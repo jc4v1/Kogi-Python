@@ -11,7 +11,7 @@ Date: January 23, 2025.
     
     Returns:
     None
-    
+
 """
 
 from enum import Enum
@@ -57,7 +57,7 @@ class GoalModel:
 
 def process_istar_model():
     """Process the iStar goal model file and generate the demo_model.py file."""
-    print("Please select your iStar goal model file (.txt format)")
+    print("Please select your iStar goal model file (.json format)")
     file_path = input("Enter the file path: ")
 
     try:
@@ -151,11 +151,21 @@ def process_istar_model():
 
         print(f"\nGenerated demo_model.py successfully!")
         print("\nModel Structure:")
+        print(" ")
         print(f"Tasks: {sorted(list(model.tasks))}")
         print(f"Goals: {sorted(list(model.goals))}")
         print(f"Qualities: {sorted(list(model.qualities))}")
         print(f"Number of links: {len(model.links)}")
         print(f"Number of requirements: {len(model.requirements)}")
+        print(" ")
+
+        print("\nLink Information:")
+        print("{:<20} {:<20} {:<10}".format("Target", "Source", "Link Type"))  # Table header
+        print("-" * 60)
+        for target, source, link_type in model.links:
+            print("{:<20} {:<20} {:<10}".format(source, target, link_type.value)) 
+        print(" ")
+
 
     except Exception as e:
         print(f"Error processing file: {str(e)}")
