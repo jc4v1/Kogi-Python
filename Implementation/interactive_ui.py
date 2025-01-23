@@ -140,7 +140,7 @@ class InteractiveGoalModel:
         with self.output:
             clear_output()
             print("Resetting model to initial state...")
-            self.model = create_demo_model()
+            self.model = create_model()
 
             # Update display
             self.tabs.children = [
