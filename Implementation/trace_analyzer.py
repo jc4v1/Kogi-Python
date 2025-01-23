@@ -54,12 +54,4 @@ def analyze_traces(trazas_unicas: List[List[str]], target_elements: List[str]):
     return results
 
 if __name__ == "__main__":
-    # Example usage
-    trazas_unicas = [
-        ['e6', 'e3', 'e2', 'e4', 'e5', 'e7', 'e8'],
-        ['e6', 'e2', 'e3', 'e4', 'e5', 'e7', 'e1'],
-        ['e6', 'e2', 'e3', 'e4', 'e5', 'e7', 'e8'],
-        ['e6', 'e3', 'e2', 'e4', 'e5', 'e7', 'e1']
-    ]
-    target_elements = ['Q1']
-    analyze_traces(trazas_unicas, target_elements)
+    analyze_traces()

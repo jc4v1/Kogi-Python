@@ -3,6 +3,7 @@ from get_traces import  get_bpmn_file_path
 from get_mapping import get_mapping_file_path
 from istar_processor import process_istar_model
 from mapping_updater import update_event_mappings
+from trace_analyzer import analyze_traces
 
 def main():
 
@@ -31,12 +32,34 @@ def main():
         mapping_file = get_mapping_file_path()
         update_event_mappings(mapping_file)
         print("Step 3 completed successfully.")
+        print(" ")
     except Exception as e:
         print(f"Error in Step 3: {e}")
         return  # Stop execution if Step 3 fails.
-    
+
+ # 4. Asking for the target elements
+
+    try:
+        user_input = ("Enter the target elements separated by commas (e.g. Q1, G1;)")
+        target_elements = [element.strip() for element in user_input.split(',')]
+        print("\nTarget elements:", target_elements)
+        print(" ")
+    except Exception as e:
+        print(f"Error in Step 4: {e}")
+
+# 5. Analyze the traces
+
+    try:
+        print("Your traces has been analyzed: ")
+        analyze_traces(traces, target_elements)
+        print(" ")
+    except Exception as e:
+        print(f"Error in Step 4: {e}")
+
+# 6. Goal Pattern Analysis
 
 
+        
 # Assigns the PATHS for the different variables.
 # By Default the application will ask you to enter the PATH Manually. 
 # But for quickly analysis you can configure the PATHS Here:
