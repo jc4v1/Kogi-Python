@@ -11,12 +11,12 @@ def update_event_mappings(mapping_path):
         new_mappings = [f'    model.add_event_mapping("{row["Event"]}", "{row["Task"]}")' for _, row in df.iterrows()]
 
         # Update demo_model.py
-        with open('demo_model.py', 'r') as f:
+        with open('Implementation\demo_model.py', 'r') as f:
             content = f.read()
         sections = re.split(r'(\s*model\.add_event_mapping.*?\n)+', content, flags=re.DOTALL)
         pre_mapping, post_mapping = sections[0].rstrip(), '\n    ' + sections[-1].lstrip() if len(sections) > 2 else ""
         new_content = pre_mapping + "\n\n" + "\n".join(new_mappings) + "\n\n" + post_mapping
-        with open('demo_model.py', 'w') as f:
+        with open('Implementation\demo_model.py', 'w') as f:
             f.write(new_content)
         print("\nSuccessfully updated demo_model.py!")
         print(f"Added {len(new_mappings)} new mappings.")
