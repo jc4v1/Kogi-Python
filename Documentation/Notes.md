@@ -13,3 +13,4 @@ pyton -m
 
 ## Installing requirements just in the virtual environment
 C:\Users\jcavi\Desktop\Traces-driven-goals-analysis\.venv\Scripts\activate pip install -r C:\Users\jcavi\Desktop\Traces-driven-goals-analysis\Implementation\requirements.txt
+C:\Users\jcavi\Desktop\Traces-driven-goals-analysis\.venv\Scripts\activate pip install perl
