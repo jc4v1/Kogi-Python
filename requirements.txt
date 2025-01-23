@@ -1,0 +1,2 @@
+pm4py
+ipywidgets>=7.0.0
