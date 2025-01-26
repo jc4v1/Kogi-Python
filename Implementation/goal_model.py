@@ -64,12 +64,19 @@ class GoalModel:
         return affected_parents
 
     def _evaluate_goals(self, goals_to_check: Set[str]):
-        for goal in goals_to_check:
-            if goal not in self.goals and goal not in self.tasks:
+        processed_elements = set()
+        elements_to_process = goals_to_check.copy()
+        
+        while elements_to_process:
+            current = elements_to_process.pop()
+            if current in processed_elements:
+                continue
+                
+            if current not in self.goals and current not in self.tasks:
                 continue
 
-            if goal in self.requirements:
-                required_elements = self.requirements[goal]
+            if current in self.requirements:
+                required_elements = self.requirements[current]
                 achieved = False
                 partially_achieved = False
 
@@ -91,28 +98,34 @@ class GoalModel:
                         partially_achieved = True
 
                 if achieved:
-                    if goal in self.goals:
-                        self.goals[goal] = ElementStatus.ACHIEVED
+                    if current in self.goals:
+                        self.goals[current] = ElementStatus.ACHIEVED
                     else:
-                        self.tasks[goal] = ElementStatus.ACTIVATED
-                    print(f"Goal/Task {goal} achieved/activated")
-                    self._set_links_for_child(goal, LinkStatus.ACTIVATED)
+                        self.tasks[current] = ElementStatus.ACTIVATED
+                    print(f"Goal/Task {current} achieved/activated")
+                    affected_parents = self._set_links_for_child(current, LinkStatus.ACTIVATED)
+                    elements_to_process.update(affected_parents)
                 elif partially_achieved:
-                    if goal in self.goals:
-                        self.goals[goal] = ElementStatus.PARTIALLY_ACHIEVED
+                    if current in self.goals:
+                        self.goals[current] = ElementStatus.PARTIALLY_ACHIEVED
                     else:
-                        self.tasks[goal] = ElementStatus.PARTIALLY_ACTIVATED
-                    print(f"Goal/Task {goal} partially achieved/activated")
-                    self._set_links_for_child(goal, LinkStatus.PARTIALLY_ACTIVATED)
+                        self.tasks[current] = ElementStatus.PARTIALLY_ACTIVATED
+                    print(f"Goal/Task {current} partially achieved/activated")
+                    self._set_links_for_child(current, LinkStatus.PARTIALLY_ACTIVATED)
+                    
+            processed_elements.add(current)
 
-    def _set_links_for_child(self, child: str, status: LinkStatus):
+    def _set_links_for_child(self, child: str, status: LinkStatus) -> Set[str]:
+        affected_parents = set()
         for i, (parent, link_child, link_type, _) in enumerate(self.links):
             if link_child == child:
                 self.links[i] = (parent, child, link_type, status)
                 print(f"Updated link {parent} <- {child} to {status.value}")
                 self.last_activated_link = self.links[i]
                 if status != LinkStatus.PARTIALLY_ACTIVATED:
+                    affected_parents.add(parent)
                     self._propagate_status_change(parent)
+        return affected_parents
 
     def _is_element_activated(self, element: str) -> bool:
         if element in self.tasks:
