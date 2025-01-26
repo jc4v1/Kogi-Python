@@ -40,12 +40,12 @@ def create_model():
 
     model.add_event_mapping("e1", "T1")
     model.add_event_mapping("e2", "T2")
-    model.add_event_mapping("e3", "T3")
+    model.add_event_mapping("e3", ["T3", "G3"])
     model.add_event_mapping("e4", "T4")
     model.add_event_mapping("e5", "T5")
     model.add_event_mapping("e6", "T6")
     model.add_event_mapping("e7", "T7")
-    model.add_event_mapping("e8", "T8")
+    model.add_event_mapping("e8", "G1")
 
 
     return model
