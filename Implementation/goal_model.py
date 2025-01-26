@@ -206,8 +206,13 @@ class GoalModel:
             print(f"Task {element} deactivated")
 
         if deactivate_subtree:
+            # Find all links where the deactivated element is a parent
             for i, (parent, child, link_type, status) in enumerate(self.links):
-                if child == element and status == LinkStatus.ACTIVATED:
+                if parent == element and status in [LinkStatus.ACTIVATED, LinkStatus.PARTIALLY_ACTIVATED]:
                     self.links[i] = (parent, child, link_type, LinkStatus.DEACTIVATED)
                     print(f"Deactivating link {parent} <- {child}")
-                    self._handle_deactivation(parent, True)
+                    # Recursively deactivate the child element and its subtree
+                    if child in self.tasks and self.tasks[child] in [ElementStatus.ACTIVATED, ElementStatus.PARTIALLY_ACTIVATED]:
+                        self._handle_deactivation(child, True)
+                    elif child in self.goals and self.goals[child] in [ElementStatus.ACHIEVED, ElementStatus.PARTIALLY_ACHIEVED]:
+                        self._handle_deactivation(child, True)
