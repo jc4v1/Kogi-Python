@@ -73,13 +73,14 @@ def main():
     
     # Create and process model
     model = create_model()
-
+    print("\nInitial state:")
+    #print_model_state(model)
     
     print("\nProcessing events...")
     for event in events:
         print(f"\nProcessing {event}:")
         model.process_event(event)
-       
+        #print_model_state(model)
 
 if __name__ == "__main__":
     main()
