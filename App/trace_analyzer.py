@@ -62,9 +62,69 @@ def create_model():
     
     return model
 
+def print_summary_table(traces, results):
+    # Get all elements from the model
+    model = create_model()
+    all_elements = {
+        **model.tasks,
+        **model.goals,
+        **model.qualities
+    }
+    
+    # Calculate satisfaction percentages and traces for each element
+    element_stats = {}
+    total_traces = len(traces)
+    
+    for element in all_elements:
+        satisfied_count = 0
+        satisfied_trace_nums = []
+        
+        for i, trace_result in enumerate(results):
+            final_state = trace_result['states'][-1]
+            element_type = None
+            if element in final_state['tasks']:
+                element_type = 'tasks'
+            elif element in final_state['goals']:
+                element_type = 'goals'
+            elif element in final_state['qualities']:
+                element_type = 'qualities'
+                
+            if element_type:
+                state = final_state[element_type][element]
+                if ((element_type == 'qualities' and state == ElementStatus.FULFILLED) or
+                    (element_type == 'goals' and state == ElementStatus.ACHIEVED) or
+                    (element_type == 'tasks' and state == ElementStatus.ACTIVATED)):
+                    satisfied_count += 1
+                    satisfied_trace_nums.append(i + 1)
+        
+        satisfaction_percentage = (satisfied_count / total_traces) * 100 if total_traces > 0 else 0
+        element_stats[element] = {
+            'percentage': satisfaction_percentage,
+            'traces': satisfied_trace_nums
+        }
+    
+    # Print table only once
+    print("\nSummary Table:")
+    print("-" * 40)
+    print(f"{'Intentional Element':<20}{'  '} {'% Satisfaction':<15}\n {'Satisfied Traces':<45}")
+    print("-" * 40)
+    
+    for element in sorted(element_stats.keys()):
+        stats = element_stats[element]
+        traces_details = []
+        for trace_num in stats['traces']:
+            trace = traces[trace_num - 1]
+            trace_str = ', '.join(trace)
+            traces_details.append(trace_str)
+        traces_str = '\n'+'\n'.join(traces_details)
+        print(f"{element:<20} {stats['percentage']:>6.1f}%   \n     {traces_str:<45}")
+        print("-" * 40)
+    #print("-" * 40)
+
 def analyze_traces(traces: List[List[str]], target_elements: List[str]):
     results = []
     satisfied_traces = []
+    summary_printed = False  # Flag to control summary printing
     
     for i, trace in enumerate(traces):
         model = create_model()
@@ -105,39 +165,34 @@ def analyze_traces(traces: List[List[str]], target_elements: List[str]):
                 print(f"{target} final state: {model.goals[target]}")
             elif target in model.tasks:
                 print(f"{target} final state: {model.tasks[target]}")
-        
+    
     print("\nSatisfied Traces:")
     for idx, trace in enumerate(satisfied_traces, 1):
-        print(f"Trace #{idx}: {' -> '.join(trace)}")
+        print(f"Trace #{idx}: [{', '.join(trace)}]")
+    
+    # Print summary table only once after all traces are processed
+    if not summary_printed:
+        print_summary_table(traces, results)
+        summary_printed = True
     
     return results
 
 def export_results(results: List[Dict], filename: str = 'trace_analysis.json'):
-    """
-    Export results to a JSON file in the App\Outputs folder.
-
-    :param results: List of dictionaries to be exported.
-    :param filename: Name of the file to save the results (default: 'trace_analysis.json').
-    """
-    # Set the folder to App\Outputs
     folder = os.path.join("App", "Outputs")
-
-    # Ensure the folder exists
     os.makedirs(folder, exist_ok=True)
-
-    # Create the full file path
     file_path = os.path.join(folder, filename)
-
-    # Write the results to the file
+    
     with open(file_path, 'w') as f:
         json.dump(results, f, default=str, indent=2)
-
+    
     print(f"Results exported to: {file_path}")
 
 def main():
     traces = [
-        ["e1", "e2", "e3", "e4"],
-        # Add more traces here
+        ["e6", "e2", "e3", "e4", "e5", "e7", "e8"],
+        ["e6", "e2", "e3", "e4", "e5", "e7", "e1"],
+        ["e6", "e3", "e2", "e4", "e5", "e7", "e1"],
+        ["e6", "e3", "e2", "e4", "e5", "e7", "e8"]
     ]
     target_elements = ["Q1"]
     
