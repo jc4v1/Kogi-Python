@@ -1,5 +1,8 @@
 from goal_model import GoalModel
 from enums import LinkType, ElementStatus
+from typing import List, Dict
+import json
+from datetime import datetime
 
 def create_model():
     model = GoalModel()
@@ -54,42 +57,45 @@ def create_model():
     
     return model
 
-def print_model_state(model):
-    print("\nModel State:")
-    print("\nTasks:")
-    for task, status in model.tasks.items():
-        print(f"{task}: {status}")
+def analyze_traces(traces: List[List[str]], target_elements: List[str]):
+    results = []
     
-    print("\nGoals:")
-    for goal, status in model.goals.items():
-        print(f"{goal}: {status}")
+    for i, trace in enumerate(traces):
+        model = create_model()
+        trace_result = {
+            'trace_number': i + 1,
+            'events': trace,
+            'states': []
+        }
+        
+        for event in trace:
+            model.process_event(event)
+            trace_result['states'].append({
+                'event': event,
+                'qualities': model.qualities.copy(),
+                'goals': model.goals.copy(),
+                'tasks': model.tasks.copy()
+            })
+        
+        results.append(trace_result)
+        print(f"\nTrace {i+1} ({' -> '.join(trace)}):")
+        print(f"Q1 final state: {model.qualities['Q1']}")
     
-    print("\nQualities:")
-    for quality, status in model.qualities.items():
-        print(f"{quality}: {status}")
+    return results
+
+def export_results(results: List[Dict], filename: str = 'trace_analysis.json'):
+    with open(filename, 'w') as f:
+        json.dump(results, f, default=str, indent=2)
 
 def main():
-    print("Goal Model Trace Analyzer")
-    print("Enter events (e1-e8) separated by commas (e.g., e1,e2,e3)")
+    traces = [
+        ["e1", "e2", "e3", "e4"],
+        # Add more traces here
+    ]
+    target_elements = ["Q1"]
     
-    # Get trace input
-    trace_input = input("Enter trace: ")
-    events = [e.strip() for e in trace_input.split(",")]
-
-    
-    # Create and process model
-    model = create_model()
-    print("\nInitial state:")
-    # print_model_state(model)
-    
-    print("\nProcessing events...")
-    for event in events:
-        print(f"\nProcessing {event}:")
-        model.process_event(event)
-        # print_model_state(model)
-
-    print(events)
-    print(trace_input)
+    results = analyze_traces(traces, target_elements)
+    export_results(results)
 
 if __name__ == "__main__":
     main()

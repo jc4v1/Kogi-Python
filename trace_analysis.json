@@ -1,0 +1,97 @@
+[
+  {
+    "trace_number": 1,
+    "events": [
+      "e1",
+      "e2",
+      "e3",
+      "e4"
+    ],
+    "states": [
+      {
+        "event": "e1",
+        "qualities": {
+          "Q1": "ElementStatus.FULFILLED"
+        },
+        "goals": {
+          "G1": "ElementStatus.ACHIEVED",
+          "G2": "ElementStatus.UNKNOWN",
+          "G3": "ElementStatus.UNKNOWN"
+        },
+        "tasks": {
+          "T1": "ElementStatus.UNKNOWN",
+          "T2": "ElementStatus.UNKNOWN",
+          "T3": "ElementStatus.UNKNOWN",
+          "T4": "ElementStatus.UNKNOWN",
+          "T5": "ElementStatus.UNKNOWN",
+          "T6": "ElementStatus.UNKNOWN",
+          "T7": "ElementStatus.UNKNOWN",
+          "T8": "ElementStatus.UNKNOWN"
+        }
+      },
+      {
+        "event": "e2",
+        "qualities": {
+          "Q1": "ElementStatus.FULFILLED"
+        },
+        "goals": {
+          "G1": "ElementStatus.ACHIEVED",
+          "G2": "ElementStatus.UNKNOWN",
+          "G3": "ElementStatus.UNKNOWN"
+        },
+        "tasks": {
+          "T1": "ElementStatus.UNKNOWN",
+          "T2": "ElementStatus.ACTIVATED",
+          "T3": "ElementStatus.UNKNOWN",
+          "T4": "ElementStatus.UNKNOWN",
+          "T5": "ElementStatus.UNKNOWN",
+          "T6": "ElementStatus.UNKNOWN",
+          "T7": "ElementStatus.UNKNOWN",
+          "T8": "ElementStatus.UNKNOWN"
+        }
+      },
+      {
+        "event": "e3",
+        "qualities": {
+          "Q1": "ElementStatus.FULFILLED"
+        },
+        "goals": {
+          "G1": "ElementStatus.ACHIEVED",
+          "G2": "ElementStatus.PARTIALLY_ACHIEVED",
+          "G3": "ElementStatus.UNKNOWN"
+        },
+        "tasks": {
+          "T1": "ElementStatus.UNKNOWN",
+          "T2": "ElementStatus.ACTIVATED",
+          "T3": "ElementStatus.ACTIVATED",
+          "T4": "ElementStatus.UNKNOWN",
+          "T5": "ElementStatus.UNKNOWN",
+          "T6": "ElementStatus.UNKNOWN",
+          "T7": "ElementStatus.UNKNOWN",
+          "T8": "ElementStatus.UNKNOWN"
+        }
+      },
+      {
+        "event": "e4",
+        "qualities": {
+          "Q1": "ElementStatus.FULFILLED"
+        },
+        "goals": {
+          "G1": "ElementStatus.ACHIEVED",
+          "G2": "ElementStatus.PARTIALLY_ACHIEVED",
+          "G3": "ElementStatus.UNKNOWN"
+        },
+        "tasks": {
+          "T1": "ElementStatus.UNKNOWN",
+          "T2": "ElementStatus.ACTIVATED",
+          "T3": "ElementStatus.ACTIVATED",
+          "T4": "ElementStatus.ACTIVATED",
+          "T5": "ElementStatus.UNKNOWN",
+          "T6": "ElementStatus.UNKNOWN",
+          "T7": "ElementStatus.UNKNOWN",
+          "T8": "ElementStatus.UNKNOWN"
+        }
+      }
+    ]
+  }
+]
