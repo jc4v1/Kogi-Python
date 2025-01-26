@@ -1,7 +1,7 @@
 from typing import List, Dict
 from collections import defaultdict
-from demo_model import create_model
-from enums import ElementStatus
+from Implementation.demo_model import create_model
+from Implementation.enums import ElementStatus
 
 def analyze_goal_patterns(trazas_unicas: List[List[str]]):
     """

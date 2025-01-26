@@ -1,10 +1,15 @@
-from bpmn_processor import process_bpmn_file
-from get_traces import  get_bpmn_file_path
-from get_mapping import get_mapping_file_path
-from istar_processor import process_istar_model
-from mapping_updater import update_event_mappings
-from TestTraces import analyze_traces
-from goal_pattern_analyzer import analyze_goal_patterns
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from Implementation.bpmn_processor import process_bpmn_file
+from Implementation.get_traces import  get_bpmn_file_path
+from Implementation.get_mapping import get_mapping_file_path
+from Implementation.istar_processor import process_istar_model
+from Implementation.mapping_updater import update_event_mappings
+from App.trace_analyzer import analyze_traces
+from Implementation.goal_pattern_analyzer import analyze_goal_patterns
 
 def main():
 

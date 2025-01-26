@@ -1,5 +1,5 @@
-from goal_model import GoalModel
-from enums import LinkType
+from Implementation.goal_model import GoalModel
+from Implementation.enums import LinkType
 
 def create_model():
     model = GoalModel()

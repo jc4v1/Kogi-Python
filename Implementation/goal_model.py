@@ -1,5 +1,5 @@
 from typing import Dict, List, Tuple, Set
-from enums import ElementStatus, LinkType, LinkStatus
+from Implementation.enums import ElementStatus, LinkType, LinkStatus
 
 class GoalModel:
     def __init__(self):
