@@ -1,7 +1,7 @@
-# import sys
-# import os
+import sys
+import os
 
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from Implementation.goal_model import GoalModel
 from Implementation.enums import LinkType, ElementStatus
@@ -89,8 +89,27 @@ def analyze_traces(traces: List[List[str]], target_elements: List[str]):
     return results
 
 def export_results(results: List[Dict], filename: str = 'trace_analysis.json'):
-    with open(filename, 'w') as f:
+    """
+    Export results to a JSON file in the App\Outputs folder.
+
+    :param results: List of dictionaries to be exported.
+    :param filename: Name of the file to save the results (default: 'trace_analysis.json').
+    """
+    # Set the folder to App\Outputs
+    folder = os.path.join("App", "Outputs")
+
+    # Ensure the folder exists
+    os.makedirs(folder, exist_ok=True)
+
+    # Create the full file path
+    file_path = os.path.join(folder, filename)
+
+    # Write the results to the file
+    with open(file_path, 'w') as f:
         json.dump(results, f, default=str, indent=2)
+
+    print(f"Results exported to: {file_path}")
+
 
 def main():
     traces = [
