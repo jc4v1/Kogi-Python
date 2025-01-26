@@ -62,13 +62,13 @@ def main():
     except Exception as e:
         print(f"Error in Step 5: {e}")
 
-# 6. Goal Pattern Analysis
-    try:
-         print("Based on your traces, this is your goal pattern analysis: ")
-         analyze_goal_patterns(traces)
-         print(" ")
-    except Exception as e:
-         print(f"Error in Step 6: {e}")
+# # 6. Goal Pattern Analysis
+#     try:
+#          print("Based on your traces, this is your goal pattern analysis: ")
+#          analyze_goal_patterns(traces)
+#          print(" ")
+#     except Exception as e:
+#          print(f"Error in Step 6: {e}")
         
 # Assigns the PATHS for the different variables.
 # By Default the application will ask you to enter the PATH Manually. 
