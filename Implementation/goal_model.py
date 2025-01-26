@@ -51,10 +51,16 @@ class GoalModel:
         affected_parents = set()
         for i, (parent, link_child, link_type, _) in enumerate(self.links):
             if link_child == child:
-                self.links[i] = (parent, child, link_type, LinkStatus.ACTIVATED)
+                # Check if child is partially activated/achieved
+                if (child in self.tasks and self.tasks[child] == ElementStatus.PARTIALLY_ACTIVATED) or \
+                   (child in self.goals and self.goals[child] == ElementStatus.PARTIALLY_ACHIEVED):
+                    self.links[i] = (parent, child, link_type, LinkStatus.PARTIALLY_ACTIVATED)
+                    print(f"Updated link {parent} <- {child} to PARTIALLY_ACTIVATED due to partial child status")
+                else:
+                    self.links[i] = (parent, child, link_type, LinkStatus.ACTIVATED)
+                    print(f"Updated link {parent} <- {child} to ACTIVATED")
+                    affected_parents.add(parent)  # Only add to affected_parents if fully activated
                 self.last_activated_link = self.links[i]
-                affected_parents.add(parent)
-                print(f"Updated link {parent} <- {child} to ACTIVATED")
         return affected_parents
 
     def _evaluate_goals(self, goals_to_check: Set[str]):
@@ -69,11 +75,12 @@ class GoalModel:
 
                 for requirement_set in required_elements:
                     all_activated = all(
-                        self._is_element_activated(elem)
+                        self._is_element_activated(elem) and not self._is_partially_activated(elem)
                         for elem in requirement_set
                     )
                     any_activated = any(
-                        self._is_element_activated(elem)
+                        (self._is_element_activated(elem) and not self._is_partially_activated(elem)) or
+                        self._is_partially_activated(elem)
                         for elem in requirement_set
                     )
 
@@ -89,13 +96,23 @@ class GoalModel:
                     else:
                         self.tasks[goal] = ElementStatus.ACTIVATED
                     print(f"Goal/Task {goal} achieved/activated")
-                    self._propagate_achievement(goal)
+                    self._set_links_for_child(goal, LinkStatus.ACTIVATED)
                 elif partially_achieved:
                     if goal in self.goals:
                         self.goals[goal] = ElementStatus.PARTIALLY_ACHIEVED
                     else:
                         self.tasks[goal] = ElementStatus.PARTIALLY_ACTIVATED
                     print(f"Goal/Task {goal} partially achieved/activated")
+                    self._set_links_for_child(goal, LinkStatus.PARTIALLY_ACTIVATED)
+
+    def _set_links_for_child(self, child: str, status: LinkStatus):
+        for i, (parent, link_child, link_type, _) in enumerate(self.links):
+            if link_child == child:
+                self.links[i] = (parent, child, link_type, status)
+                print(f"Updated link {parent} <- {child} to {status.value}")
+                self.last_activated_link = self.links[i]
+                if status != LinkStatus.PARTIALLY_ACTIVATED:
+                    self._propagate_status_change(parent)
 
     def _is_element_activated(self, element: str) -> bool:
         if element in self.tasks:
@@ -104,12 +121,44 @@ class GoalModel:
             return self.goals[element] in [ElementStatus.ACHIEVED, ElementStatus.PARTIALLY_ACHIEVED]
         return False
 
-    def _propagate_achievement(self, element: str):
+    def _is_partially_activated(self, element: str) -> bool:
+        if element in self.tasks:
+            return self.tasks[element] == ElementStatus.PARTIALLY_ACTIVATED
+        elif element in self.goals:
+            return self.goals[element] == ElementStatus.PARTIALLY_ACHIEVED
+        return False
+
+    def _should_be_partially_activated(self, element: str) -> bool:
+        related_links = [(p, c, t, s) for p, c, t, s in self.links if p == element]
+        return any(status == LinkStatus.PARTIALLY_ACTIVATED for _, _, _, status in related_links)
+
+    def _should_be_deactivated(self, element: str) -> bool:
+        related_links = [(p, c, t, s) for p, c, t, s in self.links if p == element]
+        return any(status == LinkStatus.DEACTIVATED for _, _, _, status in related_links)
+
+    def _propagate_achievement(self, element: str, link_status: LinkStatus = None):
         for i, (parent, child, link_type, _) in enumerate(self.links):
-            if child == element:
-                self.links[i] = (parent, child, link_type, LinkStatus.ACTIVATED)
+            if child == element and link_status in [LinkStatus.ACTIVATED, LinkStatus.DEACTIVATED]:
+                self.links[i] = (parent, child, link_type, link_status)
                 self.last_activated_link = self.links[i]
-                print(f"Propagating achievement: Updated link {parent} <- {child} to ACTIVATED")
+                print(f"Propagating achievement: Updated link {parent} <- {child} to {link_status.value}")
+                self._propagate_status_change(parent)
+
+    def _propagate_status_change(self, element: str):
+        if element in self.goals:
+            if self._should_be_partially_activated(element):
+                self.goals[element] = ElementStatus.PARTIALLY_ACHIEVED
+                print(f"Goal {element} set to PARTIALLY_ACHIEVED due to propagation")
+            elif self._should_be_deactivated(element):
+                self.goals[element] = ElementStatus.DEACTIVATED
+                print(f"Goal {element} set to DEACTIVATED due to propagation")
+        elif element in self.tasks:
+            if self._should_be_partially_activated(element):
+                self.tasks[element] = ElementStatus.PARTIALLY_ACTIVATED
+                print(f"Task {element} set to PARTIALLY_ACTIVATED due to propagation")
+            elif self._should_be_deactivated(element):
+                self.tasks[element] = ElementStatus.DEACTIVATED
+                print(f"Task {element} set to DEACTIVATED due to propagation")
 
     def _evaluate_qualities(self):
         for quality in self.qualities:
@@ -117,13 +166,13 @@ class GoalModel:
             break_links = []
             
             for parent, child, link_type, status in self.links:
-                if parent == quality and status == LinkStatus.ACTIVATED:
+                if parent == quality and status == LinkStatus.ACTIVATED:  # Only consider ACTIVATED links
                     if link_type == LinkType.MAKE:
                         make_links.append(child)
                     elif link_type == LinkType.BREAK:
                         break_links.append(child)
 
-            if self.last_activated_link and self.last_activated_link[0] == quality:
+            if self.last_activated_link and self.last_activated_link[0] == quality and self.last_activated_link[3] == LinkStatus.ACTIVATED:
                 parent, child, link_type, _ = self.last_activated_link
                 if link_type == LinkType.MAKE:
                     self.qualities[quality] = ElementStatus.FULFILLED

@@ -23,4 +23,5 @@ class LinkStatus(Enum):
     UNKNOWN = "unknown"
     ACTIVATED = "activated"
     DEACTIVATED = "deactivated"
+    PARTIALLY_ACTIVATED = "partially activated"
     
