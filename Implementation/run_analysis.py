@@ -1,4 +1,4 @@
-from trace_analyzer import TraceAnalyzer, print_analysis_results
+from App.trace_analyzer import TraceAnalyzer, print_analysis_results
 
 def analyze_traces(trazas_unicas, target_elements):
     try:

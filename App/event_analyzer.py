@@ -1,5 +1,10 @@
-from goal_model import GoalModel
-from enums import LinkType, ElementStatus
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from Implementation.goal_model import GoalModel
+from Implementation.enums import LinkType, ElementStatus
 
 def create_model():
     model = GoalModel()
