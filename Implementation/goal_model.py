@@ -8,7 +8,7 @@ class GoalModel:
         self.qualities: Dict[str, ElementStatus] = {}
         self.links: List[Tuple[str, str, LinkType, LinkStatus]] = []
         self.requirements: Dict[str, List[List[str]]] = {}
-        self.event_mapping: Dict[str, str] = {}
+        self.event_mapping: Dict[str, List[str]] = {}  # Changed to List[str]
         self.execution_count: Dict[str, int] = {}
         self.last_activated_link: Tuple[str, str, LinkType, LinkStatus] = None
 
@@ -25,27 +25,33 @@ class GoalModel:
     def add_link(self, parent: str, child: str, link_type: LinkType):
         self.links.append((parent, child, link_type, LinkStatus.UNKNOWN))
 
-    def add_event_mapping(self, event: str, target: str):
-        self.event_mapping[event] = target
+    def add_event_mapping(self, event: str, target):
+        if isinstance(target, list):
+            self.event_mapping[event] = target
+        else:
+            self.event_mapping[event] = [[target]]
 
     def process_event(self, event: str):
         print(f"\nProcessing event: {event}")
         if event not in self.event_mapping:
             return
 
-        target = self.event_mapping[event]
-        
-        if target in self.tasks:
-            self.tasks[target] = ElementStatus.ACTIVATED
-            self.execution_count[target] += 1
-            print(f"Task {target} activated and execution count increased to {self.execution_count[target]}")
-        elif target in self.goals:
-            self.goals[target] = ElementStatus.ACHIEVED
-            print(f"Goal {target} activated directly by event")
-
-        affected_parents = self._update_links_with_child(target)
-        self._evaluate_goals(affected_parents)
-        self._evaluate_qualities()
+        # Process each target set independently
+        for target_set in self.event_mapping[event]:
+            # First activate all targets in the set
+            for target in target_set:
+                if target in self.tasks:
+                    self.tasks[target] = ElementStatus.ACTIVATED
+                    self.execution_count[target] += 1
+                    print(f"Task {target} activated and execution count increased to {self.execution_count[target]}")
+                elif target in self.goals:
+                    self.goals[target] = ElementStatus.ACHIEVED
+                    print(f"Goal {target} activated directly by event")
+                
+                # Then process its propagation
+                affected_parents = self._update_links_with_child(target)
+                self._evaluate_goals(affected_parents)
+                self._evaluate_qualities()
 
     def _update_links_with_child(self, child: str) -> Set[str]:
         affected_parents = set()
