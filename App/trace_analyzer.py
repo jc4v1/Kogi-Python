@@ -1,13 +1,13 @@
 import sys
 import os
+from typing import List, Dict
+import json
+from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from Implementation.goal_model import GoalModel
 from Implementation.enums import LinkType, ElementStatus
-from typing import List, Dict
-import json
-from datetime import datetime
 
 def create_model():
     model = GoalModel()
@@ -64,6 +64,7 @@ def create_model():
 
 def analyze_traces(traces: List[List[str]], target_elements: List[str]):
     results = []
+    satisfied_traces = []
     
     for i, trace in enumerate(traces):
         model = create_model()
@@ -72,6 +73,8 @@ def analyze_traces(traces: List[List[str]], target_elements: List[str]):
             'events': trace,
             'states': []
         }
+        
+        satisfied = False
         
         for event in trace:
             model.process_event(event)
@@ -82,9 +85,30 @@ def analyze_traces(traces: List[List[str]], target_elements: List[str]):
                 'tasks': model.tasks.copy()
             })
         
+        for target in target_elements:
+            if target in model.qualities and model.qualities[target] == ElementStatus.FULFILLED:
+                satisfied = True
+            elif target in model.goals and model.goals[target] == ElementStatus.ACHIEVED:
+                satisfied = True
+            elif target in model.tasks and model.tasks[target] == ElementStatus.ACTIVATED:
+                satisfied = True
+        
+        if satisfied:
+            satisfied_traces.append(trace)
+        
         results.append(trace_result)
         print(f"\nTrace {i+1} ({' -> '.join(trace)}):")
-        print(f"Q1 final state: {model.qualities['Q1']}")
+        for target in target_elements:
+            if target in model.qualities:
+                print(f"{target} final state: {model.qualities[target]}")
+            elif target in model.goals:
+                print(f"{target} final state: {model.goals[target]}")
+            elif target in model.tasks:
+                print(f"{target} final state: {model.tasks[target]}")
+        
+    print("\nSatisfied Traces:")
+    for idx, trace in enumerate(satisfied_traces, 1):
+        print(f"Trace #{idx}: {' -> '.join(trace)}")
     
     return results
 
@@ -109,7 +133,6 @@ def export_results(results: List[Dict], filename: str = 'trace_analysis.json'):
         json.dump(results, f, default=str, indent=2)
 
     print(f"Results exported to: {file_path}")
-
 
 def main():
     traces = [

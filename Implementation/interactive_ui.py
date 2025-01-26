@@ -1,4 +1,4 @@
-from demo_model import create_model  # Changed from create_demo_model
+from Implementation.demo_model import create_model  # Changed from create_demo_model
 from IPython.display import display, clear_output, HTML
 import ipywidgets as widgets
 

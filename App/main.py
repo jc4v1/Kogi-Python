@@ -53,7 +53,7 @@ def main():
         print(f"Error in Step 4: {e}")
         return  # Stop execution if target input fails
     
-# 5. Analyze the traces
+    # 5. Analyze the traces
 
     try:
         print("Your traces has been analyzed: ")
@@ -63,12 +63,12 @@ def main():
         print(f"Error in Step 5: {e}")
 
 # 6. Goal Pattern Analysis
-    # try:
-    #     print("Based on your traces, this is your goal pattern analysis: ")
-    #     analyze_goal_patterns(traces)
-    #     print(" ")
-    # except Exception as e:
-    #     print(f"Error in Step 6: {e}")
+    try:
+         print("Based on your traces, this is your goal pattern analysis: ")
+         analyze_goal_patterns(traces)
+         print(" ")
+    except Exception as e:
+         print(f"Error in Step 6: {e}")
         
 # Assigns the PATHS for the different variables.
 # By Default the application will ask you to enter the PATH Manually. 
