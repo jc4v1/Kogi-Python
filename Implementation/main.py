@@ -12,7 +12,7 @@ def main():
     try:
      bpmn_path = get_bpmn_file_path()
      traces = process_bpmn_file(bpmn_path)
-     
+    
      if not traces:
             raise ValueError("No traces generated. Step 1 failed.")
             print(f"Step 1 completed successfully. Traces: {traces}")
