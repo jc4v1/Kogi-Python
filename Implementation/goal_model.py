@@ -188,6 +188,11 @@ class GoalModel:
             if parent == quality and link_type == LinkType.BREAK and status == LinkStatus.ACTIVATED:
                 self.links[i] = (parent, child, link_type, LinkStatus.DEACTIVATED)
                 print(f"Deactivated BREAK link {parent} <- {child}")
+                # Start deactivation chain for the child
+                if child in self.tasks and self.tasks[child] in [ElementStatus.ACTIVATED, ElementStatus.PARTIALLY_ACTIVATED]:
+                    self._handle_deactivation(child, True)
+                elif child in self.goals and self.goals[child] in [ElementStatus.ACHIEVED, ElementStatus.PARTIALLY_ACHIEVED]:
+                    self._handle_deactivation(child, True)
 
     def _handle_quality_denial(self, quality: str, make_links: List[str]):
         for child in make_links:
