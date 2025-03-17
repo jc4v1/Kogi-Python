@@ -23,7 +23,7 @@ For the qualitative aspects, the relevant GDPR articles were analyzed to extract
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/JUANITACABALLEROV/Traces-driven-goals-analysis.git
+   git clone https://anonymous.4open.science/r/High-Level-Requirements-Driven-Business-Process.Compliance
    cd Traces-driven-goals-analysis
    ```
 
