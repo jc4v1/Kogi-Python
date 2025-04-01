@@ -1,9 +1,3 @@
-"""
-Get BPMN File
-Developed by Juanita Caballero-Villalobos
-Date: January 23, 2025.
-
-"""
 
 import os
 from typing import List
