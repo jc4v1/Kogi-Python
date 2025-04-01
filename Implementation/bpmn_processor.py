@@ -1,7 +1,6 @@
 """
 BPMN Processor
-Developed by Juanita Caballero-Villalobos
-Date: January 23, 2025.
+
 
     Process a BPMN file and return unique traces.
 
