@@ -26,6 +26,15 @@ def update_event_mappings(mapping_path=None):
         # Debug: Print column information
         print(f"Columns found: {list(df.columns)}")
         
+        # Check if we have the combined format "Event;Intentional Element"
+        if len(df.columns) == 1 and ';' in df.columns[0]:
+            print("Detected combined column format. Splitting...")
+            # Split the combined column
+            combined_col = df.columns[0]
+            df[['Event', 'Intentional Element']] = df[combined_col].str.split(';', expand=True)
+            df = df.drop(columns=[combined_col])  # Remove the original combined column
+            print(f"New columns after split: {list(df.columns)}")
+        
         # Check if we have enough columns
         if len(df.columns) < 2:
             print(f"Error: File only has {len(df.columns)} column(s), but need 2 columns (Event and Intentional Element)")
