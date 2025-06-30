@@ -1,16 +1,36 @@
 import pandas as pd
 import re
 
-def update_event_mappings(mapping_path):
+def update_event_mappings(mapping_path=None):
     try:
-        # Read the mapping file
-        df = pd.read_csv(mapping_path) if mapping_path.endswith('.csv') else pd.read_excel(mapping_path)
+        # If no path provided, ask for it
+        if mapping_path is None:
+            mapping_path = input("Enter the mapping file relative path: ")
+        
+        # Read the mapping file with different separators
+        if mapping_path.endswith('.csv'):
+            # Try different separators
+            try:
+                df = pd.read_csv(mapping_path, sep=',')
+            except:
+                try:
+                    df = pd.read_csv(mapping_path, sep=';')
+                except:
+                    df = pd.read_csv(mapping_path, sep='\t')
+        else:
+            df = pd.read_excel(mapping_path)
         
         # Clean column names and handle the column access issue
         df.columns = df.columns.str.strip()
         
         # Debug: Print column information
         print(f"Columns found: {list(df.columns)}")
+        
+        # Check if we have enough columns
+        if len(df.columns) < 2:
+            print(f"Error: File only has {len(df.columns)} column(s), but need 2 columns (Event and Intentional Element)")
+            print("Please check your CSV file format.")
+            return
         
         # Use position-based access instead of column names to avoid the KeyError
         event_col = df.columns[0]  # First column (Event)
@@ -52,7 +72,7 @@ def update_event_mappings(mapping_path):
             f.write(new_content)
                     
         print("\nSuccessfully updated demo_model.py!")
-        print(f"Added {len(new_mappings)} new mappings.")       
+        print(f"Added {len(new_mappings)} new mappings.")
         
         # Print the actual mappings that were added
         print("\nEvent Mappings:")
@@ -64,4 +84,6 @@ def update_event_mappings(mapping_path):
         print("Make sure your file has 'Event' and 'Intentional Element' columns.")
 
 if __name__ == "__main__":
-    update_event_mappings()
+    # Test with your file path - replace with your actual file path
+    test_path = input("Enter the mapping file path: ")
+    update_event_mappings(test_path)

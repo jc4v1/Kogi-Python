@@ -9,7 +9,9 @@ from Implementation.get_mapping import get_mapping_file_path
 from Implementation.istar_processor import process_istar_model
 from Implementation.mapping_updater import update_event_mappings
 from App.trace_analyzer import analyze_traces
+from App.designtime import analyze_all_traces_compliance
 from Implementation.goal_pattern_analyzer import analyze_goal_patterns
+
 
 def main():
 
