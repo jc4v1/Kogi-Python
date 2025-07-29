@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import os
 
 def update_event_mappings(mapping_path=None):
     try:
@@ -68,7 +69,9 @@ def update_event_mappings(mapping_path=None):
                 new_mappings.append(f'    model.add_event_mapping("{event}", "{targets[0]}")')
 
         # Update demo_model.py
-        with open('Implementation/demo_model.py', 'r') as f:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        demo_model_path = os.path.join(script_dir, 'demo_model.py')
+        with open(demo_model_path, 'r') as f:
             content = f.read()
                     
         sections = re.split(r'(\s*model\.add_event_mapping.*?\n)+', content, flags=re.DOTALL)
@@ -77,7 +80,7 @@ def update_event_mappings(mapping_path=None):
                 
         new_content = pre_mapping + "\n\n" + "\n".join(new_mappings) + "\n\n" + post_mapping
                 
-        with open('Implementation/demo_model.py', 'w') as f:
+        with open(demo_model_path, 'w') as f:
             f.write(new_content)
                     
         print("\nSuccessfully updated demo_model.py!")
