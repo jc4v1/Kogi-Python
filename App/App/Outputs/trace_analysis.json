@@ -309,7 +309,7 @@
           "G3": "unknown"
         },
         "tasks": {
-          "T1": "true_false",
+          "T1": "unknown",
           "T2": "true_true",
           "T3": "true_true",
           "T4": "true_true",
@@ -357,10 +357,10 @@
       {
         "event": "e3",
         "qualities": {
-          "Q1": "unknown"
+          "Q1": "fulfilled"
         },
         "goals": {
-          "G1": "unknown",
+          "G1": "true_false",
           "G2": "unknown",
           "G3": "unknown"
         },
@@ -470,7 +470,7 @@
           "G3": "unknown"
         },
         "tasks": {
-          "T1": "true_false",
+          "T1": "unknown",
           "T2": "true_true",
           "T3": "true_true",
           "T4": "true_true",
@@ -518,10 +518,10 @@
       {
         "event": "e3",
         "qualities": {
-          "Q1": "unknown"
+          "Q1": "fulfilled"
         },
         "goals": {
-          "G1": "unknown",
+          "G1": "true_false",
           "G2": "unknown",
           "G3": "unknown"
         },
