@@ -1,17 +1,14 @@
 from enum import Enum
 
 class ElementStatus(Enum):
+    UNKNOWN = "unknown"        # (?, ?) - initial state
+    TRUE_FALSE = "true_false"  # (⊤, ⊥) - satisfied/achieved but not executed pending
+    TRUE_TRUE = "true_true"    # (⊤, ⊤) - satisfied/achieved and executed pending
+
+class QualityStatus(Enum):
     UNKNOWN = "unknown"
-    ACTIVATED = "activated"
-    DEACTIVATED = "deactivated"
-    PARTIALLY_ACTIVATED = "partially activated"
-    ACHIEVED = "achieved"
-    NOT_ACHIEVED = "not achieved"
-    PARTIALLY_ACHIEVED = "partially achieved"
-    FULFILLED = "fulfilled"
-    DENIED = "denied"
-    PARTIALLY_FULFILLED = "partially fulfilled"
-    PARTIALLY_DENIED = "partially denied"
+    FULFILLED = "fulfilled"    # ⊤
+    DENIED = "denied"         # ⊥
 
 class LinkType(Enum):
     AND = "AND"
@@ -24,4 +21,3 @@ class LinkStatus(Enum):
     ACTIVATED = "activated"
     DEACTIVATED = "deactivated"
     PARTIALLY_ACTIVATED = "partially activated"
-    
