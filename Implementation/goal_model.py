@@ -331,11 +331,227 @@ class GoalModel:
         
         return targeting_elements
 
+    def generate_statistics(self, traces: List[List[str]], results: List[Dict]):
+        """Generate and display statistics for the evaluation"""
+        print("\n" + "="*80)
+        print("GOAL MODEL EVALUATION STATISTICS")
+        print("="*80)
+        
+        total_traces = len(traces)
+        all_elements = list(self.tasks.keys()) + list(self.goals.keys()) + list(self.qualities.keys())
+        
+        # Calculate statistics for each element
+        element_stats = {}
+        
+        for element in all_elements:
+            satisfied_count = 0
+            executed_pending_count = 0
+            satisfied_traces = []
+            executed_pending_traces = []
+            
+            for i, trace_result in enumerate(results):
+                final_state = trace_result['states'][-1]
+                
+                # Check element status
+                if element in final_state['qualities']:
+                    if final_state['qualities'][element] == 'fulfilled':
+                        satisfied_count += 1
+                        satisfied_traces.append(i + 1)
+                elif element in final_state['goals']:
+                    if final_state['goals'][element] == 'true_false':
+                        satisfied_count += 1
+                        satisfied_traces.append(i + 1)
+                    elif final_state['goals'][element] == 'true_true':
+                        executed_pending_count += 1
+                        executed_pending_traces.append(i + 1)
+                elif element in final_state['tasks']:
+                    if final_state['tasks'][element] == 'true_false':
+                        satisfied_count += 1
+                        satisfied_traces.append(i + 1)
+                    elif final_state['tasks'][element] == 'true_true':
+                        executed_pending_count += 1
+                        executed_pending_traces.append(i + 1)
+            
+            element_stats[element] = {
+                'satisfied_count': satisfied_count,
+                'executed_pending_count': executed_pending_count,
+                'unsatisfied_count': total_traces - satisfied_count - executed_pending_count,
+                'satisfied_percentage': (satisfied_count / total_traces) * 100,
+                'executed_pending_percentage': (executed_pending_count / total_traces) * 100,
+                'satisfied_traces': satisfied_traces,
+                'executed_pending_traces': executed_pending_traces
+            }
+        
+        # Display element statistics
+        print(f"\n{'Element':<12} {'Type':<8} {'Satisfied %':<12} {'Exec.Pend %':<12} {'Unsatisfied %':<14} {'Satisfied Traces'}")
+        print("-" * 90)
+        
+        for element in sorted(element_stats.keys()):
+            stats = element_stats[element]
+            element_type = self._get_element_type(element)
+            unsatisfied_percentage = 100 - stats['satisfied_percentage'] - stats['executed_pending_percentage']
+            traces_str = ', '.join(map(str, stats['satisfied_traces'])) if stats['satisfied_traces'] else 'None'
+            
+            print(f"{element:<12} {element_type:<8} {stats['satisfied_percentage']:>10.1f}% "
+                  f"{stats['executed_pending_percentage']:>10.1f}% {unsatisfied_percentage:>12.1f}% {traces_str}")
+        
+        # Quality analysis
+        print(f"\n{'='*80}")
+        print("QUALITY ANALYSIS")
+        print("="*80)
+        
+        for quality in self.qualities.keys():
+            quality_stats = element_stats[quality]
+            print(f"\nQuality {quality}:")
+            print(f"  Fulfilled in {quality_stats['satisfied_count']}/{total_traces} traces ({quality_stats['satisfied_percentage']:.1f}%)")
+            print(f"  Traces where fulfilled: {', '.join(map(str, quality_stats['satisfied_traces'])) if quality_stats['satisfied_traces'] else 'None'}")
+        
+        # Trace pattern analysis
+        print(f"\n{'='*80}")
+        print("TRACE PATTERN ANALYSIS")
+        print("="*80)
+        
+        successful_traces = []
+        unsuccessful_traces = []
+        
+        for i, trace_result in enumerate(results):
+            final_state = trace_result['states'][-1]
+            # Check if main quality (Q1) is fulfilled
+            if 'Q1' in final_state['qualities'] and final_state['qualities']['Q1'] == 'fulfilled':
+                successful_traces.append({'index': i + 1, 'trace': traces[i]})
+            else:
+                unsuccessful_traces.append({'index': i + 1, 'trace': traces[i]})
+        
+        print(f"Successful traces: {len(successful_traces)} ({len(successful_traces)/total_traces*100:.1f}%)")
+        for trace_info in successful_traces:
+            print(f"  Trace {trace_info['index']}: {' -> '.join(trace_info['trace'])}")
+        
+        print(f"\nUnsuccessful traces: {len(unsuccessful_traces)} ({len(unsuccessful_traces)/total_traces*100:.1f}%)")
+        for trace_info in unsuccessful_traces:
+            print(f"  Trace {trace_info['index']}: {' -> '.join(trace_info['trace'])}")
+        
+        print("="*80)
+        
+        return element_stats
+
     def print_final_status(self):
         """Print final status of all elements"""
         print("\n" + "="*50)
         print("FINAL STATUS OF ALL ELEMENTS")
         print("="*50)
+
+    def generate_statistics(self, traces: List[List[str]], results: List[Dict]):
+        """Generate and display statistics for the evaluation"""
+        print("\n" + "="*80)
+        print("GOAL MODEL EVALUATION STATISTICS")
+        print("="*80)
+        
+        total_traces = len(traces)
+        all_elements = list(self.tasks.keys()) + list(self.goals.keys()) + list(self.qualities.keys())
+        
+        # Calculate statistics for each element
+        element_stats = {}
+        
+        for element in all_elements:
+            satisfied_count = 0
+            executed_pending_count = 0
+            satisfied_traces = []
+            executed_pending_traces = []
+            
+            for i, trace_result in enumerate(results):
+                final_state = trace_result['states'][-1]
+                
+                # Check element status
+                if element in final_state['qualities']:
+                    if final_state['qualities'][element] == 'fulfilled':
+                        satisfied_count += 1
+                        satisfied_traces.append(i + 1)
+                elif element in final_state['goals']:
+                    if final_state['goals'][element] == 'true_false':
+                        satisfied_count += 1
+                        satisfied_traces.append(i + 1)
+                    elif final_state['goals'][element] == 'true_true':
+                        executed_pending_count += 1
+                        executed_pending_traces.append(i + 1)
+                elif element in final_state['tasks']:
+                    if final_state['tasks'][element] == 'true_false':
+                        satisfied_count += 1
+                        satisfied_traces.append(i + 1)
+                    elif final_state['tasks'][element] == 'true_true':
+                        executed_pending_count += 1
+                        executed_pending_traces.append(i + 1)
+            
+            element_stats[element] = {
+                'satisfied_count': satisfied_count,
+                'executed_pending_count': executed_pending_count,
+                'unsatisfied_count': total_traces - satisfied_count - executed_pending_count,
+                'satisfied_percentage': (satisfied_count / total_traces) * 100,
+                'executed_pending_percentage': (executed_pending_count / total_traces) * 100,
+                'satisfied_traces': satisfied_traces,
+                'executed_pending_traces': executed_pending_traces
+            }
+        
+        # Display element statistics
+        print(f"\n{'Element':<12} {'Type':<8} {'Satisfied %':<12} {'Exec.Pend %':<12} {'Unsatisfied %':<14} {'Satisfied Traces'}")
+        print("-" * 90)
+        
+        for element in sorted(element_stats.keys()):
+            stats = element_stats[element]
+            element_type = self._get_element_type(element)
+            unsatisfied_percentage = 100 - stats['satisfied_percentage'] - stats['executed_pending_percentage']
+            traces_str = ', '.join(map(str, stats['satisfied_traces'])) if stats['satisfied_traces'] else 'None'
+            
+            print(f"{element:<12} {element_type:<8} {stats['satisfied_percentage']:>10.1f}% "
+                  f"{stats['executed_pending_percentage']:>10.1f}% {unsatisfied_percentage:>12.1f}% {traces_str}")
+        
+        # Quality analysis
+        print(f"\n{'='*80}")
+        print("QUALITY ANALYSIS")
+        print("="*80)
+        
+        for quality in self.qualities.keys():
+            quality_stats = element_stats[quality]
+            print(f"\nQuality {quality}:")
+            print(f"  Fulfilled in {quality_stats['satisfied_count']}/{total_traces} traces ({quality_stats['satisfied_percentage']:.1f}%)")
+            print(f"  Traces where fulfilled: {', '.join(map(str, quality_stats['satisfied_traces'])) if quality_stats['satisfied_traces'] else 'None'}")
+        
+        # Trace pattern analysis
+        print(f"\n{'='*80}")
+        print("TRACE PATTERN ANALYSIS")
+        print("="*80)
+        
+        successful_traces = []
+        unsuccessful_traces = []
+        
+        for i, trace_result in enumerate(results):
+            final_state = trace_result['states'][-1]
+            # Check if main quality (Q1) is fulfilled
+            if 'Q1' in final_state['qualities'] and final_state['qualities']['Q1'] == 'fulfilled':
+                successful_traces.append({'index': i + 1, 'trace': traces[i]})
+            else:
+                unsuccessful_traces.append({'index': i + 1, 'trace': traces[i]})
+        
+        print(f"Successful traces: {len(successful_traces)} ({len(successful_traces)/total_traces*100:.1f}%)")
+        for trace_info in successful_traces:
+            print(f"  Trace {trace_info['index']}: {' -> '.join(trace_info['trace'])}")
+        
+        print(f"\nUnsuccessful traces: {len(unsuccessful_traces)} ({len(unsuccessful_traces)/total_traces*100:.1f}%)")
+        for trace_info in unsuccessful_traces:
+            print(f"  Trace {trace_info['index']}: {' -> '.join(trace_info['trace'])}")
+        
+        print("="*80)
+        
+        return element_stats
+
+    def _get_element_type(self, element: str) -> str:
+        """Get the type of an element"""
+        if element in self.qualities:
+            return 'Quality'
+        elif element in self.goals:
+            return 'Goal'
+        elif element in self.tasks:
+            return 'Task'
+        return 'Unknown'
         
         # Print qualities first
         print("\nQualities:")
@@ -353,3 +569,13 @@ class GoalModel:
             print(f"  {task_id}: {self._format_status(status)}")
         
         print("="*50)
+
+    def _get_element_type(self, element: str) -> str:
+        """Get the type of an element"""
+        if element in self.qualities:
+            return 'Quality'
+        elif element in self.goals:
+            return 'Goal'
+        elif element in self.tasks:
+            return 'Task'
+        return 'Unknown'
