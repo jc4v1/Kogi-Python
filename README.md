@@ -49,4 +49,11 @@ For the qualitative aspects, the relevant GDPR articles were analyzed to extract
 
 ## References
 
+
+## Modules
+ 1. trace_analyzer
+ 2. whatif-analyzer (include two modes)
+ 3. main
+
+ 
 - High-Level Requirements-Driven Business Process Compliance
