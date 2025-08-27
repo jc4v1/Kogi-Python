@@ -30,6 +30,8 @@ import numpy as np
 from enum import Enum
 from typing import Dict, List, Tuple, Set
 import pandas as pd
+from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+from Implementation.goal_model import GoalModel
 
 # %%
 # Add your Implementation directory to the path
@@ -54,33 +56,32 @@ print("Paths configured!")
 
 # %%
 # Cell 2: Import Your Existing Code
-try:
+# try:
     # Import your enums
-    from enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-    print(" Enums imported successfully")
+    # from enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+    # print(" Enums imported successfully")
     
-    # Import your GoalModel class
-    from goal_model import GoalModel
-    print(" GoalModel imported successfully")
+    # # Import your GoalModel class
+    # from goal_model import GoalModel
+    # print(" GoalModel imported successfully")
     
     # Try to import the main app logic (adjust the import based on your file structure)
     # If you have the main evaluation logic in a separate file, import it here
-    try:
-        import main_evaluation  # Adjust this to your actual file name
-        print(" Main evaluation module imported")
-    except ImportError:
-        print(" Main evaluation module not found - will use direct GoalModel")
+    # try:
+    #     import main_evaluation  # Adjust this to your actual file name
+    #     print(" Main evaluation module imported")
+    # except ImportError:
+    #     print(" Main evaluation module not found - will use direct GoalModel")
     
-except ImportError as e:
-    print(f" Import error: {e}")
-    print(" Please ensure your files are in the correct directory structure:")
-    print("   - Implementation/enums.py")
-    print("   - Implementation/goal_model.py")
-    print("   - App/main_evaluation.py (or similar)")
-    raise
+# except ImportError as e:
+#     print(f" Import error: {e}")
+#     print(" Please ensure your files are in the correct directory structure:")
+#     print("   - Implementation/enums.py")
+#     print("   - Implementation/goal_model.py")
+#     print("   - App/main_evaluation.py (or similar)")
+#     raise
 
-print(" All imports successful!")
-
+# print(" All imports successful!")
 
 # %%
 # Cell 3: Model Creation Function 
@@ -142,19 +143,19 @@ def get_status_color_from_your_model(element_id):
     """Get color based on element status using your model's data structures"""
     if element_id in model.qualities:
         status = model.qualities[element_id]
-        if status.value == QualityStatus.UNKNOWN.value:
+        if status == QualityStatus.UNKNOWN:
             return 'white'
-        elif status.value == QualityStatus.FULFILLED.value:
+        elif status == QualityStatus.FULFILLED:
             return 'lightgreen'
-        elif status.value == QualityStatus.DENIED.value:
+        elif status == QualityStatus.DENIED:
             return 'lightcoral'
     else:
         status = model.tasks.get(element_id) or model.goals.get(element_id)
-        if status.value == ElementStatus.UNKNOWN.value:
+        if status == ElementStatus.UNKNOWN:
             return 'white'
-        elif status.value == ElementStatus.TRUE_FALSE.value:
+        elif status == ElementStatus.TRUE_FALSE:
             return 'lightgreen'
-        elif status.value == ElementStatus.TRUE_TRUE.value:
+        elif status == ElementStatus.TRUE_TRUE:
             return 'lightblue'
     return 'black'
 
