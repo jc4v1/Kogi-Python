@@ -14,5 +14,6 @@ env/
 venv/
 
 KogiNotebookV1.ipynb
+play.ipynb
 
 .vscode/
