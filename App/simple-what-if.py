@@ -15,12 +15,12 @@ def create_model():
     model = GoalModel()
     
     # Add tasks
-    tasks = ["T1", "T2", "T3"]
+    tasks = ["T1", "T2", "T3", "T4"]
     for task in tasks:
         model.add_task(task)
     
     # Add goals
-    goals = []
+    goals = ["G1", "G2"]
     for goal in goals:
         model.add_goal(goal)
     
@@ -28,12 +28,17 @@ def create_model():
     model.add_quality("Q1")
     
     # Add links
-    model.add_link("Q1", "T1", LinkType.MAKE)
-    model.add_link("Q1", "T2", LinkType.MAKE)
-    model.add_link("Q1", "T3", LinkType.BREAK)
+    model.add_link("Q1", "G1", LinkType.MAKE)
+    model.add_link("G1", "T1", LinkType.AND)
+    model.add_link("G1", "T2", LinkType.AND)
+    model.add_link("Q1", "G2", LinkType.BREAK)
+    model.add_link("G2", "T3", LinkType.OR)
+    model.add_link("G2", "T4", LinkType.OR)
     
     # Add requirements
     model.requirements = {
+        "G1":[["T1", "T2"]],
+        "G2":[["T3"], ["T4"]],
     }
     
     # Add event mappings
@@ -41,6 +46,7 @@ def create_model():
         "e1": "T1", 
         "e2": "T2", 
         "e3": "T3", 
+        "e4": "T4", 
     }
     for event, target in events.items():
         model.add_event_mapping(event, target)
@@ -52,11 +58,12 @@ def interactive_evaluation():
     print("="*60)
     print("INTERACTIVE GOAL MODEL EVALUATION")
     print("="*60)
-    print("Available events: e1, e2, e3")
+    print("Available events: e1, e2, e3, e4")
     print("Event mappings:")
     print("  e1 -> T1")
     print("  e2 -> T2")
     print("  e3 -> T3")
+    print("  e4 -> T4")
     print("\nType events one by one (or 'stop' to finish, 'status' to see current state):")
     print("="*60)
     
@@ -85,7 +92,7 @@ def interactive_evaluation():
             continue
         elif user_input == "help":
             print("Available commands:")
-            print("  e1, e2, e3 - Process events")
+            print("  e1, e2, e3, e4 - Process events")
             print("  status - Show current status of all elements")
             print("  stop - End evaluation")
             print("  help - Show this help message")
@@ -94,13 +101,14 @@ def interactive_evaluation():
             continue
         
         # Validate event
-        if user_input not in ["e1", "e2", "e3"]:
-            print(f"Invalid event '{user_input}'. Available events: e1, e2, e3")
+        if user_input not in ["e1", "e2", "e3", "e4"]:
+            print(f"Invalid event '{user_input}'. Available events: e1, e2, e3, e4")
             continue
         
         # Process the event
         event_sequence.append(user_input)
         model.process_event(user_input)
+        model.print_markings()
         
         # Record state for statistics
         trace_result['events'].append(user_input)

@@ -579,3 +579,23 @@ class GoalModel:
         elif element in self.tasks:
             return 'Task'
         return 'Unknown'
+    
+    def print_markings(self):
+        """Print current markings of all elements and links"""
+        print("\nCurrent Markings:")
+        print("Tasks:")
+        for task_id, status in self.tasks.items():
+            print(f"  {task_id}: {self._format_status(status)}")
+        
+        print("Goals:")
+        for goal_id, status in self.goals.items():
+            print(f"  {goal_id}: {self._format_status(status)}")
+        
+        print("Qualities:")
+        for quality_id, status in self.qualities.items():
+            print(f"  {quality_id}: {self._format_status(status)}")
+        
+        print("Links:")
+        for parent, child, link_type, status in self.links:
+            print(f"  {parent} --{link_type.name}/{status.name}--> {child}")
+        print("-" * 50)     
