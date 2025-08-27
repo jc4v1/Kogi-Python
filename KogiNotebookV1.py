@@ -1,7 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,md,py:percent
+#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
@@ -14,6 +14,7 @@
 # ---
 
 # %%
+# Some new text
 # Interactive Goal Model Evaluation - Jupyter Notebook
 # Run each cell sequentially to set up the interactive environment
 
