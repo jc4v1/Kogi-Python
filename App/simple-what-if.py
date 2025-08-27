@@ -60,7 +60,7 @@ def interactive_evaluation():
     print("="*60)
     print("INTERACTIVE GOAL MODEL EVALUATION")
     print("="*60)
-    print("Available events: e1, e2, e3, e4")
+    print("Available events: e1, e2, e3, e4, g1, g2")
     print("Event mappings:")
     print("  e1 -> T1")
     print("  e2 -> T2")
