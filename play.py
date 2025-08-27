@@ -88,7 +88,7 @@ def create_model_from_your_code():
     """Create the goal model using your existing create_model function logic"""
     model = GoalModel()  
     
-    # Add tasks
+# Add tasks
     tasks = ["T1", "T2", "T3", "T4"]
     for task in tasks:
         model.add_task(task)
@@ -121,8 +121,10 @@ def create_model_from_your_code():
         "e2": "T2", 
         "e3": "T3", 
         "e4": "T4", 
+        "g1": "G1", 
+        "g2": "G2"
     }
-
+    
     for event, target in events.items():
         model.add_event_mapping(event, target)
     

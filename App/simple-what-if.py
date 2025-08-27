@@ -47,6 +47,8 @@ def create_model():
         "e2": "T2", 
         "e3": "T3", 
         "e4": "T4", 
+        "g1": "G1", 
+        "g2": "G2"
     }
     for event, target in events.items():
         model.add_event_mapping(event, target)
@@ -64,6 +66,8 @@ def interactive_evaluation():
     print("  e2 -> T2")
     print("  e3 -> T3")
     print("  e4 -> T4")
+    print("  g1 -> G1")
+    print("  g2 -> G2")
     print("\nType events one by one (or 'stop' to finish, 'status' to see current state):")
     print("="*60)
     
@@ -92,7 +96,7 @@ def interactive_evaluation():
             continue
         elif user_input == "help":
             print("Available commands:")
-            print("  e1, e2, e3, e4 - Process events")
+            print("  e1, e2, e3, e4, g1, g2 - Process events")
             print("  status - Show current status of all elements")
             print("  stop - End evaluation")
             print("  help - Show this help message")
@@ -101,8 +105,8 @@ def interactive_evaluation():
             continue
         
         # Validate event
-        if user_input not in ["e1", "e2", "e3", "e4"]:
-            print(f"Invalid event '{user_input}'. Available events: e1, e2, e3, e4")
+        if user_input not in ["e1", "e2", "e3", "e4", "g1", "g2"]:
+            print(f"Invalid event '{user_input}'. Available events: e1, e2, e3, e4, g1, g2")
             continue
         
         # Process the event
