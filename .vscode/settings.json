@@ -1,4 +1,8 @@
 {
     "latex-workshop.linting.chktex.convertOutput.column.enabled": false,
-    "latex-workshop.linting.chktex.convertOutput.column.chktexrcTabSize": 0
+    "latex-workshop.linting.chktex.convertOutput.column.chktexrcTabSize": 0,
+    "python.analysis.extraPaths": [
+        "./Implementation",
+        "./App"
+    ]
 }
