@@ -26,17 +26,62 @@ class GoalModel(BaseGoalModel):
 
     def try_pmake_rule(self, quality: str) -> bool:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
-        if any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links):
+        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links) 
+            and self.get_quality_status(quality) == QualityStatus.UNKNOWN):
             self.set_quality_status(quality,QualityStatus.FULFILLED)
             return True
         return False
 
     def try_pbreak_rule(self, quality: str) -> bool:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
-        if any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links):
+        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
+            and self.get_quality_status(quality) == QualityStatus.UNKNOWN):
             self.set_quality_status(quality,QualityStatus.DENIED)
             return True
         return False
+    
+    def try_bpfulfill_rule(self, quality: str) -> bool:
+        make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
+        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links)
+            and self.get_quality_status(quality) == QualityStatus.DENIED):
+            self.set_quality_status(quality,QualityStatus.FULFILLED)
+            break_elements = [link[1] for link in self.links if link[0] == quality 
+                              and link[2] == LinkType.BREAK
+                              and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
+            for elem in break_elements:
+                true_true_refinements = self.true_false_refinements(elem,set())
+                for e in true_true_refinements:
+                    self.set_element_status(e, ElementStatus.TRUE_TRUE)
+            return True
+        return False
+    
+    def try_bpdeny_rule(self, quality: str) -> bool:
+        break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
+        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
+            and self.get_quality_status(quality) == QualityStatus.FULFILLED):
+            self.set_quality_status(quality,QualityStatus.DENIED)
+            make_elements = [link[1] for link in self.links if link[0] == quality 
+                             and link[2] == LinkType.MAKE
+                             and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
+            for elem in make_elements:
+                true_true_refinements = self.true_false_refinements(elem,set())
+                for e in true_true_refinements:
+                    self.set_element_status(e, ElementStatus.TRUE_TRUE)
+            return True
+        return False
+
+    def true_false_refinements(self, element: str, visited: Set[str]) -> Set[str]:
+        result = {element}
+        if element in visited:
+            return result
+        visited.add(element)  
+        refinements = [link[1] for link in self.links if link[0] == element 
+                       and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
+        result.update(refinements)
+        for e in refinements:
+            result.update(self.true_false_refinements(e,visited))
+        return result
+    
 
     def get_element_status(self, element: str) -> ElementStatus | None:
         if element in self.tasks:
