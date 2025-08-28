@@ -31,7 +31,7 @@ from enum import Enum
 from typing import Dict, List, Tuple, Set
 import pandas as pd
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-from Implementation.goal_model import GoalModel
+from NewSemantics.goal_model import GoalModel
 
 # %%
 # Add your Implementation directory to the path
