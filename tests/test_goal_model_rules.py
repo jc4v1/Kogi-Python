@@ -1,6 +1,7 @@
 import pytest
 from NewSemantics.goal_model import GoalModel
 from Implementation.enums import ElementStatus, LinkType, QualityStatus
+from tests.utilities import check_markings, set_markings
 
 def test_pie_rule_task():
     gm = GoalModel()

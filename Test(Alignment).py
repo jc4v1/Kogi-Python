@@ -31,7 +31,8 @@ from enum import Enum
 from typing import Dict, List, Tuple, Set
 import pandas as pd
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-from NewSemantics.goal_model import GoalModel
+from NewSemantics.goal_model import GoalModel  # use the new semantics based on rules presented in the paper
+# from Implementation.goal_model import GoalModel # use the old semantics
 
 # %%
 # Add your Implementation directory to the path
@@ -53,35 +54,6 @@ print(f"Implementation path: {implementation_path}")
 print(f"App path: {app_path}")
 print("Paths configured!")
 
-
-# %%
-# Cell 2: Import Your Existing Code
-# try:
-    # Import your enums
-    # from enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-    # print(" Enums imported successfully")
-    
-    # # Import your GoalModel class
-    # from goal_model import GoalModel
-    # print(" GoalModel imported successfully")
-    
-    # Try to import the main app logic (adjust the import based on your file structure)
-    # If you have the main evaluation logic in a separate file, import it here
-    # try:
-    #     import main_evaluation  # Adjust this to your actual file name
-    #     print(" Main evaluation module imported")
-    # except ImportError:
-    #     print(" Main evaluation module not found - will use direct GoalModel")
-    
-# except ImportError as e:
-#     print(f" Import error: {e}")
-#     print(" Please ensure your files are in the correct directory structure:")
-#     print("   - Implementation/enums.py")
-#     print("   - Implementation/goal_model.py")
-#     print("   - App/main_evaluation.py (or similar)")
-#     raise
-
-# print(" All imports successful!")
 
 # %%
 # Cell 3: Model Creation Function 
@@ -206,6 +178,7 @@ def create_interactive_controls():
             
             # Use your actual process_event method
             model.process_event(selected_event)
+            model.print_markings()
             
             print(f"✅ Event {selected_event} processed!")
             
@@ -531,7 +504,7 @@ def create_dual_model_visualization():
             
             # Define positions for goal model elements
             positions = {
-                'Q1': (5, 10.5),
+                'Q1': (3.4, 10.5),
                 'G1': (2, 8.5), 'G2': (5, 8.5),
                 # 'G3': (8, 8.5),
                 'T1': (1, 6), 'T2': (2.5, 6), 'T3': (4, 6), 'T4': (5.5, 6),
@@ -689,6 +662,7 @@ def display_interface():
             
             # Use your actual process_event method
             model.process_event(selected_event)
+            model.print_markings()
             
             print(f"✅ Event {selected_event} processed!")
             

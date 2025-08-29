@@ -2,6 +2,7 @@ import pytest
 from NewSemantics.goal_model import GoalModel as NewGoalModel
 from Implementation.goal_model import GoalModel as OldGoalModel
 from Implementation.enums import ElementStatus, LinkType, QualityStatus
+from tests.utilities import check_markings, set_markings
 
 def test_and_the_same():
     old_model = create_model(OldGoalModel())
@@ -57,15 +58,6 @@ def test_difference_and_UNKNOWN():
     check_markings(old_model, markings_old)
     check_markings(new_model, markings_new) 
 
-def check_markings(model, expected_markings):
-    for element, expected_status in expected_markings.items():
-        actual_status = get_element_status(model, element)
-        assert expected_status == actual_status, f"Element {element}: expected {expected_status}, got {actual_status}"
-
-def set_markings(model, markings):
-    for element, status in markings.items():
-        set_element_status(model, element, status)
-
 def create_model(gm):
     gm.add_goal("G")
     gm.add_task("T1")
@@ -80,17 +72,3 @@ def create_model(gm):
     gm.add_event_mapping("e2", "T2")
     return gm
 
-def get_element_status(model, element:str) -> ElementStatus | None:
-    if element in model.goals:
-        return model.goals[element]
-    elif element in model.tasks:
-        return model.tasks[element]
-    else: return None
-
-def set_element_status(model, element:str, status:ElementStatus) -> None:
-    if element in model.goals:
-        model.goals[element] = status
-    elif element in model.tasks:
-        model.tasks[element] = status
-    else: 
-        raise ValueError(f"Element {element} not found in model.")
