@@ -94,22 +94,24 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
-    def fire_element(self, element: str) -> None:
-        e = element
+    def fire_element(self,element: str) -> None:
         self.changed_elements.clear()
-        while e and self.try_any_rule(e):
-            self.changed_elements.add(e)
-            e = self._successor(e)
-
+        self.fire_elements({element})
+        
+    def fire_elements(self, elements: Set[str]) -> None:
+        for e in elements:
+            if self.try_any_rule(e):
+                self.changed_elements.add(e)
+                self.fire_elements(self._parents(e))
+    
     def process_event(self, event: str) -> None:
         for target_set in self.event_mapping[event]:
             for element in target_set:
                 self.fire_element(element)
             
-    def _successor(self, element: str) -> str | None:
-        successors = [link[0] for link in self.links if link[1] == element]
-        return successors[0] if successors else None
-    
+    def _parents(self, element: str) -> Set[str]:
+        return {link[0] for link in self.links if link[1] == element}
+  
     def try_any_rule(self, element: str) -> bool:
         return (self.try_pie_rule(element) or
                 self.try_por_rule(element) or

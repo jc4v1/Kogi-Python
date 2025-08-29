@@ -232,3 +232,19 @@ def test_propagation_failed():
     assert ElementStatus.UNKNOWN == gm.get_element_status("G")
     assert ElementStatus.UNKNOWN == gm.get_element_status("T")
     
+def test_propagation_two_parents():
+    gm = GoalModel()
+    gm.add_quality("Q")
+    gm.add_goal("P1")
+    gm.add_task("CP12")
+    gm.add_goal("P2")
+    gm.add_task("CP2")
+    gm.add_link("Q","P1", LinkType.MAKE)
+    gm.add_link("P1","CP12", LinkType.AND)
+    gm.add_link("P2","CP12", LinkType.AND)
+    gm.add_link("P2","CP2", LinkType.AND)
+    
+    gm.fire_element("CP2")
+    assert {"CP2"} == gm.changed_elements
+    gm.fire_element("CP12")
+    assert {"CP12", "P2", "P1", "Q"} == gm.changed_elements

@@ -30,6 +30,10 @@ import numpy as np
 from enum import Enum
 from typing import Dict, List, Tuple, Set
 import pandas as pd
+from NewSemantics.goal_model import GoalModel  # Adjust based on your actual file structure
+from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+
+
 
 # %%
 # Add your Implementation directory to the path
@@ -54,33 +58,33 @@ print("Paths configured!")
 
 # %%
 # Cell 2: Import Your Existing Code
-try:
-    # Import your enums
-    from enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-    print(" Enums imported successfully")
+# try:
+#     # Import your enums
+#     from enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+#     print(" Enums imported successfully")
     
-    # Import your GoalModel class
-    from goal_model import GoalModel
-    print(" GoalModel imported successfully")
+#     # Import your GoalModel class
+#     # from goal_model import GoalModel
+#     from NewSemantics.goal_model import GoalModel  # Adjust based on your actual file structure
+#     print(" GoalModel imported successfully")
     
-    # Try to import the main app logic (adjust the import based on your file structure)
-    # If you have the main evaluation logic in a separate file, import it here
-    try:
-        import main_evaluation  # Adjust this to your actual file name
-        print(" Main evaluation module imported")
-    except ImportError:
-        print(" Main evaluation module not found - will use direct GoalModel")
+#     # Try to import the main app logic (adjust the import based on your file structure)
+#     # If you have the main evaluation logic in a separate file, import it here
+#     try:
+#         import main_evaluation  # Adjust this to your actual file name
+#         print(" Main evaluation module imported")
+#     except ImportError:
+#         print(" Main evaluation module not found - will use direct GoalModel")
     
-except ImportError as e:
-    print(f" Import error: {e}")
-    print(" Please ensure your files are in the correct directory structure:")
-    print("   - Implementation/enums.py")
-    print("   - Implementation/goal_model.py")
-    print("   - App/main_evaluation.py (or similar)")
-    raise
+# except ImportError as e:
+#     print(f" Import error: {e}")
+#     print(" Please ensure your files are in the correct directory structure:")
+#     print("   - Implementation/enums.py")
+#     print("   - Implementation/goal_model.py")
+#     print("   - App/main_evaluation.py (or similar)")
+#     raise
 
-print(" All imports successful!")
-
+# print(" All imports successful!")
 
 # %%
 # Cell 3: Model Creation Function 
