@@ -301,19 +301,19 @@
       {
         "event": "e1",
         "qualities": {
-          "Q1": "fulfilled"
+          "Q1": "denied"
         },
         "goals": {
-          "G1": "true_false",
-          "G2": "true_true",
+          "G1": "true_true",
+          "G2": "true_false",
           "G3": "unknown"
         },
         "tasks": {
           "T1": "unknown",
           "T2": "true_true",
-          "T3": "true_true",
-          "T4": "true_true",
-          "T5": "true_true",
+          "T3": "true_false",
+          "T4": "true_false",
+          "T5": "true_false",
           "T6": "true_true",
           "T7": "true_false",
           "T8": "unknown"
@@ -357,10 +357,10 @@
       {
         "event": "e3",
         "qualities": {
-          "Q1": "fulfilled"
+          "Q1": "unknown"
         },
         "goals": {
-          "G1": "true_false",
+          "G1": "unknown",
           "G2": "unknown",
           "G3": "unknown"
         },
@@ -462,19 +462,19 @@
       {
         "event": "e1",
         "qualities": {
-          "Q1": "fulfilled"
+          "Q1": "denied"
         },
         "goals": {
-          "G1": "true_false",
-          "G2": "true_true",
+          "G1": "true_true",
+          "G2": "true_false",
           "G3": "unknown"
         },
         "tasks": {
           "T1": "unknown",
           "T2": "true_true",
-          "T3": "true_true",
-          "T4": "true_true",
-          "T5": "true_true",
+          "T3": "true_false",
+          "T4": "true_false",
+          "T5": "true_false",
           "T6": "true_true",
           "T7": "true_false",
           "T8": "unknown"
@@ -518,10 +518,10 @@
       {
         "event": "e3",
         "qualities": {
-          "Q1": "fulfilled"
+          "Q1": "unknown"
         },
         "goals": {
-          "G1": "true_false",
+          "G1": "unknown",
           "G2": "unknown",
           "G3": "unknown"
         },

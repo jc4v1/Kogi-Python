@@ -138,9 +138,9 @@ def export_results(results: List[Dict], filename: str = 'trace_analysis.json'):
 def main():
     traces = [
         ["e6", "e2", "e3", "e4", "e5", "e7", "e8"],
-        # ["e6", "e2", "e3", "e4", "e5", "e7", "e1"],
-        # ["e6", "e3", "e2", "e4", "e5", "e7", "e1"],
-        # ["e6", "e3", "e2", "e4", "e5", "e7", "e8"]
+        ["e6", "e2", "e3", "e4", "e5", "e7", "e1"],
+        ["e6", "e3", "e2", "e4", "e5", "e7", "e1"],
+        ["e6", "e3", "e2", "e4", "e5", "e7", "e8"]
     ]
     target_elements = ["Q1"]
     
