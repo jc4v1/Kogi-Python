@@ -11,30 +11,62 @@ def test_and_the_same():
         old_model.process_event(event)
         new_model.process_event(event)
 
-    elements = ["T1", "T2", "G"]
-    for element in elements:
-        assert get_element_status(old_model,element) == get_element_status(new_model,element) == ElementStatus.TRUE_FALSE
+    markings = {"G": ElementStatus.TRUE_FALSE, "T1": ElementStatus.TRUE_FALSE, "T2": ElementStatus.TRUE_FALSE}
 
-def test_difference():
+    check_markings(old_model, markings)
+    check_markings(new_model, markings)
+
+def test_difference_and_TRUE_TRUE():
     old_model = create_model(OldGoalModel())
     new_model = create_model(NewGoalModel())
+    markings = {"G": ElementStatus.UNKNOWN, "T1": ElementStatus.TRUE_TRUE, "T2": ElementStatus.TRUE_FALSE}
+    set_markings(old_model, markings)
+    set_markings(new_model, markings)
     trace = ["eg"]
     for event in trace:
         old_model.process_event(event)
         new_model.process_event(event)
 
-    elements = ["T1", "T2"]
-    for element in elements:
-        assert get_element_status(old_model,element) == get_element_status(new_model,element) == ElementStatus.UNKNOWN
+    markings_old = {"G": ElementStatus.TRUE_FALSE, "T1": ElementStatus.TRUE_TRUE, "T2": ElementStatus.TRUE_FALSE}
 
-    # difference between old and new semantics
-    # The pand rules says that G and only be TRUE_FALSE if all its sub-elements are TRUE_FALSE
-    # The old semantics just sets G to TRUE_FALSE regardless of the status of its sub-elements
-    old_model._get_element_status("G") == ElementStatus.TRUE_FALSE
-    new_model._get_element_status("G") == ElementStatus.UNKNOWN
+    # The difference is, that according to the pand rule, both T1 and T2 should be TRUE_FALSE to make G TRUE_FALSE.
+    # Question is, should the pand rule be changed, to also allow for TRUE_FALSE if one of the sub-elements is TRUE_TRUE?
+
+    markings_new = {"G": ElementStatus.UNKNOWN, "T1": ElementStatus.TRUE_TRUE, "T2": ElementStatus.TRUE_FALSE}
+    check_markings(old_model, markings_old)
+    check_markings(new_model, markings_new) 
+
+def test_difference_and_UNKNOWN():
+    old_model = create_model(OldGoalModel())
+    new_model = create_model(NewGoalModel())
+    markings = {"G": ElementStatus.UNKNOWN, "T1": ElementStatus.UNKNOWN, "T2": ElementStatus.UNKNOWN}
+    set_markings(old_model, markings)
+    set_markings(new_model, markings)
+    trace = ["eg"]
+    for event in trace:
+        old_model.process_event(event)
+        new_model.process_event(event)
+
+    markings_old = {"G": ElementStatus.TRUE_FALSE, "T1": ElementStatus.UNKNOWN, "T2": ElementStatus.UNKNOWN}
+    
+    # The old model allows to set G to TRUE_FALSE, even if both T1 and T2 are UNKNOWN.
+    # The new model requires both T1 and T2 to be TRUE_FALSE to set G to TRUE_FALSE.
+    
+    markings_new = {"G": ElementStatus.UNKNOWN, "T1": ElementStatus.UNKNOWN, "T2": ElementStatus.UNKNOWN}
+
+    check_markings(old_model, markings_old)
+    check_markings(new_model, markings_new) 
+
+def check_markings(model, expected_markings):
+    for element, expected_status in expected_markings.items():
+        actual_status = get_element_status(model, element)
+        assert expected_status == actual_status, f"Element {element}: expected {expected_status}, got {actual_status}"
+
+def set_markings(model, markings):
+    for element, status in markings.items():
+        set_element_status(model, element, status)
 
 def create_model(gm):
-    # Create elements
     gm.add_goal("G")
     gm.add_task("T1")
     gm.add_task("T2")
@@ -48,9 +80,17 @@ def create_model(gm):
     gm.add_event_mapping("e2", "T2")
     return gm
 
-def get_element_status(model, element):
+def get_element_status(model, element:str) -> ElementStatus | None:
     if element in model.goals:
         return model.goals[element]
     elif element in model.tasks:
         return model.tasks[element]
     else: return None
+
+def set_element_status(model, element:str, status:ElementStatus) -> None:
+    if element in model.goals:
+        model.goals[element] = status
+    elif element in model.tasks:
+        model.tasks[element] = status
+    else: 
+        raise ValueError(f"Element {element} not found in model.")

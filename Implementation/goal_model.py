@@ -552,33 +552,6 @@ class GoalModel:
         elif element in self.tasks:
             return 'Task'
         return 'Unknown'
-        
-        # Print qualities first
-        print("\nQualities:")
-        for quality_id, status in self.qualities.items():
-            print(f"  {quality_id}: {self._format_status(status)}")
-        
-        # Print goals
-        print("\nGoals:")
-        for goal_id, status in self.goals.items():
-            print(f"  {goal_id}: {self._format_status(status)}")
-        
-        # Print tasks
-        print("\nTasks:")
-        for task_id, status in self.tasks.items():
-            print(f"  {task_id}: {self._format_status(status)}")
-        
-        print("="*50)
-
-    def _get_element_type(self, element: str) -> str:
-        """Get the type of an element"""
-        if element in self.qualities:
-            return 'Quality'
-        elif element in self.goals:
-            return 'Goal'
-        elif element in self.tasks:
-            return 'Task'
-        return 'Unknown'
     
     def print_markings(self):
         """Print current markings of all elements and links"""
@@ -595,7 +568,7 @@ class GoalModel:
         for quality_id, status in self.qualities.items():
             print(f"  {quality_id}: {self._format_status(status)}")
         
-        print("Links:")
-        for parent, child, link_type, status in self.links:
-            print(f"  {parent} --{link_type.name}/{status.name}--> {child}")
+        # print("Links:")
+        # for parent, child, link_type, status in self.links:
+        #     print(f"  {parent} --{link_type.name}/{status.name}--> {child}")
         print("-" * 50)     
