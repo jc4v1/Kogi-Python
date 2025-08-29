@@ -207,9 +207,9 @@ def test_propagation():
     gm.add_link("Q0","G", LinkType.MAKE)
     gm.add_link("G","T", LinkType.AND)
     
-    events = gm.propagate("T")
+    gm.fire_element("T")
     
-    assert events == ["T", "G", "Q0"]
+    assert {"T", "G", "Q0"} == gm.changed_elements
     
     assert QualityStatus.FULFILLED == gm.get_quality_status("Q0")
     assert ElementStatus.TRUE_FALSE == gm.get_element_status("G")
@@ -224,9 +224,9 @@ def test_propagation_failed():
     gm.add_link("Q0","G", LinkType.MAKE)
     gm.add_link("G","T", LinkType.AND)
     
-    events = gm.propagate("G")
+    gm.fire_element("G")
     
-    assert events == []
+    assert set() == gm.changed_elements
     
     assert QualityStatus.UNKNOWN == gm.get_quality_status("Q0")
     assert ElementStatus.UNKNOWN == gm.get_element_status("G")

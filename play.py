@@ -206,7 +206,6 @@ def create_interactive_controls():
             
             # Use your actual process_event method
             model.process_event(selected_event)
-            model.print_markings()
             
             print(f"✅ Event {selected_event} processed!")
             
@@ -690,7 +689,6 @@ def display_interface():
             
             # Use your actual process_event method
             model.process_event(selected_event)
-            model.print_markings()
             
             print(f"✅ Event {selected_event} processed!")
             

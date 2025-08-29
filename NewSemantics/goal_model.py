@@ -5,8 +5,8 @@ from Implementation.goal_model import GoalModel as BaseGoalModel
 import functools
 
 # Decorator to print successful rule applications
-# The decorator assumes that the function the decorator is 
-# used with returns a boolean indicating success or failurex
+# The decorator assumes, that the function the decorator is 
+# used with, returns a boolean indicating success or failurex
 def log_rule(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -14,7 +14,8 @@ def log_rule(func):
         # print(f"Calling {func.__name__}({arg_str})")
         result = func(*args, **kwargs)
         if result:
-            print(f"{func.__name__}({arg_str}) successful")
+            print(f"Rule {func.__name__} applied successfully on arguments ({arg_str})")
+        # print(f"Result {func.__name__} is {result}")
         return result
     return wrapper
 
@@ -93,13 +94,17 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
-    def propagate(self, element: str) -> List[str]:
+    def fire_element(self, element: str) -> None:
         e = element
-        trace = []
+        self.changed_elements.clear()
         while e and self.try_any_rule(e):
-            trace.append(e)
+            self.changed_elements.add(e)
             e = self._successor(e)
-        return trace
+
+    def process_event(self, event: str) -> None:
+        for target_set in self.event_mapping[event]:
+            for element in target_set:
+                self.fire_element(element)
             
     def _successor(self, element: str) -> str | None:
         successors = [link[0] for link in self.links if link[1] == element]
@@ -126,7 +131,6 @@ class GoalModel(BaseGoalModel):
             result.update(self.true_false_refinements(e,visited))
         return result
     
-
     def get_element_status(self, element: str) -> ElementStatus | None:
         if element in self.tasks:
             return self.tasks[element]
@@ -139,9 +143,13 @@ class GoalModel(BaseGoalModel):
     
     def set_element_status(self, element: str, status:ElementStatus) -> None:
         if element in self.tasks:
+            old_status = self.tasks[element]
             self.tasks[element] = status
+            print(f"Task {element}: {self._format_status(old_status)} -> {self._format_status(self.tasks[element])} {'(executed pending)' if status == ElementStatus.TRUE_TRUE else ''}")
         elif element in self.goals:
+            old_status = self.goals[element]
             self.goals[element] = status
+            print(f"Goal {element}: {self._format_status(old_status)} -> {self._format_status(self.goals[element])} {'(executed pending)' if status == ElementStatus.TRUE_TRUE else ''}")
         else:
             raise ValueError(f"Element {element} does not exist in tasks or goals.")    
             
@@ -152,4 +160,6 @@ class GoalModel(BaseGoalModel):
         return self.qualities.get(quality, None)
     
     def set_quality_status(self, quality: str, status: QualityStatus) -> None:
+        old_status = self.qualities[quality]
         self.qualities[quality] = status
+        print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
