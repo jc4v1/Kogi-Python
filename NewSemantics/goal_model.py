@@ -88,8 +88,8 @@ class GoalModel(BaseGoalModel):
                              and link[2] == LinkType.MAKE
                              and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
             for elem in make_elements:
-                true_true_refinements = self.true_false_refinements(elem,set())
-                for e in true_true_refinements:
+                true_false_refinements = self.true_false_refinements(elem,set())
+                for e in true_false_refinements:
                     self.set_element_status(e, ElementStatus.TRUE_TRUE)
             return True
         return False
