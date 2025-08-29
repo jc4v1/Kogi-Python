@@ -6,7 +6,7 @@ from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from Implementation.goal_model import GoalModel
+from NewSemantics.goal_model import GoalModel
 from Implementation.enums import LinkType, ElementStatus, QualityStatus
 
 def create_model():
