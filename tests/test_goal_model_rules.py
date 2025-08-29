@@ -9,8 +9,7 @@ def test_pie_rule_task():
     gm.add_goal("G")
     executed = gm.try_pie_rule("T")
     assert executed
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("G")
+    check_markings(gm, {"T": ElementStatus.TRUE_FALSE, "G": ElementStatus.UNKNOWN})
      
 def test_pie_rule_goal():
     gm = GoalModel()
@@ -18,8 +17,7 @@ def test_pie_rule_goal():
     gm.add_goal("G")
     executed = gm.try_pie_rule("G")
     assert executed
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("G")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T")
+    check_markings(gm, {"G": ElementStatus.TRUE_FALSE, "T": ElementStatus.UNKNOWN})
 
 def test_pie_rule_not_leaf():
     gm = GoalModel()
@@ -28,37 +26,31 @@ def test_pie_rule_not_leaf():
     gm.add_link("T","T1", LinkType.AND)
     executed = gm.try_pie_rule("T")
     assert not executed
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T1")
+    check_markings(gm, {"T": ElementStatus.UNKNOWN, "T1": ElementStatus.UNKNOWN})
 
 def test_pand_rule_goal():
     gm = GoalModel()
     gm.add_task("T")
     gm.add_task("T1")
-    gm.set_element_status("T1", ElementStatus.TRUE_FALSE)
     gm.add_task("T2")
-    gm.set_element_status("T2", ElementStatus.TRUE_FALSE)
     gm.add_link("T","T1", LinkType.AND)
     gm.add_link("T","T2", LinkType.AND) 
+    set_markings(gm, {"T1": ElementStatus.TRUE_FALSE, "T2": ElementStatus.TRUE_FALSE})
     executed = gm.try_pand_rule("T")
     assert executed
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T1")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T2")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T")
+    check_markings(gm, {"T": ElementStatus.TRUE_FALSE, "T1": ElementStatus.TRUE_FALSE, "T2": ElementStatus.TRUE_FALSE})
 
 def test_por_rule_goal():
     gm = GoalModel()
     gm.add_task("T")
     gm.add_task("T1")
-    gm.set_element_status("T1", ElementStatus.TRUE_FALSE)
     gm.add_task("T2")
+    set_markings(gm, {"T1": ElementStatus.TRUE_FALSE})
     gm.add_link("T","T1", LinkType.OR)
     gm.add_link("T","T2", LinkType.OR) 
     executed = gm.try_por_rule("T")
     assert executed
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T1")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T2")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T")
+    check_markings(gm, {"T": ElementStatus.TRUE_FALSE, "T1": ElementStatus.TRUE_FALSE, "T2": ElementStatus.UNKNOWN})
 
 def test_pmake_rule():
     gm = GoalModel()
@@ -70,9 +62,7 @@ def test_pmake_rule():
     gm.add_link("Q","T2", LinkType.MAKE) 
     executed = gm.try_pmake_rule("Q")
     assert executed
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T1")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T2")
-    assert QualityStatus.FULFILLED == gm.get_quality_status("Q")
+    check_markings(gm, {"Q": QualityStatus.FULFILLED, "T1": ElementStatus.TRUE_FALSE, "T2": ElementStatus.UNKNOWN})
 
 def test_pbreak_rule():
     gm = GoalModel()
@@ -84,18 +74,14 @@ def test_pbreak_rule():
     gm.add_link("Q","T2", LinkType.BREAK) 
     executed = gm.try_pbreak_rule("Q")
     assert executed
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T1")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T2")
-    assert QualityStatus.DENIED == gm.get_quality_status("Q")
+    check_markings(gm, {"Q": QualityStatus.DENIED, "T1": ElementStatus.UNKNOWN, "T2": ElementStatus.TRUE_FALSE})
     
 def test_bpfulfill_rule():
     gm = GoalModel()
     gm.add_quality("Q")
-    gm.set_quality_status("Q", QualityStatus.DENIED)
     gm.add_task("M")
-    gm.set_element_status("M", ElementStatus.TRUE_FALSE)
     gm.add_task("B")
-    gm.set_element_status("B", ElementStatus.TRUE_FALSE)
+    set_markings(gm, {"Q": QualityStatus.DENIED, "M": ElementStatus.TRUE_FALSE, "B": ElementStatus.TRUE_FALSE})
     gm.add_link("Q","M", LinkType.MAKE)
     gm.add_link("Q","B", LinkType.BREAK) 
     executed = gm.try_pmake_rule("Q")
@@ -104,54 +90,50 @@ def test_bpfulfill_rule():
     assert not executed
     executed = gm.try_bpfulfill_rule("Q")
     assert executed
-    assert QualityStatus.FULFILLED == gm.get_quality_status("Q")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("M")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("B")   
+    check_markings(gm, {"Q": QualityStatus.FULFILLED, "M": ElementStatus.TRUE_FALSE, "B": ElementStatus.TRUE_TRUE})
 
 def test_bpfulfill_transitive_rule():
     gm = GoalModel()
     gm.add_quality("Q")
-    gm.set_quality_status("Q", QualityStatus.DENIED)
     gm.add_task("M")
     gm.add_link("Q","M", LinkType.MAKE)
-    gm.set_element_status("M", ElementStatus.TRUE_FALSE)
     gm.add_task("B")
-    gm.set_element_status("B", ElementStatus.TRUE_FALSE)
     gm.add_link("Q","B", LinkType.BREAK) 
     gm.add_task("BB1")
     gm.add_link("B","BB1", LinkType.AND)
-    gm.set_element_status("BB1", ElementStatus.TRUE_FALSE)
     gm.add_task("BB2")
     gm.add_link("B","BB2", LinkType.AND)
-    gm.set_element_status("BB2", ElementStatus.TRUE_FALSE)
     gm.add_task("BB3")
     gm.add_link("B","BB3", LinkType.OR)
-    gm.set_element_status("BB3", ElementStatus.TRUE_FALSE)
     gm.add_task("BB4")
+    set_markings(gm, {"Q": QualityStatus.DENIED, 
+                      "M": ElementStatus.TRUE_FALSE, 
+                      "B": ElementStatus.TRUE_FALSE, 
+                      "BB1": ElementStatus.TRUE_FALSE, 
+                      "BB2": ElementStatus.TRUE_FALSE, 
+                      "BB3": ElementStatus.TRUE_FALSE,
+                      "BB4": ElementStatus.UNKNOWN})
     gm.add_link("B","BB4", LinkType.OR)
-    gm.set_element_status("BB4", ElementStatus.UNKNOWN)
     executed = gm.try_pmake_rule("Q")
     assert not executed
     executed = gm.try_pbreak_rule("Q")
     assert not executed
     executed = gm.try_bpfulfill_rule("Q")
     assert executed
-    assert QualityStatus.FULFILLED == gm.get_quality_status("Q")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("M")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("B")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB1")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB2")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB3")   
-    assert ElementStatus.UNKNOWN == gm.get_element_status("BB4") 
+    check_markings(gm, {"Q": QualityStatus.FULFILLED, 
+                        "M": ElementStatus.TRUE_FALSE, 
+                        "B": ElementStatus.TRUE_TRUE, 
+                        "BB1": ElementStatus.TRUE_TRUE, 
+                        "BB2": ElementStatus.TRUE_TRUE, 
+                        "BB3": ElementStatus.TRUE_TRUE,
+                        "BB4": ElementStatus.UNKNOWN})
     
 def test_bpdeny_rule():
     gm = GoalModel()
     gm.add_quality("Q")
-    gm.set_quality_status("Q", QualityStatus.FULFILLED)
     gm.add_task("M")
-    gm.set_element_status("M", ElementStatus.TRUE_FALSE)
     gm.add_task("B")
-    gm.set_element_status("B", ElementStatus.TRUE_FALSE)
+    set_markings(gm, {"Q": QualityStatus.FULFILLED, "M": ElementStatus.TRUE_FALSE, "B": ElementStatus.TRUE_FALSE})
     gm.add_link("Q","M", LinkType.MAKE)
     gm.add_link("Q","B", LinkType.BREAK) 
     executed = gm.try_pmake_rule("Q")
@@ -160,45 +142,43 @@ def test_bpdeny_rule():
     assert not executed
     executed = gm.try_bpdeny_rule("Q")
     assert executed
-    assert QualityStatus.DENIED == gm.get_quality_status("Q")
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("M")   
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("B")   
+    check_markings(gm, {"Q": QualityStatus.DENIED, "M": ElementStatus.TRUE_TRUE, "B": ElementStatus.TRUE_FALSE})
 
 def test_bpdeny_transitive_rule():
     gm = GoalModel()
     gm.add_quality("Q")
-    gm.set_quality_status("Q", QualityStatus.FULFILLED)
     gm.add_task("M")
     gm.add_link("Q","M", LinkType.MAKE)
-    gm.set_element_status("M", ElementStatus.TRUE_FALSE)
     gm.add_task("B")
-    gm.set_element_status("B", ElementStatus.TRUE_FALSE)
     gm.add_link("Q","B", LinkType.BREAK) 
     gm.add_task("MM1")
     gm.add_link("M","MM1", LinkType.AND)
-    gm.set_element_status("MM1", ElementStatus.TRUE_FALSE)
     gm.add_task("MM2")
     gm.add_link("M","MM2", LinkType.AND)
-    gm.set_element_status("MM2", ElementStatus.TRUE_FALSE)
     gm.add_task("MM3")
     gm.add_link("M","MM3", LinkType.OR)
-    gm.set_element_status("MM3", ElementStatus.TRUE_FALSE)
     gm.add_task("MM4")
     gm.add_link("M","MM4", LinkType.OR)
-    gm.set_element_status("MM4", ElementStatus.UNKNOWN)
+    set_markings(gm, {"Q": QualityStatus.FULFILLED, 
+                      "M": ElementStatus.TRUE_FALSE, 
+                      "B": ElementStatus.TRUE_FALSE,
+                      "MM1": ElementStatus.TRUE_FALSE,
+                      "MM2": ElementStatus.TRUE_FALSE,
+                      "MM3": ElementStatus.TRUE_FALSE,
+                      "MM4": ElementStatus.UNKNOWN})
     executed = gm.try_pmake_rule("Q")
     assert not executed
     executed = gm.try_pbreak_rule("Q")
     assert not executed
     executed = gm.try_bpdeny_rule("Q")
     assert executed
-    assert QualityStatus.DENIED == gm.get_quality_status("Q")
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("M")   
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("B")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("MM1")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("MM2")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("MM3")   
-    assert ElementStatus.UNKNOWN == gm.get_element_status("MM4") 
+    check_markings(gm, {"Q": QualityStatus.DENIED, 
+                        "M": ElementStatus.TRUE_TRUE, 
+                        "B": ElementStatus.TRUE_FALSE,
+                        "MM1": ElementStatus.TRUE_TRUE,
+                        "MM2": ElementStatus.TRUE_TRUE,
+                        "MM3": ElementStatus.TRUE_TRUE,
+                        "MM4": ElementStatus.UNKNOWN})
 
 def test_propagation():
     gm = GoalModel()
@@ -212,9 +192,7 @@ def test_propagation():
     
     assert {"T", "G", "Q0"} == gm.changed_elements
     
-    assert QualityStatus.FULFILLED == gm.get_quality_status("Q0")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("G")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T")
+    check_markings(gm, {"Q0": QualityStatus.FULFILLED, "G": ElementStatus.TRUE_FALSE, "T": ElementStatus.TRUE_FALSE})
     
 
 def test_propagation_failed():
@@ -229,9 +207,7 @@ def test_propagation_failed():
     
     assert set() == gm.changed_elements
     
-    assert QualityStatus.UNKNOWN == gm.get_quality_status("Q0")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("G")
-    assert ElementStatus.UNKNOWN == gm.get_element_status("T")
+    check_markings(gm, {"Q0": QualityStatus.UNKNOWN, "G": ElementStatus.UNKNOWN, "T": ElementStatus.UNKNOWN})
     
 def test_propagation_two_parents():
     gm = GoalModel()
@@ -253,17 +229,17 @@ def test_propagation_two_parents():
 def test_bpfulfill_propagation_jump():
     gm = GoalModel()
     gm.add_quality("Q")
-    gm.set_quality_status("Q", QualityStatus.DENIED)
     gm.add_goal("M")
-    gm.set_element_status("M", ElementStatus.TRUE_FALSE)
     gm.add_goal("B")
-    gm.set_element_status("B", ElementStatus.TRUE_FALSE)
     gm.add_task("BB1")
-    gm.set_element_status("BB1", ElementStatus.TRUE_FALSE)
     gm.add_task("BB2")
-    gm.set_element_status("BB2", ElementStatus.UNKNOWN)
     gm.add_task("BB2B")
-    gm.set_element_status("BB2B", ElementStatus.TRUE_FALSE)
+    set_markings(gm, {"Q": QualityStatus.DENIED, 
+                      "M": ElementStatus.TRUE_FALSE, 
+                      "B": ElementStatus.TRUE_FALSE, 
+                      "BB1": ElementStatus.TRUE_FALSE, 
+                      "BB2": ElementStatus.UNKNOWN, 
+                      "BB2B": ElementStatus.TRUE_FALSE})
     gm.add_link("Q","M", LinkType.MAKE)
     gm.add_link("Q","B", LinkType.BREAK)
     gm.add_link("B","BB1", LinkType.OR)
@@ -271,9 +247,9 @@ def test_bpfulfill_propagation_jump():
     gm.add_link("BB2","BB2B", LinkType.OR)
     executed = gm.try_bpfulfill_rule("Q")
     assert executed
-    assert QualityStatus.FULFILLED == gm.get_quality_status("Q")
-    assert ElementStatus.TRUE_FALSE == gm.get_element_status("M")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("B")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB1")   
-    assert ElementStatus.UNKNOWN == gm.get_element_status("BB2")   
-    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB2B")    
+    check_markings(gm, {"Q": QualityStatus.FULFILLED, 
+                        "M": ElementStatus.TRUE_FALSE, 
+                        "B": ElementStatus.TRUE_TRUE, 
+                        "BB1": ElementStatus.TRUE_TRUE, 
+                        "BB2": ElementStatus.UNKNOWN, 
+                        "BB2B": ElementStatus.TRUE_TRUE})  
