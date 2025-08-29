@@ -248,3 +248,31 @@ def test_propagation_two_parents():
     assert {"CP2"} == gm.changed_elements
     gm.fire_element("CP12")
     assert {"CP12", "P2", "P1", "Q"} == gm.changed_elements
+
+def test_bpfulfill_propagation_jump():
+    gm = GoalModel()
+    gm.add_quality("Q")
+    gm.set_quality_status("Q", QualityStatus.DENIED)
+    gm.add_goal("M")
+    gm.set_element_status("M", ElementStatus.TRUE_FALSE)
+    gm.add_goal("B")
+    gm.set_element_status("B", ElementStatus.TRUE_FALSE)
+    gm.add_task("BB1")
+    gm.set_element_status("BB1", ElementStatus.TRUE_FALSE)
+    gm.add_task("BB2")
+    gm.set_element_status("BB2", ElementStatus.UNKNOWN)
+    gm.add_task("BB2B")
+    gm.set_element_status("BB2B", ElementStatus.TRUE_FALSE)
+    gm.add_link("Q","M", LinkType.MAKE)
+    gm.add_link("Q","B", LinkType.BREAK)
+    gm.add_link("B","BB1", LinkType.OR)
+    gm.add_link("B","BB2", LinkType.OR)
+    gm.add_link("BB2","BB2B", LinkType.OR)
+    executed = gm.try_bpfulfill_rule("Q")
+    assert executed
+    assert QualityStatus.FULFILLED == gm.get_quality_status("Q")
+    assert ElementStatus.TRUE_FALSE == gm.get_element_status("M")   
+    assert ElementStatus.TRUE_TRUE == gm.get_element_status("B")   
+    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB1")   
+    assert ElementStatus.UNKNOWN == gm.get_element_status("BB2")   
+    assert ElementStatus.TRUE_TRUE == gm.get_element_status("BB2B")    

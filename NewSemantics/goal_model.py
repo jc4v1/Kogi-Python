@@ -20,14 +20,14 @@ def log_rule(func):
     return wrapper
 
 class GoalModel(BaseGoalModel):
-    @log_rule
+    
     def try_pie_rule(self, element : str) -> bool:
         if self.element_exists(element) and self.is_leaf(element):
             self.set_element_status(element,ElementStatus.TRUE_FALSE)
             return True
         return False
         
-    @log_rule
+    
     def try_pand_rule(self, element: str) -> bool:
         and_links = [link for link in self.links if link[0] == element and link[2] == LinkType.AND]
         if (any(and_links) 
@@ -36,7 +36,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
         
-    @log_rule
+    
     def try_por_rule(self, element: str) -> bool:
         or_links = [link for link in self.links if link[0] == element and link[2] == LinkType.OR]
         if any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in or_links):
@@ -44,7 +44,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
-    @log_rule
+    
     def try_pmake_rule(self, quality: str) -> bool:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links) 
@@ -53,7 +53,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
-    @log_rule
+    
     def try_pbreak_rule(self, quality: str) -> bool:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
@@ -62,7 +62,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
     
-    @log_rule
+    
     def try_bpfulfill_rule(self, quality: str) -> bool:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links)
@@ -74,11 +74,12 @@ class GoalModel(BaseGoalModel):
             for elem in break_elements:
                 true_true_refinements = self.true_false_refinements(elem,set())
                 for e in true_true_refinements:
-                    self.set_element_status(e, ElementStatus.TRUE_TRUE)
+                    if self.get_element_status(e) == ElementStatus.TRUE_FALSE:
+                        self.set_element_status(e, ElementStatus.TRUE_TRUE)
             return True
         return False
     
-    @log_rule
+    
     def try_bpdeny_rule(self, quality: str) -> bool:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
@@ -90,7 +91,8 @@ class GoalModel(BaseGoalModel):
             for elem in make_elements:
                 true_false_refinements = self.true_false_refinements(elem,set())
                 for e in true_false_refinements:
-                    self.set_element_status(e, ElementStatus.TRUE_TRUE)
+                    if self.get_element_status(e) == ElementStatus.TRUE_FALSE:
+                        self.set_element_status(e, ElementStatus.TRUE_TRUE)
             return True
         return False
 
@@ -105,6 +107,7 @@ class GoalModel(BaseGoalModel):
                 self.fire_elements(self._parents(e))
     
     def process_event(self, event: str) -> None:
+        print(f"\nProcessing event: {event}")
         for target_set in self.event_mapping[event]:
             for element in target_set:
                 self.fire_element(element)
@@ -126,8 +129,7 @@ class GoalModel(BaseGoalModel):
         if element in visited:
             return result
         visited.add(element)  
-        refinements = [link[1] for link in self.links if link[0] == element 
-                       and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
+        refinements = [link[1] for link in self.links if link[0] == element]
         result.update(refinements)
         for e in refinements:
             result.update(self.true_false_refinements(e,visited))
