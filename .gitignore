@@ -3,6 +3,7 @@ satisfaction_analysis.xlsx
 ~$satisfaction_analysis.xlsx
 
 __pycache__/
+*/__pycache__/
 *.pyc
 
 .ipynb_checkpoints
