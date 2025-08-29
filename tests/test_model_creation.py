@@ -2,10 +2,6 @@ import pytest
 from NewSemantics.goal_model import GoalModel
 from Implementation.enums import ElementStatus, LinkType, QualityStatus
 
-def test_goal_model_creation():
-    gm = GoalModel()
-    assert isinstance(gm, GoalModel)
-    
 def test_pie_rule_task():
     gm = GoalModel()
     gm.add_task("T")
@@ -202,3 +198,37 @@ def test_bpdeny_transitive_rule():
     assert ElementStatus.TRUE_TRUE == gm.get_element_status("MM2")   
     assert ElementStatus.TRUE_TRUE == gm.get_element_status("MM3")   
     assert ElementStatus.UNKNOWN == gm.get_element_status("MM4") 
+
+def test_propagation():
+    gm = GoalModel()
+    gm.add_quality("Q0")
+    gm.add_goal("G")
+    gm.add_task("T")
+    gm.add_link("Q0","G", LinkType.MAKE)
+    gm.add_link("G","T", LinkType.AND)
+    
+    events = gm.propagate("T")
+    
+    assert events == ["T", "G", "Q0"]
+    
+    assert QualityStatus.FULFILLED == gm.get_quality_status("Q0")
+    assert ElementStatus.TRUE_FALSE == gm.get_element_status("G")
+    assert ElementStatus.TRUE_FALSE == gm.get_element_status("T")
+    
+
+def test_propagation_failed():
+    gm = GoalModel()
+    gm.add_quality("Q0")
+    gm.add_goal("G")
+    gm.add_task("T")
+    gm.add_link("Q0","G", LinkType.MAKE)
+    gm.add_link("G","T", LinkType.AND)
+    
+    events = gm.propagate("G")
+    
+    assert events == []
+    
+    assert QualityStatus.UNKNOWN == gm.get_quality_status("Q0")
+    assert ElementStatus.UNKNOWN == gm.get_element_status("G")
+    assert ElementStatus.UNKNOWN == gm.get_element_status("T")
+    

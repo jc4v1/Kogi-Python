@@ -2,21 +2,40 @@ from typing import Dict, List, Tuple, Set
 from typing_extensions import Self
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
 from Implementation.goal_model import GoalModel as BaseGoalModel
+import functools
+
+# Decorator to print successful rule applications
+# The decorator assumes that the function the decorator is 
+# used with returns a boolean indicating success or failurex
+def log_rule(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        arg_str = ", ".join([repr(a) for a in args[1:]] + [f"{k}={v!r}" for k, v in kwargs.items()])
+        # print(f"Calling {func.__name__}({arg_str})")
+        result = func(*args, **kwargs)
+        if result:
+            print(f"{func.__name__}({arg_str}) successful")
+        return result
+    return wrapper
 
 class GoalModel(BaseGoalModel):
+    @log_rule
     def try_pie_rule(self, element : str) -> bool:
         if self.element_exists(element) and self.is_leaf(element):
             self.set_element_status(element,ElementStatus.TRUE_FALSE)
             return True
         return False
         
+    @log_rule
     def try_pand_rule(self, element: str) -> bool:
         and_links = [link for link in self.links if link[0] == element and link[2] == LinkType.AND]
-        if all(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in and_links):
+        if (any(and_links) 
+            and all(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in and_links)):
             self.set_element_status(element,ElementStatus.TRUE_FALSE)
             return True
         return False
         
+    @log_rule
     def try_por_rule(self, element: str) -> bool:
         or_links = [link for link in self.links if link[0] == element and link[2] == LinkType.OR]
         if any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in or_links):
@@ -24,6 +43,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
+    @log_rule
     def try_pmake_rule(self, quality: str) -> bool:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links) 
@@ -32,6 +52,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
+    @log_rule
     def try_pbreak_rule(self, quality: str) -> bool:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
@@ -40,6 +61,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
     
+    @log_rule
     def try_bpfulfill_rule(self, quality: str) -> bool:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links)
@@ -55,6 +77,7 @@ class GoalModel(BaseGoalModel):
             return True
         return False
     
+    @log_rule
     def try_bpdeny_rule(self, quality: str) -> bool:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
@@ -70,6 +93,27 @@ class GoalModel(BaseGoalModel):
             return True
         return False
 
+    def propagate(self, element: str) -> List[str]:
+        e = element
+        trace = []
+        while e and self.try_any_rule(e):
+            trace.append(e)
+            e = self._successor(e)
+        return trace
+            
+    def _successor(self, element: str) -> str | None:
+        successors = [link[0] for link in self.links if link[1] == element]
+        return successors[0] if successors else None
+    
+    def try_any_rule(self, element: str) -> bool:
+        return (self.try_pie_rule(element) or
+                self.try_por_rule(element) or
+                self.try_pand_rule(element) or
+                self.try_pmake_rule(element) or
+                self.try_pbreak_rule(element) or
+                self.try_bpfulfill_rule(element) or
+                self.try_bpdeny_rule(element))
+    
     def true_false_refinements(self, element: str, visited: Set[str]) -> Set[str]:
         result = {element}
         if element in visited:
@@ -98,6 +142,8 @@ class GoalModel(BaseGoalModel):
             self.tasks[element] = status
         elif element in self.goals:
             self.goals[element] = status
+        else:
+            raise ValueError(f"Element {element} does not exist in tasks or goals.")    
             
     def is_leaf(self, element):
         return not any(link[0] == element for link in self.links)
