@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple, Set
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+from pprint import pp
 
 class GoalModel:
     def __init__(self):
@@ -12,6 +13,7 @@ class GoalModel:
         self.execution_count: Dict[str, int] = {}
         self.last_activated_link: Tuple[str, str, LinkType, LinkStatus] = None
         self.changed_elements: Set[str] = set()  # Track changed elements
+        self.positions: Dict[str,Tuple[float,float]] = {}
 
     def add_task(self, task_id: str):
         self.tasks[task_id] = ElementStatus.UNKNOWN
