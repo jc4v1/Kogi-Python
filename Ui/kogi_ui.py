@@ -5,6 +5,7 @@ import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch
 import ipywidgets as widgets
 from IPython.display import display, clear_output, HTML
+from collections import defaultdict
 
 # Global variable model to hold a goal model instance
 # The variable model is set in create_interface function and
@@ -33,116 +34,6 @@ def get_status_color_from_your_model(element_id):
         elif status == ElementStatus.TRUE_TRUE:
             return 'lightblue'
     return 'white'
-
-def create_goal_model_visualization():
-    global model
-    """Create visualization using your actual GoalModel data"""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
-    
-    # Left side: Goal Model Structure
-    ax1.set_title("Goal Model Structure", fontsize=14, fontweight='bold')
-    ax1.set_xlim(0, 10)
-    ax1.set_ylim(0, 10)
-    ax1.set_aspect('equal')
-    
-    # Define positions for elements
-    positions = {
-        'Q1': (5, 9),
-        'G1': (2, 7), 'G2': (5, 7), 'G3': (8, 7),
-        'T1': (1, 5), 'T2': (3, 5), 'T3': (4, 5), 'T4': (5, 5),
-        'T5': (6, 5), 'T6': (1, 3), 'T7': (2, 3), 'T8': (8, 3)
-    }
-    
-    # Draw elements using your model's actual data
-    for element_id, (x, y) in positions.items():
-        color = get_status_color_from_your_model(element_id)
-        
-        if element_id.startswith('Q'):
-            # Quality - cloud shape
-            cloud = FancyBboxPatch((x-0.4, y-0.3), 0.8, 0.6, 
-                                 boxstyle="round,pad=0.1", 
-                                 facecolor=color, edgecolor='black', linewidth=2)
-            ax1.add_patch(cloud)
-            # Show actual status from your model
-            status_text = f"{element_id}\n{model._format_status(model.qualities[element_id])}"
-            ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=8)
-        elif element_id.startswith('G'):
-            # Goal - ellipse
-            ellipse = patches.Ellipse((x, y), 0.8, 0.5, 
-                                    facecolor=color, edgecolor='black', linewidth=2)
-            ax1.add_patch(ellipse)
-            status_text = f"{element_id}\n{model._format_status(model.goals[element_id])}"
-            ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=8)
-        else:
-            # Task - hexagon
-            hexagon = patches.RegularPolygon((x, y), 6, radius=0.4, 
-                                          facecolor=color, edgecolor='black', linewidth=2)
-            ax1.add_patch(hexagon)
-            status_text = f"{element_id}\n{model._format_status(model.tasks[element_id])}"
-            ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=8)
-    
-    # Draw links using your model's actual links
-    for parent, child, link_type, status in model.links:
-        if parent in positions and child in positions:
-            px, py = positions[parent]
-            cx, cy = positions[child]
-            
-            # Determine arrow style based on link type from your enums
-            if link_type == LinkType.MAKE:
-                color = 'green'
-                style = '->'
-            elif link_type == LinkType.BREAK:
-                color = 'red'
-                style = '->'
-            elif link_type == LinkType.AND:
-                        arrow_color = 'purple'
-                        style = '->'
-            elif link_type == LinkType.OR:
-                        arrow_color = 'orange'
-                        style = '->'
-            else:
-                color = 'blue'
-                style = '->'
-            
-            ax1.annotate('', xy=(cx, cy), xytext=(px, py),
-                        arrowprops=dict(arrowstyle=style, color=color, lw=2))
-    
-    ax1.set_xticks([])
-    ax1.set_yticks([])
-    
-    # Right side: Process Model with Mappings (using your event_mapping)
-    ax2.set_title("Process Model & Event Mappings", fontsize=14, fontweight='bold')
-    ax2.set_xlim(0, 10)
-    ax2.set_ylim(0, 10)
-    
-    # Draw process transitions using your actual event mappings
-    events = list(model.event_mapping.keys())
-    for i, event in enumerate(events):
-        x_pos = (i + 1) * (8 / len(events)) + 1
-        y_level = 5
-        
-        # Process transition as rectangle
-        rect = FancyBboxPatch((x_pos-0.3, y_level-0.2), 0.6, 0.4,
-                            boxstyle="round,pad=0.05",
-                            facecolor='lightgray', edgecolor='black')
-        ax2.add_patch(rect)
-        ax2.text(x_pos, y_level, event, ha='center', va='center', fontweight='bold')
-        
-        # Show mapping using your actual event_mapping data
-        targets = model.event_mapping[event]
-        if isinstance(targets[0], list):
-            target_str = ', '.join(targets[0])
-        else:
-            target_str = targets[0][0] if isinstance(targets[0], list) else str(targets[0])
-        
-        ax2.text(x_pos, y_level-0.8, f"→ {target_str}", 
-                ha='center', va='center', fontsize=8)
-    
-    ax2.set_xticks([])
-    ax2.set_yticks([])
-    
-    plt.tight_layout()
-    return fig
 
 # Interactive Controls 
 
@@ -229,7 +120,6 @@ def create_interactive_controls():
         """Update the visualization using your model data"""
         with viz_output:
             clear_output(wait=True)
-            fig = create_goal_model_visualization()
             plt.show()
             plt.close()
     
@@ -389,21 +279,22 @@ def create_dual_model_visualization():
         with viz_output:
             clear_output(wait=True)
             
-            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 10))
+            # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 10))
+            _, ax1 = plt.subplots(1,1,figsize=(18,10))
             
             # Left side: Goal Model
             ax1.set_title("Goal Model Structure", fontsize=16, fontweight='bold', pad=20)
-            ax1.set_xlim(0, 10)
-            ax1.set_ylim(0, 12)
+            layout = Layout(model)
+            ax1.set_xlim(0, layout.max[0])
+            ax1.set_ylim(0, layout.max[1])
             ax1.set_aspect('equal')
+            diff = ax1.get_xlim()[1] - ax1.get_xlim()[0]
+            scale = (1/diff) * 20
+            fontsize = 10 * scale
             
             # Define positions for goal model elements
-            positions = {
-                'Q1': (5, 10.5),
-                'G1': (2, 8.5), 'G2': (5, 8.5), 'G3': (8, 8.5),
-                'T1': (1, 6), 'T2': (2.5, 6), 'T3': (4, 6), 'T4': (5.5, 6),
-                'T5': (7, 6), 'T6': (1, 3.5), 'T7': (3, 3.5), 'T8': (8, 3.5)
-            }
+
+            positions = layout.positions
             
             # Draw goal model elements
             for element_id, (x, y) in positions.items():
@@ -416,21 +307,21 @@ def create_dual_model_visualization():
                                          facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(cloud)
                     status_text = f"{element_id}\n{model._format_status(model.qualities[element_id])}"
-                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10)
+                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
                 elif element_id.startswith('G'):
                     # Goal - ellipse
                     ellipse = patches.Ellipse((x, y), 1.0, 0.6, 
                                             facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(ellipse)
                     status_text = f"{element_id}\n{model._format_status(model.goals[element_id])}"
-                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10)
+                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
                 else:
                     # Task - hexagon
                     hexagon = patches.RegularPolygon((x, y), 6, radius=0.5, 
                                                   facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(hexagon)
                     status_text = f"{element_id}\n{model._format_status(model.tasks[element_id])}"
-                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=9)
+                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
             
             # Draw links in goal model
             for parent, child, link_type, status in model.links:
@@ -440,19 +331,19 @@ def create_dual_model_visualization():
                     
                     if link_type == LinkType.MAKE:
                         arrow_color = 'green'
-                        style = '->'
+                        style = '<-'
                     elif link_type == LinkType.BREAK:
                         arrow_color = 'red'
-                        style = '->'
+                        style = '<-'
                     elif link_type == LinkType.AND:
                         arrow_color = 'purple'
-                        style = '->'
+                        style = '<-'
                     elif link_type == LinkType.OR:
                         arrow_color = 'orange'
-                        style = '->'
+                        style = '<-'
                     else:
                         arrow_color = 'blue'
-                        style = '->'
+                        style = '<-'
                     
                     ax1.annotate('', xy=(cx, cy), xytext=(px, py),
                                 arrowprops=dict(arrowstyle=style, color=arrow_color, lw=2))
@@ -461,48 +352,48 @@ def create_dual_model_visualization():
             ax1.set_yticks([])
             ax1.grid(True, alpha=0.3)
             
-            # Right side: Process Model
-            ax2.set_title("Process Model & Event Mappings", fontsize=16, fontweight='bold', pad=20)
-            ax2.set_xlim(0, 10)
-            ax2.set_ylim(0, 12)
+            # # Right side: Process Model
+            # ax2.set_title("Process Model & Event Mappings", fontsize=16, fontweight='bold', pad=20)
+            # ax2.set_xlim(0, 10)
+            # ax2.set_ylim(0, 12)
             
-            # Draw process model as a sequence
-            events = list(model.event_mapping.keys())
-            y_positions = [10, 8.5, 7, 5.5, 4, 2.5, 1, 0.5]  # Different heights for visual appeal
+            # # Draw process model as a sequence
+            # events = list(model.event_mapping.keys())
+            # y_positions = [10, 8.5, 7, 5.5, 4, 2.5, 1, 0.5]  # Different heights for visual appeal
             
-            for i, event in enumerate(events):
-                if i < len(y_positions):
-                    x_pos = 2
-                    y_pos = y_positions[i]
+            # for i, event in enumerate(events):
+            #     if i < len(y_positions):
+            #         x_pos = 2
+            #         y_pos = y_positions[i]
                     
-                    # Process transition as rectangle
-                    rect = FancyBboxPatch((x_pos-0.4, y_pos-0.25), 0.8, 0.5,
-                                        boxstyle="round,pad=0.05",
-                                        facecolor='lightgray', edgecolor='black', linewidth=2)
-                    ax2.add_patch(rect)
-                    ax2.text(x_pos, y_pos, event, ha='center', va='center', fontweight='bold', fontsize=12)
+            #         # Process transition as rectangle
+            #         rect = FancyBboxPatch((x_pos-0.4, y_pos-0.25), 0.8, 0.5,
+            #                             boxstyle="round,pad=0.05",
+            #                             facecolor='lightgray', edgecolor='black', linewidth=2)
+            #         ax2.add_patch(rect)
+            #         ax2.text(x_pos, y_pos, event, ha='center', va='center', fontweight='bold', fontsize=12)
                     
-                    # Show mapping with arrow
-                    targets = model.event_mapping[event]
-                    if isinstance(targets[0], list):
-                        target_str = ', '.join(targets[0])
-                    else:
-                        target_str = targets[0][0] if isinstance(targets[0], list) else str(targets[0])
+            #         # Show mapping with arrow
+            #         targets = model.event_mapping[event]
+            #         if isinstance(targets[0], list):
+            #             target_str = ', '.join(targets[0])
+            #         else:
+            #             target_str = targets[0][0] if isinstance(targets[0], list) else str(targets[0])
                     
-                    # Arrow pointing to mapping
-                    ax2.annotate('', xy=(x_pos + 1.5, y_pos), xytext=(x_pos + 0.5, y_pos),
-                                arrowprops=dict(arrowstyle='->', color='black', lw=2))
+            #         # Arrow pointing to mapping
+            #         ax2.annotate('', xy=(x_pos + 1.5, y_pos), xytext=(x_pos + 0.5, y_pos),
+            #                     arrowprops=dict(arrowstyle='->', color='black', lw=2))
                     
-                    # Target box
-                    target_rect = FancyBboxPatch((x_pos + 1.5, y_pos-0.2), 2.5, 0.4,
-                                               boxstyle="round,pad=0.05",
-                                               facecolor='lightyellow', edgecolor='gray')
-                    ax2.add_patch(target_rect)
-                    ax2.text(x_pos + 2.75, y_pos, target_str, ha='center', va='center', fontsize=10)
+            #         # Target box
+            #         target_rect = FancyBboxPatch((x_pos + 1.5, y_pos-0.2), 2.5, 0.4,
+            #                                    boxstyle="round,pad=0.05",
+            #                                    facecolor='lightyellow', edgecolor='gray')
+            #         ax2.add_patch(target_rect)
+            #         ax2.text(x_pos + 2.75, y_pos, target_str, ha='center', va='center', fontsize=10)
             
-            ax2.set_xticks([])
-            ax2.set_yticks([])
-            ax2.grid(True, alpha=0.3)
+            # ax2.set_xticks([])
+            # ax2.set_yticks([])
+            # ax2.grid(True, alpha=0.3)
             
             plt.tight_layout()
             plt.show()
@@ -629,3 +520,86 @@ def create_interface(create_model_func):
     ])
     
     return interface
+
+from collections import defaultdict
+from NewSemantics.goal_model import GoalModel
+from Implementation.enums import LinkType
+
+class Layout():
+    def __init__(self,model):
+        self.model = model
+        self.positions = self._calculate_positions_from_model()
+        point = self._compute_max_corrdinate(self.positions)
+        self.max = (point[0]+0.7, point[1]+0.7)
+        
+    def _calculate_positions_from_model(self):
+        links = [ (link[0],link[1]) for link in self.model.links]
+        return self._calculate_positions(links,min_coord=0.7)
+    
+    def _compute_max_corrdinate(self,ps):
+        print([value for value in ps])
+        return (max([p[0] for p in ps.values()]), max([p[1] for p in ps.values()]))
+        
+    def _calculate_positions(self, links, y_gap=2.0, x_gap=2.0, min_coord=2.0):
+        """
+        Compute positions for nodes based on hierarchical links.
+
+        Args:
+            links (list of tuples): Each tuple is (parent, child).
+            y_gap (int): Vertical distance between levels.
+            x_gap (int): Horizontal distance between nodes.
+            min_coord (int): Minimum x and y coordinate for all nodes.
+
+        Returns:
+            dict: Mapping of node -> (x, y) positions.
+        """
+        # Build parent -> children mapping
+        children = defaultdict(list)
+        parents = defaultdict(list)
+        all_nodes = set()
+        for parent, child in links:
+            children[parent].append(child)
+            parents[child].append(parent)
+            all_nodes.update([parent, child])
+
+        # Identify roots (nodes with no parents)
+        roots = [n for n in all_nodes if n not in parents]
+
+        positions = {}
+        x_counter = [0]  # mutable counter for horizontal spacing
+
+        # Recursive function to assign positions
+        def assign_positions(node, depth=0):
+            if node not in children or not children[node]:
+                # Leaf node: assign next x position
+                x = x_counter[0] * x_gap
+                positions[node] = (x, depth * y_gap)
+                x_counter[0] += 1
+            else:
+                child_xs = []
+                for child in children[node]:
+                    assign_positions(child, depth + 1)
+                    child_xs.append(positions[child][0])
+                # Parent is centered above its children
+                x = sum(child_xs) / len(child_xs)
+                positions[node] = (x, depth * y_gap)
+
+        # Assign positions for each root
+        for root in roots:
+            assign_positions(root)
+
+        # Shift x-coordinates so minimum is min_coord
+        min_x = min(pos[0] for pos in positions.values())
+        min_y = min(pos[1] for pos in positions.values())
+        for k in positions:
+            positions[k] = (
+                positions[k][0] - min_x + min_coord,
+                positions[k][1] - min_y + min_coord
+            )
+
+        # Reverse y so that root is on top
+        max_y = max(pos[1] for pos in positions.values())
+        for k in positions:
+            positions[k] = (positions[k][0], max_y - positions[k][1] + min_coord)
+
+        return positions
