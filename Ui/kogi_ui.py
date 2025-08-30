@@ -1,5 +1,4 @@
 from Implementation.enums import ElementStatus, QualityStatus, LinkType
-from Implementation.goal_model import GoalModel
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch
@@ -10,7 +9,7 @@ from collections import defaultdict
 # Global variable model to hold a goal model instance
 # The variable model is set in create_interface function and
 # in reset_model_with_trace function
-model: GoalModel | None = None
+model = None
 
 # Visualization Functions (adapted to work with your GoalModel)
 
@@ -295,12 +294,12 @@ def create_dual_model_visualization():
             # Define positions for goal model elements
 
             positions = layout.positions
-            
+                        
             # Draw goal model elements
             for element_id, (x, y) in positions.items():
                 color = get_status_color_from_your_model(element_id)
                 
-                if element_id.startswith('Q'):
+                if model._get_element_type(element_id) == "Quality":
                     # Quality - cloud shape
                     cloud = FancyBboxPatch((x-0.6, y-0.4), 1.2, 0.8, 
                                          boxstyle="round,pad=0.15", 
@@ -308,7 +307,7 @@ def create_dual_model_visualization():
                     ax1.add_patch(cloud)
                     status_text = f"{element_id}\n{model._format_status(model.qualities[element_id])}"
                     ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
-                elif element_id.startswith('G'):
+                elif model._get_element_type(element_id) == "Goal":
                     # Goal - ellipse
                     ellipse = patches.Ellipse((x, y), 1.0, 0.6, 
                                             facecolor=color, edgecolor='black', linewidth=2)
@@ -537,7 +536,6 @@ class Layout():
         return self._calculate_positions(links,min_coord=0.7)
     
     def _compute_max_corrdinate(self,ps):
-        print([value for value in ps])
         return (max([p[0] for p in ps.values()]), max([p[1] for p in ps.values()]))
         
     def _calculate_positions(self, links, y_gap=2.0, x_gap=2.0, min_coord=2.0):
