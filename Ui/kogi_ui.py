@@ -401,9 +401,9 @@ def create_dual_model_visualization():
     return viz_output, update_dual_visualization
 
 # Main Interface with New Layout
-def create_interface(create_model_func):
+def create_interface(mdl):
     global model
-    model = create_model_func()  # Ensure model is initialized
+    model = mdl
     """Display the interface with trace timeline and dual model view"""
     controls, trace_out, status_out, viz_out = create_interactive_controls()
     # Header
@@ -463,10 +463,10 @@ def create_interface(create_model_func):
         update_evolution()
         update_dual_viz()
     
-    def reset_model_with_trace(b,create_model_func):
+    def reset_model_with_trace(b):
         """Reset model and clear trace"""
         global model
-        model = create_model_func()
+        model.reset()
         create_trace_visualization.executed_events = []
         
         with status_out:
@@ -483,7 +483,7 @@ def create_interface(create_model_func):
     
     # Connect new event handlers
     controls.children[1].on_click(execute_event_with_trace)  # Execute button
-    controls.children[2].on_click(lambda b: reset_model_with_trace(b, create_model_func))    # Reset button
+    controls.children[2].on_click(reset_model_with_trace)    # Reset button
     
     # Create main tab structure
     main_tab = widgets.Tab()
@@ -492,8 +492,8 @@ def create_interface(create_model_func):
     main_content = widgets.VBox([
         controls_section,
         trace_out_new,
-        widgets.HTML("<h3>Evolution View</h3>"),
-        evolution_out,
+        # widgets.HTML("<h3>Evolution View</h3>"),
+        # evolution_out,
         widgets.HTML("<h3>Model Views</h3>"),
         dual_viz_out
     ])
