@@ -79,16 +79,6 @@
           "customProperties": {
             "Description": ""
           }
-        },
-        {
-          "id": "34ae154c-048e-448a-b0c1-c8e8cffe2c3d",
-          "text": "T5",
-          "type": "istar.Task",
-          "x": 735,
-          "y": 344,
-          "customProperties": {
-            "Description": ""
-          }
         }
       ]
     }
@@ -97,54 +87,48 @@
   "dependencies": [],
   "links": [
     {
-      "id": "197d0e9c-cc15-4f9b-907e-3ad37e8a4b52",
+      "id": "2ce9c27e-7660-4850-968f-077863b5bca7",
       "type": "istar.AndRefinementLink",
       "source": "e093106e-aafa-452c-ac02-566f5822172c",
       "target": "49d8679b-5703-47ed-b120-24d81ea4a0e8"
     },
     {
-      "id": "23dcb2fa-4693-449e-b38b-e76e15db934d",
+      "id": "5c3f6e43-a00e-4d34-a42d-5bb50f0cb641",
       "type": "istar.AndRefinementLink",
       "source": "63c96c33-5ed4-4560-8484-ec728da92fbd",
       "target": "49d8679b-5703-47ed-b120-24d81ea4a0e8"
     },
     {
-      "id": "a662c8f2-33de-4788-a9c8-dd02fbbe1000",
+      "id": "4184a2a8-d918-4fa4-bf35-60c86c82807f",
       "type": "istar.OrRefinementLink",
       "source": "a5aab320-3fa7-4dfa-b803-38c987e4509d",
       "target": "3bc8218f-7de8-47e3-b46b-c5c8c29f8db4"
     },
     {
-      "id": "125a8cd1-04de-403c-a221-6451cb2aafc5",
+      "id": "f2f577e4-cb45-4a0c-a508-5fc144e633cd",
       "type": "istar.OrRefinementLink",
       "source": "1d3eff26-13ce-4ce5-987a-6de771e4b99d",
       "target": "3bc8218f-7de8-47e3-b46b-c5c8c29f8db4"
     },
     {
-      "id": "d18a319d-d5ce-443f-a40d-8ea905d09879",
+      "id": "c1a1d772-cd15-4358-8994-30ca3803c2c2",
       "type": "istar.ContributionLink",
       "source": "49d8679b-5703-47ed-b120-24d81ea4a0e8",
       "target": "896dc5a6-434a-473c-8076-fcb168bec151",
       "label": "make"
     },
     {
-      "id": "769413f6-2203-4757-af52-e8be35a9498b",
+      "id": "3ce8ad20-c986-4668-a92c-ac9184b49c3d",
       "type": "istar.ContributionLink",
       "source": "3bc8218f-7de8-47e3-b46b-c5c8c29f8db4",
       "target": "896dc5a6-434a-473c-8076-fcb168bec151",
       "label": "break"
-    },
-    {
-      "id": "a0a94f71-b1d6-4ce0-a978-faaaabc40f48",
-      "type": "istar.OrRefinementLink",
-      "source": "34ae154c-048e-448a-b0c1-c8e8cffe2c3d",
-      "target": "3bc8218f-7de8-47e3-b46b-c5c8c29f8db4"
     }
   ],
   "display": {},
   "tool": "pistar.2.1.0",
   "istar": "2.0",
-  "saveDate": "Sun, 31 Aug 2025 07:19:03 GMT",
+  "saveDate": "Sun, 31 Aug 2025 18:40:25 GMT",
   "diagram": {
     "width": 1468,
     "height": 781,

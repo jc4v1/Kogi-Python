@@ -14,6 +14,9 @@ class GoalModel:
         self.last_activated_link: Tuple[str, str, LinkType, LinkStatus] = None
         self.changed_elements: Set[str] = set()  # Track changed elements
         self.positions: Dict[str,Tuple[float,float]] = {}
+        self.istar_positions: Dict[str,Tuple[float,float]] = {}
+        self.istar_width: float | None = None
+        self.istar_height: float | None = None
         
     def reset(self):
         for e in self.tasks:

@@ -5,28 +5,28 @@ class Layout():
         self.model = model
         self.positions = self._calculate_positions_from_model()
         point = self._compute_max_corrdinate(self.positions)
-        self.max = (point[0]+0.7, point[1]+0.7)
+        self.max = (point[0]+1.5, point[1]+1.5)
         
     def _calculate_positions_from_model(self):
-        if self.model.positions:
+        if self.model.istar_positions and not self.model.positions:
             # Reverse y so that root is on top
-            positions = self.model.positions.copy()
-            max_y = max(pos[1] for pos in positions.values()) + 25
+            positions = self.model.istar_positions.copy()
+            max_y = max(pos[1] for pos in positions.values()) + 25 + 70
             for k in positions:
                 positions[k] = (positions[k][0], max_y - positions[k][1])
             # Remove x-offset
-            min_x = min(pos[0] for pos in positions.values()) - 25
+            min_x = min(pos[0] for pos in positions.values()) - 25 - 45
             for k in positions:
                 positions[k] = (positions[k][0]-min_x, positions[k][1])
-            max_x = max(pos[0] for pos in positions.values())
-            max_y = max(pos[1] for pos in positions.values())
             scale = 1/50           
             for k in positions:
                 positions[k] = (positions[k][0]*scale, positions[k][1]*scale)
+            self.model.positions = positions
             return positions
-        else:
+        elif not self.model.positions:
             links = [ (link[0],link[1]) for link in self.model.links]
             return self._calculate_positions(links,min_coord=0.7)
+        return self.model.positions
     
     def _compute_max_corrdinate(self,ps):
         return (max([p[0] for p in ps.values()]), max([p[1] for p in ps.values()]))

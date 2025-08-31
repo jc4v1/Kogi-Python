@@ -56,7 +56,10 @@ def read_istar_model(file_path):
                 model.add_link(target, source, LinkType.BREAK)
 
     model.requirements = requirements
-    model.positions = positions
+    model.istar_positions = positions
+    
+    model.istar_width = data["diagram"]["width"]
+    model.istar_height = data["diagram"]["height"]
     
     # Add event mappings
     for i, element in enumerate(sorted(list(_get_leaves(model)))):
