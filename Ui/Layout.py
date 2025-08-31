@@ -24,8 +24,9 @@ class Layout():
             for k in positions:
                 positions[k] = (positions[k][0]*scale, positions[k][1]*scale)
             return positions
-        links = [ (link[0],link[1]) for link in self.model.links]
-        return self._calculate_positions(links,min_coord=0.7)
+        else:
+            links = [ (link[0],link[1]) for link in self.model.links]
+            return self._calculate_positions(links,min_coord=0.7)
     
     def _compute_max_corrdinate(self,ps):
         return (max([p[0] for p in ps.values()]), max([p[1] for p in ps.values()]))

@@ -287,7 +287,7 @@ def create_dual_model_visualization():
             ax1.set_xlim(0, layout.max[0])
             ax1.set_ylim(0, layout.max[1])
             ax1.set_aspect('equal')
-            diff = ax1.get_xlim()[1] - ax1.get_xlim()[0]
+            diff = max(ax1.get_xlim()[1] - ax1.get_xlim()[0],ax1.get_ylim()[1] - ax1.get_ylim()[0])
             scale = (1/diff) * 20
             fontsize = 10 * scale
             

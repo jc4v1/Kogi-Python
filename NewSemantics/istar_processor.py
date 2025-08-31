@@ -57,9 +57,22 @@ def read_istar_model(file_path):
 
     model.requirements = requirements
     model.positions = positions
-
-    # Add event mappings
-    for i, task in enumerate(sorted(list(model.tasks))):
-        model.add_event_mapping(f"e{i+1}", task)
     
+    # Add event mappings
+    for i, element in enumerate(sorted(list(_get_leaves(model)))):
+        model.add_event_mapping(f"e{i+1}->{element.lower()}", element)
+        
     return model
+
+def _get_leaves(model):
+    links = model.links
+    parents = set()
+    children = set()
+
+    for parent, child, _, _ in links:
+        parents.add(parent)
+        children.add(child)
+
+    # Leaves are nodes that appear as children but never as parents
+    leaves = children - parents
+    return leaves

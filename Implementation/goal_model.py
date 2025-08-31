@@ -14,7 +14,20 @@ class GoalModel:
         self.last_activated_link: Tuple[str, str, LinkType, LinkStatus] = None
         self.changed_elements: Set[str] = set()  # Track changed elements
         self.positions: Dict[str,Tuple[float,float]] = {}
-
+        
+    def reset(self):
+        for e in self.tasks:
+            self.tasks[e] = ElementStatus.UNKNOWN
+        for e in self.goals:
+            self.goals[e] = ElementStatus.UNKNOWN
+        for e in self.qualities:
+            self.qualities[e] = QualityStatus.UNKNOWN
+        self.links = [(l[0],l[1],l[2],LinkStatus.UNKNOWN) for l in self.links]
+        for e in self.execution_count:
+            self.execution_count[e] = 0
+        self.last_activated_link = None
+        self.changed_elements = set()
+        
     def add_task(self, task_id: str):
         self.tasks[task_id] = ElementStatus.UNKNOWN
         self.execution_count[task_id] = 0
