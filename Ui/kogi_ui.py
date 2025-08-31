@@ -290,14 +290,14 @@ def create_dual_model_visualization():
             ax1.set_aspect('equal')
             diff = max(ax1.get_xlim()[1] - ax1.get_xlim()[0],ax1.get_ylim()[1] - ax1.get_ylim()[0])
             scale = (1/diff) * 20
-            fontsize = 10 * scale
+            fontsize = 10*scale
             
             # Define positions for goal model elements
 
             positions = layout.positions
                         
             # Draw goal model elements
-            links = {}
+            shapes = {}
             for element_id, (x, y) in positions.items():
                 color = get_status_color_from_your_model(element_id)
                 
@@ -307,7 +307,7 @@ def create_dual_model_visualization():
                                          boxstyle="roundtooth, pad=0.6, tooth_size=0.5", 
                                          facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(cloud)
-                    links.update({element_id:cloud})
+                    shapes.update({element_id:cloud})
                     status_text = f"{element_id}\n{model._format_status(model.qualities[element_id])}"
                     ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize,  zorder=10)
                 elif model._get_element_type(element_id) == "Goal":
@@ -315,7 +315,7 @@ def create_dual_model_visualization():
                     ellipse = patches.Ellipse((x, y), 1.0, 0.6, 
                                             facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(ellipse)
-                    links.update({element_id:ellipse})
+                    shapes.update({element_id:ellipse})
                     status_text = f"{element_id}\n{model._format_status(model.goals[element_id])}"
                     ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
                 else:
@@ -323,7 +323,7 @@ def create_dual_model_visualization():
                     hexagon = patches.RegularPolygon((x, y), 6, radius=0.5, 
                                                   facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(hexagon)
-                    links.update({element_id:hexagon})
+                    shapes.update({element_id:hexagon})
                     status_text = f"{element_id}\n{model._format_status(model.tasks[element_id])}"
                     ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
                             
@@ -352,8 +352,8 @@ def create_dual_model_visualization():
                 connector_arrow = patches.FancyArrowPatch(
                                         posA=positions[child],
                                         posB=positions[parent],
-                                        patchA=links[child], 
-                                        patchB=links[parent],
+                                        patchA=shapes[child], 
+                                        patchB=shapes[parent],
                                         arrowstyle=style,
                                         color=arrow_color,
                                         linewidth=4,
