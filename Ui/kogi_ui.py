@@ -1,6 +1,7 @@
 from Implementation.enums import ElementStatus, QualityStatus, LinkType
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.colors as mcolors
 from matplotlib.patches import FancyBboxPatch
 import ipywidgets as widgets
 from IPython.display import display, clear_output, HTML
@@ -296,22 +297,25 @@ def create_dual_model_visualization():
             positions = layout.positions
                         
             # Draw goal model elements
+            links = {}
             for element_id, (x, y) in positions.items():
                 color = get_status_color_from_your_model(element_id)
                 
                 if model._get_element_type(element_id) == "Quality":
                     # Quality - cloud shape
                     cloud = FancyBboxPatch((x-0.6, y-0.4), 1.2, 0.8, 
-                                         boxstyle="round,pad=0.15", 
+                                         boxstyle="roundtooth, pad=0.6, tooth_size=0.5", 
                                          facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(cloud)
+                    links.update({element_id:cloud})
                     status_text = f"{element_id}\n{model._format_status(model.qualities[element_id])}"
-                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
+                    ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize,  zorder=10)
                 elif model._get_element_type(element_id) == "Goal":
                     # Goal - ellipse
                     ellipse = patches.Ellipse((x, y), 1.0, 0.6, 
                                             facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(ellipse)
+                    links.update({element_id:ellipse})
                     status_text = f"{element_id}\n{model._format_status(model.goals[element_id])}"
                     ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
                 else:
@@ -319,34 +323,46 @@ def create_dual_model_visualization():
                     hexagon = patches.RegularPolygon((x, y), 6, radius=0.5, 
                                                   facecolor=color, edgecolor='black', linewidth=2)
                     ax1.add_patch(hexagon)
+                    links.update({element_id:hexagon})
                     status_text = f"{element_id}\n{model._format_status(model.tasks[element_id])}"
                     ax1.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=fontsize)
-            
+                            
             # Draw links in goal model
-            for parent, child, link_type, status in model.links:
-                if parent in positions and child in positions:
-                    px, py = positions[parent]
-                    cx, cy = positions[child]
-                    
-                    if link_type == LinkType.MAKE:
+            for parent, child, link_type, _ in model.links:
+                shrink = 2
+                if link_type == LinkType.MAKE:
                         arrow_color = 'green'
-                        style = '<-'
-                    elif link_type == LinkType.BREAK:
+                        style = '->'
+                elif link_type == LinkType.BREAK:
                         arrow_color = 'red'
-                        style = '<-'
-                    elif link_type == LinkType.AND:
+                        style = '->'
+                elif link_type == LinkType.AND:
                         arrow_color = 'purple'
-                        style = '<-'
-                    elif link_type == LinkType.OR:
+                        style = '|-|,widthA=0,widthB=0.5'
+                        shrink = 30
+                elif link_type == LinkType.OR:
                         arrow_color = 'orange'
-                        style = '<-'
-                    else:
+                        style = '->'
+                else:
                         arrow_color = 'blue'
-                        style = '<-'
-                    
-                    ax1.annotate('', xy=(cx, cy), xytext=(px, py),
-                                arrowprops=dict(arrowstyle=style, color=arrow_color, lw=4))
-            
+                        style = '->'
+                        
+                # arrow_style = style+",head_length=0.4,head_width=0.2,widthA=1.0,widthB=1.0,lengthA=0.2,lengthB=0.2,angleA=0,angleB=0"
+                # print(arrow_style)
+                connector_arrow = patches.FancyArrowPatch(
+                                        posA=positions[child],
+                                        posB=positions[parent],
+                                        patchA=links[child], 
+                                        patchB=links[parent],
+                                        arrowstyle=style,
+                                        color=arrow_color,
+                                        linewidth=4,
+                                        shrinkB=shrink,
+                                        mutation_scale=20
+                                        )
+                                        
+                ax1.add_patch(connector_arrow)
+  
             ax1.set_xticks([])
             ax1.set_yticks([])
             ax1.grid(True, alpha=0.3)
