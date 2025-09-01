@@ -37,7 +37,7 @@ You can run three mains modules:
 For instance, if you run python whatif-analyzer.py, you will have the following options 
 
 ============================================================
-Goal Model Evaluation System
+## Goal Model Evaluation System
 ============================================================
 Choose evaluation mode:
 1. Interactive evaluation (enter events manually)
@@ -49,7 +49,7 @@ If you want to test the test the tool without upload your own models you can cho
 
 
 ============================================================
-Evaluating trace 1: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e8
+## Evaluating trace 1: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e8
 ============================================================
 
 Processing event: e6
@@ -88,7 +88,7 @@ Trace 1 Quality Status:
 Example of statistics
 
 ================================================================================
-Goal Model Evaluation Statistics
+## Goal Model Evaluation Statistics
 ================================================================================
 
 Element      Type     Satisfied %  Exec.Pend %  Unsatisfied %  Satisfied Traces
@@ -107,7 +107,7 @@ T7           Task          100.0%        0.0%          0.0% 1, 2, 3, 4
 T8           Task           50.0%        0.0%         50.0% 1, 4
 
 ================================================================================
-Quality Analysis
+## Quality Analysis
 ================================================================================
 
 Quality Q1:
@@ -115,7 +115,7 @@ Quality Q1:
   Traces where fulfilled: 2, 3
 
 ================================================================================
-Trace patterns
+## Trace patterns
 ================================================================================
 Successful traces: 2 (50.0%)
   Trace 2: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e1
@@ -131,7 +131,7 @@ On the other hand, if you choose option 1 you will have the opportunity to analy
 Example:
 
 ============================================================
-Interactive Goal Model Evaluation
+## Interactive Goal Model Evaluation
 ============================================================
 Available events: e1, e2, e3, e4, e5, e6, e7, e8
 Event mappings:
