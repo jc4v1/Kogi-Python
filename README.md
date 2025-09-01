@@ -36,6 +36,7 @@ You can run three mains modules:
 
 For instance, if you run python whatif-analyzer.py, you will have the following options 
 
+```bash
 ============================================================
 ## Goal Model Evaluation System
 ============================================================
@@ -44,10 +45,11 @@ Choose evaluation mode:
 2. Predefined traces evaluation
 ============================================================
 Enter your choice (1 or 2):
+```
 
-If you want to test the test the tool without upload your own models you can choose the option 2 to see the evaluation of some traces against predefined models that you can find in the Data directory.
+If you want to test the tool without uploading your own models, you can choose option 2 to see the evaluation of some traces against predefined models that you can find in the Data directory.
 
-
+```bash
 ============================================================
 ## Evaluating trace 1: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e8
 ============================================================
@@ -85,8 +87,12 @@ Trace 1 Quality Status:
 
 ==================================================
 
+```
+
+
 Example of statistics
 
+```bash
 ================================================================================
 ## Goal Model Evaluation Statistics
 ================================================================================
@@ -126,10 +132,11 @@ Unsuccessful traces: 2 (50.0%)
   Trace 4: e6 -> e3 -> e2 -> e4 -> e5 -> e7 -> e8
 ================================================================================
 
+```
 On the other hand, if you choose option 1 you will have the opportunity to analyze the impact of the execution of an specific event on the satisfaction of the goal model elements.
-
 Example:
 
+```bash
 ============================================================
 ## Interactive Goal Model Evaluation
 ============================================================
@@ -155,6 +162,7 @@ Quality Q1: (?) -> (⊤)
 
 Current Quality Status:
   Q1: (⊤)
+```
 
 ## Interactive Usage
 
