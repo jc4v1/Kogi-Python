@@ -8,11 +8,6 @@ Regulatory compliance often prioritizes adherence to explicit rules, overlooking
 
 A [Prototype]  was developed in Python3, taking as input a set of business process models (BPMN file), the goal model (JSON File), and the mapping (CSV File). It provides two evaluation options: the first assesses if the process model complies with the goal model by analyzing the composed Labeled Transition System, while the second simulates execution traces to determine which satisfies the high-level compliance requirements. The system includes an interactive Jupyter notebook for manual inspection and analysis of process execution.
 
-## Use Case: Fintech Company "FT"
-
-We initially implemented our algorithm using a fictitious Fintech company called "FT" that acts as the data controller and must manage customer data in full compliance with GDPR Articles 12–22. In this use case, 10 BPMN process models were extended and adapted to the fintech context (based on [case studies](https://link.springer.com/chapter/10.1007/978-3-030-21297-1_2)) to satisfy both the operational requirements specified in the relevant GDPR articles and the specific business requirements. 
-
-For the qualitative aspects, the relevant GDPR articles were analyzed to extract the associated qualitative attributes. The operationalization of these qualitative elements was performed using the proposed method in [reference](https://doi.org/10.1145/2884781.2884788), which assigns business-related fill-in variables to formalize the requirements. Subsequently, the mapping of process activities to these qualitative elements was validated by synchronizing the operational process models with a goal model that encapsulated the qualitative compliance requirements.
 
 ## Features
 
@@ -20,23 +15,11 @@ For the qualitative aspects, the relevant GDPR articles were analyzed to extract
 - **Simulation of Execution Traces**: Determine which execution traces satisfy high-level compliance requirements.
 - **Interactive Jupyter Notebook**: Manual inspection and analysis of process execution.
 
-## Requirements
-
-- Python 3
-- Jupyter Notebook
 
 ## Installation
 
 1. Clone the repository:
-   ```bash
-   git clone [https://anonymous.4open.science/r/High-Level-Requirements-Driven-Business-Process.Compliance](https://anonymous.4open.science/r/HLRDBPC)
-   cd Traces-driven-goals-analysis
-   ```
-
 2. Install the required packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
 
 
 ## Non-interactive usage
@@ -54,7 +37,7 @@ You can run three mains modules:
 For instance, if you run python whatif-analyzer.py, you will have the following options 
 
 ============================================================
-GOAL MODEL EVALUATION SYSTEM
+Goal Model Evaluation System
 ============================================================
 Choose evaluation mode:
 1. Interactive evaluation (enter events manually)
@@ -66,7 +49,7 @@ If you want to test the test the tool without upload your own models you can cho
 
 
 ============================================================
-EVALUATING TRACE 1: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e8
+Evaluating trace 1: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e8
 ============================================================
 
 Processing event: e6
@@ -105,7 +88,7 @@ Trace 1 Quality Status:
 Example of statistics
 
 ================================================================================
-GOAL MODEL EVALUATION STATISTICS
+Goal Model Evaluation Statistics
 ================================================================================
 
 Element      Type     Satisfied %  Exec.Pend %  Unsatisfied %  Satisfied Traces
@@ -124,7 +107,7 @@ T7           Task          100.0%        0.0%          0.0% 1, 2, 3, 4
 T8           Task           50.0%        0.0%         50.0% 1, 4
 
 ================================================================================
-QUALITY ANALYSIS
+Quality Analysis
 ================================================================================
 
 Quality Q1:
@@ -132,7 +115,7 @@ Quality Q1:
   Traces where fulfilled: 2, 3
 
 ================================================================================
-TRACE PATTERN ANALYSIS
+Trace patterns
 ================================================================================
 Successful traces: 2 (50.0%)
   Trace 2: e6 -> e2 -> e3 -> e4 -> e5 -> e7 -> e1
@@ -148,7 +131,7 @@ On the other hand, if you choose option 1 you will have the opportunity to analy
 Example:
 
 ============================================================
-INTERACTIVE GOAL MODEL EVALUATION
+Interactive Goal Model Evaluation
 ============================================================
 Available events: e1, e2, e3, e4, e5, e6, e7, e8
 Event mappings:
