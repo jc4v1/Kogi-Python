@@ -1,0 +1,220 @@
+{
+  "actors": [
+    {
+      "id": "37e3342a-e4d3-4dc9-9ae5-4d8343a20153",
+      "text": "Actor",
+      "type": "istar.Actor",
+      "x": 173,
+      "y": 54,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+          "text": "DPA",
+          "type": "istar.Quality",
+          "x": 505,
+          "y": 156,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "a815c5df-3f58-481e-b29c-5e07e19248ee",
+          "text": "DB",
+          "type": "istar.Goal",
+          "x": 363,
+          "y": 166,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea",
+          "text": "DP",
+          "type": "istar.Goal",
+          "x": 646,
+          "y": 167,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "42bed458-3fd5-4142-888a-724517efc520",
+          "text": "AP",
+          "type": "istar.Task",
+          "x": 500,
+          "y": 262,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c5fbb652-0153-4f31-ad54-d0a3044c6834",
+          "text": "PT",
+          "type": "istar.Task",
+          "x": 237,
+          "y": 123,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1edfd362-3334-44dc-b7ee-68e385bcee90",
+          "text": "FS",
+          "type": "istar.Task",
+          "x": 237,
+          "y": 213,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b2702878-298c-46e4-84ec-a44ed3ba9aef",
+          "text": "G",
+          "type": "istar.Task",
+          "x": 920,
+          "y": 258,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3ead4f1d-5122-436d-9260-e95c2181abcf",
+          "text": "O",
+          "type": "istar.Task",
+          "x": 926,
+          "y": 195,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "82d1f808-3a94-49c3-91e2-de3349e196de",
+          "text": "RA",
+          "type": "istar.Task",
+          "x": 924,
+          "y": 135,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "221ff2f3-1cec-431e-855c-5a5d1f2ad261",
+          "text": "UE",
+          "type": "istar.Task",
+          "x": 928,
+          "y": 54,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "18b02dd3-401d-47d5-932d-203f77528ee4",
+          "text": "IP",
+          "type": "istar.Task",
+          "x": 766,
+          "y": 104,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd",
+          "text": "DMP",
+          "type": "istar.Task",
+          "x": 770,
+          "y": 227,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "664da3a6-4542-4589-b711-f4bb28d34482",
+      "type": "istar.OrRefinementLink",
+      "source": "3ead4f1d-5122-436d-9260-e95c2181abcf",
+      "target": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd"
+    },
+    {
+      "id": "3525c506-c810-4795-a894-ac303ecca68c",
+      "type": "istar.OrRefinementLink",
+      "source": "b2702878-298c-46e4-84ec-a44ed3ba9aef",
+      "target": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd"
+    },
+    {
+      "id": "aa613a19-6f35-459c-88aa-30a0f4805581",
+      "type": "istar.AndRefinementLink",
+      "source": "221ff2f3-1cec-431e-855c-5a5d1f2ad261",
+      "target": "18b02dd3-401d-47d5-932d-203f77528ee4"
+    },
+    {
+      "id": "03673de4-aa5d-4c5a-b99c-d9e246a2ec8f",
+      "type": "istar.AndRefinementLink",
+      "source": "82d1f808-3a94-49c3-91e2-de3349e196de",
+      "target": "18b02dd3-401d-47d5-932d-203f77528ee4"
+    },
+    {
+      "id": "db0a15fb-696e-45ad-bd54-961f46ceb423",
+      "type": "istar.AndRefinementLink",
+      "source": "18b02dd3-401d-47d5-932d-203f77528ee4",
+      "target": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea"
+    },
+    {
+      "id": "3a7d1739-7ebf-4d6d-8276-0beaa3616eb2",
+      "type": "istar.AndRefinementLink",
+      "source": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd",
+      "target": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea"
+    },
+    {
+      "id": "6d776fd8-1ee9-4d3f-8d14-43237c569d7f",
+      "type": "istar.AndRefinementLink",
+      "source": "c5fbb652-0153-4f31-ad54-d0a3044c6834",
+      "target": "a815c5df-3f58-481e-b29c-5e07e19248ee"
+    },
+    {
+      "id": "286e0cea-35db-43ea-a721-1bb892fc53a9",
+      "type": "istar.AndRefinementLink",
+      "source": "1edfd362-3334-44dc-b7ee-68e385bcee90",
+      "target": "a815c5df-3f58-481e-b29c-5e07e19248ee"
+    },
+    {
+      "id": "5472e09b-83eb-44a7-94a8-92b40c219ade",
+      "type": "istar.ContributionLink",
+      "source": "42bed458-3fd5-4142-888a-724517efc520",
+      "target": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+      "label": "make"
+    },
+    {
+      "id": "8c3a300b-b813-48ea-918e-0dc1e6ab56ae",
+      "type": "istar.ContributionLink",
+      "source": "a815c5df-3f58-481e-b29c-5e07e19248ee",
+      "target": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+      "label": "break"
+    },
+    {
+      "id": "4931c906-b722-42ae-b318-4ff500ab1dec",
+      "type": "istar.ContributionLink",
+      "source": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea",
+      "target": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+      "label": "make"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Sat, 30 Aug 2025 23:47:49 GMT",
+  "diagram": {
+    "width": 1517,
+    "height": 781,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

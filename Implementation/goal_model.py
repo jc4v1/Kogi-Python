@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple, Set
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+from pprint import pp
 
 class GoalModel:
     def __init__(self):
@@ -12,7 +13,24 @@ class GoalModel:
         self.execution_count: Dict[str, int] = {}
         self.last_activated_link: Tuple[str, str, LinkType, LinkStatus] = None
         self.changed_elements: Set[str] = set()  # Track changed elements
-
+        self.positions: Dict[str,Tuple[float,float]] = {}
+        self.istar_positions: Dict[str,Tuple[float,float]] = {}
+        self.istar_width: float | None = None
+        self.istar_height: float | None = None
+        
+    def reset(self):
+        for e in self.tasks:
+            self.tasks[e] = ElementStatus.UNKNOWN
+        for e in self.goals:
+            self.goals[e] = ElementStatus.UNKNOWN
+        for e in self.qualities:
+            self.qualities[e] = QualityStatus.UNKNOWN
+        self.links = [(l[0],l[1],l[2],LinkStatus.UNKNOWN) for l in self.links]
+        for e in self.execution_count:
+            self.execution_count[e] = 0
+        self.last_activated_link = None
+        self.changed_elements = set()
+        
     def add_task(self, task_id: str):
         self.tasks[task_id] = ElementStatus.UNKNOWN
         self.execution_count[task_id] = 0
@@ -552,33 +570,6 @@ class GoalModel:
         elif element in self.tasks:
             return 'Task'
         return 'Unknown'
-        
-        # Print qualities first
-        print("\nQualities:")
-        for quality_id, status in self.qualities.items():
-            print(f"  {quality_id}: {self._format_status(status)}")
-        
-        # Print goals
-        print("\nGoals:")
-        for goal_id, status in self.goals.items():
-            print(f"  {goal_id}: {self._format_status(status)}")
-        
-        # Print tasks
-        print("\nTasks:")
-        for task_id, status in self.tasks.items():
-            print(f"  {task_id}: {self._format_status(status)}")
-        
-        print("="*50)
-
-    def _get_element_type(self, element: str) -> str:
-        """Get the type of an element"""
-        if element in self.qualities:
-            return 'Quality'
-        elif element in self.goals:
-            return 'Goal'
-        elif element in self.tasks:
-            return 'Task'
-        return 'Unknown'
     
     def print_markings(self):
         """Print current markings of all elements and links"""
@@ -595,7 +586,7 @@ class GoalModel:
         for quality_id, status in self.qualities.items():
             print(f"  {quality_id}: {self._format_status(status)}")
         
-        print("Links:")
-        for parent, child, link_type, status in self.links:
-            print(f"  {parent} --{link_type.name}/{status.name}--> {child}")
+        # print("Links:")
+        # for parent, child, link_type, status in self.links:
+        #     print(f"  {parent} --{link_type.name}/{status.name}--> {child}")
         print("-" * 50)     

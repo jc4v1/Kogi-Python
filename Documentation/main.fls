@@ -1,6 +1,6 @@
-PWD c:\Users\jcavi\Desktop\Traces-driven-goals-analysis\Documentation
+PWD c:\Users\jcavi\Documents\GitHub\Kogi-Python\Documentation
 INPUT C:\Users\jcavi\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\jcavi\Desktop\Traces-driven-goals-analysis\Documentation\main.tex
+INPUT c:\Users\jcavi\Documents\GitHub\Kogi-Python\Documentation\main.tex
 OUTPUT main.log
 INPUT C:\Program Files\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Program Files\MiKTeX\tex\latex\base\article.cls
