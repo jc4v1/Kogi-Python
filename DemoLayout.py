@@ -320,8 +320,8 @@ def create_complete_interface():
                     # Draw tokens if present in our direct placement
                     token_count = petri_tokens.get(label, 0)
                     if token_count > 0:
-                        if handler_debug:
-                            print(f"Drawing {token_count} token(s) at {label} (position {x}, {y})")
+                        #if handler_debug:
+                            #print(f"Drawing {token_count} token(s) at {label} (position {x}, {y})")
                         
                         if token_count == 1:
                             token = patches.Circle((x, y), 0.08, facecolor='black', edgecolor='black')
@@ -384,13 +384,13 @@ def create_complete_interface():
                     ((10.2, 2.5), (11.3, 3.3)), # t_6 -> p6
                     ((11.7, 3.5), (12.6, 3.5)), # p6 -> t_7
                     ((12.9, 3.5), (13.8, 4.4)), # t_7 -> p7
-                    ((12.9, 3.5), (14.9, 2.6)), # t_7 -> p9
+                    ((16.4, 2.5), (15.4, 2.5)), # t_10 -> p9
                     ((14.2, 4.5), (15.0, 4.5)), # p7 -> t_8
                     ((15.3, 4.5), (16.3, 4.5)), # t_8 -> p8
                     ((16.7, 4.5), (17.3, 3.7)), # p8 -> t_9
-                    ((16.3, 2.5), (16.3, 4.3)), # t_10 -> p8
-                    ((15.3, 2.5), (14.2, 2.5)), # p9 -> t_11
-                    ((13.8, 2.5), (14.0, 4.3)), # t_11 -> p7
+                    ((16.5, 4.3), (16.5, 2.5)), # p8 -> t_10
+                    ((14.8, 2.5), (14.2, 2.5)), # p9 -> t_11
+                    ((14, 2.5), (14.0, 4.3)), # t_11 -> p7
                     ((17.7, 3.5), (18.3, 3.5))  # t_9 -> p10
                 ]
                 
