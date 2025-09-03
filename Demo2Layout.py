@@ -285,7 +285,7 @@ def create_complete_interface():
                 ax3 = fig.add_subplot(gs[2, 0])  # Mappings
                 
                 # PETRI NET with direct token placement
-                ax1.set_title("Process Model (Petri Net) - Direct Token Placement", fontsize=16, fontweight='bold', pad=20)
+                ax1.set_title("Process Model (Petri Net)", fontsize=16, fontweight='bold', pad=20)
                 ax1.set_xlim(-1, 19)
                 ax1.set_ylim(-1, 8)
                 ax1.set_aspect('equal')
@@ -574,7 +574,7 @@ def create_complete_interface():
             
             model = create_model_from_your_code()
             executed_events = []
-            petri_tokens = {}  # Reset tokens to empty
+            petri_tokens = {'p0': 1}  # Reset tokens to empty
             
             if handler_debug:
                 print("Model reset - tokens cleared")
