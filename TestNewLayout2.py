@@ -169,7 +169,7 @@ def create_complete_interface():
             ax3 = fig.add_subplot(gs[2, 0])  # Mappings
             
             # CORRECTED Petri Net
-            ax1.set_title("Corrected Process Model (Petri Net)", fontsize=16, fontweight='bold', pad=20)
+            ax1.set_title("Process Model (Petri Net)", fontsize=16, fontweight='bold', pad=20)
             ax1.set_xlim(-1, 19)
             ax1.set_ylim(-1, 8)
             ax1.set_aspect('equal')
