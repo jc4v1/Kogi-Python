@@ -46,6 +46,14 @@ class PetriNet():
         model.event_mapping = {}
         for t in self.net.transitions:
             model.add_event_mapping(t.name, t.label if t.label != t.name else [])
+            
+    def min_max(self):
+        positions = self.positions['places'] + self.positions['transitions']
+        min_x = min(p[0] for p in positions)
+        min_y = min(p[1] for p in positions)
+        max_x = max(p[0] for p in positions)
+        max_y = max(p[1] for p in positions)
+        return ((min_x,min_y),(max_x,max_y))
 
 def read_petri_net(filename):
     net, init, final = pnml_importer.apply(filename)
