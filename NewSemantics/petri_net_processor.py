@@ -3,12 +3,13 @@ from pm4py.objects.petri_net.utils import reachability_graph
 from pm4py.visualization.transition_system import visualizer as ts_visualizer
 from pm4py.objects.petri_net.exporter import exporter as pnml_exporter
 from pm4py.objects.petri_net.importer import importer as pnml_importer
+from NewSemantics.goal_model import GoalModel
 import xml.etree.ElementTree as ET
+from pprint import pp
 
 class PetriNet():
     def __init__(self,net,init,final,positions):
         self.net = net
-        print(f"initial place = {self.initial_place()}")
         self.positions = positions
 
     def transitions(self):
@@ -40,12 +41,14 @@ class PetriNet():
         
     def transition_names(self): 
         return sorted([t.name for t in self.net.transitions])
-
+    
+    def set_event_mapping(self, model):
+        model.event_mapping = {}
+        for t in self.net.transitions:
+            model.add_event_mapping(t.name, t.label if t.label != t.name else [])
 
 def read_petri_net(filename):
     net, init, final = pnml_importer.apply(filename)
-    print(f"init = {init}")
-    print(f"final = {final}")
     positions = extract_pnml_layout(filename)
     return PetriNet(net, init, final, positions)
 
@@ -124,7 +127,7 @@ def extract_pnml_layout(pnml_path):
             if kind == 'place':
                 layout['places'].append((new_pos_x,new_pos_y,node_id))
             else:                
-                layout['transitions'].append((new_pos_x,new_pos_y,node_id, not any(c.tag == 'name' for c in node.iter())))
+                layout['transitions'].append((new_pos_x,new_pos_y,node_id, next((c.text for c in node.iter() if c.tag == 'text'), None)))
 
     return layout
 
