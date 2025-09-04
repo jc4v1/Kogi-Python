@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="net1" type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb">
+        <place id="p2">
+            <graphics>
+                <position x="388.8028554579751" y="77.04989319358705"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p1">
+            <graphics>
+                <position x="56.24676208494065" y="75.00375099031118"/>
+            </graphics>
+            <initialMarking>
+                <text>1</text>
+            </initialMarking>
+        </place>
+        <transition id="t1">
+            <name>
+                <text>AP</text>
+            </name>
+            <graphics>
+                <position x="222.51888786370293" y="76.94635581610179"/>
+            </graphics>
+        </transition>
+        <arc id="t1,p2" source="t1" target = "p2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p1,t1" source="p1" target = "t1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+    </net>
+</pnml>
