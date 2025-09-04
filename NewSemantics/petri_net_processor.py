@@ -35,20 +35,6 @@ def read_petri_net(filename):
     positions = extract_pnml_layout(filename)
     return PetriNet(net, init, final, positions)
 
-
-def _local(tag):
-    """Return the local tag name without namespace."""
-    return tag.split('}', 1)[-1]  # works for both namespaced and non-namespaced
-
-def _parse_float(v):
-    if v is None:
-        return None
-    # tolerate comma decimals just in case
-    try:
-        return float(v.replace(',', '.'))
-    except Exception:
-        return None
-
 def extract_pnml_layout(pnml_path):
     """
     Extract (x, y) positions for places and transitions from a PNML file,
@@ -61,6 +47,8 @@ def extract_pnml_layout(pnml_path):
     root = tree.getroot()
 
     layout = {}
+    layout['places'] = []
+    layout['transitions'] = []
 
     for node in root.iter():
         kind = _local(node.tag)
@@ -113,9 +101,31 @@ def extract_pnml_layout(pnml_path):
                         break
 
         if pos is not None:
-            layout[node_id] = pos
+            # scale_x = 0.8/38.0
+            # scale_y = 3.5/299.5
+            # scale = (scale_x + scale_y)/2
+            scale = 1/90
+            new_pos_x = pos[0]*scale
+            new_pos_y = pos[1]*scale
+            if kind == 'place':
+                layout['places'].append((new_pos_x,new_pos_y,node_id))
+            else:                
+                layout['transitions'].append((new_pos_x,new_pos_y,node_id, not any(c.tag == 'name' for c in node.iter())))
 
     return layout
+
+def _local(tag):
+    """Return the local tag name without namespace."""
+    return tag.split('}', 1)[-1]  # works for both namespaced and non-namespaced
+
+def _parse_float(v):
+    if v is None:
+        return None
+    # tolerate comma decimals just in case
+    try:
+        return float(v.replace(',', '.'))
+    except Exception:
+        return None
 
 def _ancestry(elem, stop=None):
     """Yield ancestors of elem up to (but not including) 'stop' if provided."""
