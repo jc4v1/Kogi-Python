@@ -108,7 +108,7 @@ class GoalModel(BaseGoalModel):
     
     def process_event(self, event: str) -> None:
         print(f"\nProcessing event: {event}")
-        for target_set in self.event_mapping[event]:
+        for target_set in self.event_mapping.get(event,[]):
             for element in target_set:
                 self.fire_element(element)
             

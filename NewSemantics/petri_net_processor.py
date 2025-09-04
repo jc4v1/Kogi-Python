@@ -8,8 +8,7 @@ import xml.etree.ElementTree as ET
 class PetriNet():
     def __init__(self,net,init,final,positions):
         self.net = net
-        self.init = init
-        self.final = final
+        print(f"initial place = {self.initial_place()}")
         self.positions = positions
 
     def transitions(self):
@@ -28,10 +27,25 @@ class PetriNet():
 
             transitions_dict[transition.name] = [input_places, output_places]
         return transitions_dict
+    
+    def enabled_transitions(self,markings): 
+       return [ t for t, actions in self.transitions().items() if all(p in markings for p in actions[0] ) ]
+    
+    def initial_place(self):
+        inital_places = [p for p in [p1.name for p1 in self.net.places] if not any(p in actions[1] for t, actions in self.transitions().items())]
+        if len(inital_places) != 1:
+            raise Exception(f"Number of initial places is not equal to one {inital_places}")
+        else: 
+            return inital_places[0]
+        
+    def transition_names(self): 
+        return sorted([t.name for t in self.net.transitions])
 
 
 def read_petri_net(filename):
     net, init, final = pnml_importer.apply(filename)
+    print(f"init = {init}")
+    print(f"final = {final}")
     positions = extract_pnml_layout(filename)
     return PetriNet(net, init, final, positions)
 
