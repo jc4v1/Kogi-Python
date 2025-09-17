@@ -111,9 +111,69 @@ def test_check_stable_system_deadlock_case():
     assert check_stable_system(lts, {'q'}) is True
     assert check_stable_system(lts, {'p'}) is True
 
-@pytest.fixture
-def weakly_complient_lts_holds_cycle():
-    # s0 -> s1 -> s2 -> s1. 
+# --- Test Functions for the check_weak_compliance algorithm ---
+
+def test_weak_compliance_holds_with_cycle():
+    # The system can always reach a state with 'q'
+    # s0 -> s1 -> s2 -> s1.
+    # s1 has 'q', so EF(q) is always true for all reachable states.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q'})
+    s2 = State('s2', qualities={'r'})
+
+    transitions = {
+        s0: {s1},
+        s1: {s2},
+        s2: {s1}
+    }
+    lts = Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    assert check_weak_compliance(lts, {'q'}) is True
+    
+def test_weak_compliance_holds_with_deadlock():
+    # The deadlock state s1 satisfies the second part of the disjunction (AX(false) and Q)
+        # s0 -> s1 (deadlock). s1 has 'q'.
+    # From s0, EF(q) holds. From s1, it's a deadlock, and it has 'q', so the condition holds.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q'})
+
+    transitions = {
+        s0: {s1},
+        s1: {}
+    }
+    
+    lts = Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+    assert check_weak_compliance(lts, {'q'}) is True
+
+
+# --- Test Functions for the check_weak_compliance algorithm ---
+
+def test_weak_compliance_fails():
+    # The reachable states (s0, s1) do not satisfy the condition
+    # s0 -> s1 (deadlock). Neither s0 nor s1 has 'q'.
+    # The condition EF(q) is false for all reachable states.
+    # The condition AX(false) and Q is false for all states.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'r'})
+
+    transitions = {s0: {s1}, s1: {}}
+    lts = Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+    assert check_weak_compliance(lts, {'q'}) is False
+
+def test_weak_compliance_with_no_qualities_in_lts():
+    # No states have the quality 'q1', so it should fail
+    # The condition EF(Q) is false for all reachable states.
+    # The condition AX(false) and Q is false for all states.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'r'})
+
+    transitions = {s0: {s1}, s1: {}}
+    lts = Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+    assert check_weak_compliance(lts, {'q1'}) is False
+
+def test_weak_compliance_with_multiple_qualities():
+    # Q can be a set of qualities
+        # s0 -> s1 -> s2 -> s1. 
     # s1 has 'q', so EF(q) is always true for all reachable states.
     s0 = State('s0', qualities={'p'})
     s1 = State('s1', qualities={'q'})
@@ -125,55 +185,6 @@ def weakly_complient_lts_holds_cycle():
         s2: {s1}
     }
     
-    return Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
 
-@pytest.fixture
-def weakly_complient_lts_holds_deadlock():
-    # s0 -> s1 (deadlock). s1 has 'q'.
-    # From s0, EF(q) holds. From s1, it's a deadlock, and it has 'q', so the condition holds.
-    s0 = State('s0', qualities={'p'})
-    s1 = State('s1', qualities={'q'})
-
-    transitions = {
-        s0: {s1},
-        s1: {}
-    }
-    
-    return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
-
-@pytest.fixture
-def weakly_complient_lts_fails():
-    # s0 -> s1 (deadlock). Neither s0 nor s1 has 'q'.
-    # The condition EF(q) is false for all reachable states.
-    # The condition AX(false) and Q is false for all states.
-    s0 = State('s0', qualities={'p'})
-    s1 = State('s1', qualities={'r'})
-
-    transitions = {
-        s0: {s1},
-        s1: {}
-    }
-    
-    return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
-
-# --- Test Functions for the check_weak_compliance algorithm ---
-
-def test_weak_compliance_holds_with_cycle(weakly_complient_lts_holds_cycle):
-    # The system can always reach a state with 'q'
-    assert check_weak_compliance(weakly_complient_lts_holds_cycle, {'q'}) is True
-
-def test_weak_compliance_holds_with_deadlock(weakly_complient_lts_holds_deadlock):
-    # The deadlock state s1 satisfies the second part of the disjunction (AX(false) and Q)
-    assert check_weak_compliance(weakly_complient_lts_holds_deadlock, {'q'}) is True
-
-def test_weak_compliance_fails(weakly_complient_lts_fails):
-    # The reachable states (s0, s1) do not satisfy the condition
-    assert check_weak_compliance(weakly_complient_lts_fails, {'q'}) is False
-
-def test_weak_compliance_with_no_qualities_in_lts(weakly_complient_lts_fails):
-    # No states have the quality 'q', so it should fail
-    assert check_weak_compliance(weakly_complient_lts_fails, {'q'}) is False
-
-def test_weak_compliance_with_multiple_qualities(weakly_complient_lts_holds_cycle):
-    # Q can be a set of qualities
-    assert check_weak_compliance(weakly_complient_lts_holds_cycle, {'p', 'q'}) is True
+    assert check_weak_compliance(lts, {'p', 'q'}) is True
