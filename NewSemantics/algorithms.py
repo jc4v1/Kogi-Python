@@ -57,11 +57,11 @@ def check_stable_system(lts, qualities_Q):
         bool: True if the formula holds, False otherwise.
     """
     for q in qualities_Q:
-        S_not_q = {s for s in lts.states if not lts.satisfies_quality(s, q)}
+        S_not_q = {s for s in lts.states() if not lts.satisfies_quality(s, q)}
         S_ef_not_q = backward_bfs(lts, S_not_q)
-        S_ag_q = lts.states.difference(S_ef_not_q)
+        S_ag_q = lts.states().difference(S_ef_not_q)
         S_implication = S_not_q.union(S_ag_q)
-        S_reachable = forward_bfs(lts, lts.initial_state)
+        S_reachable = forward_bfs(lts, lts.initial_state())
 
         if not S_reachable.issubset(S_implication):
             return False
@@ -85,11 +85,11 @@ def check_weak_compliance(lts, qualities_Q):
     
     # Step 1: Find states satisfying EF(Q)
     # The set S_Q should contain all states that have *any* quality from qualities_Q.
-    S_Q = {s for s in lts.states for q in qualities_Q if lts.satisfies_quality(s, q)}
+    S_Q = {s for s in lts.states() for q in qualities_Q if lts.satisfies_quality(s, q)}
     S_ef_q = backward_bfs(lts, S_Q)
 
     # Step 2: Find states satisfying AX(false)
-    S_ax_false = {s for s in lts.states if not lts.get_successors(s)}
+    S_ax_false = {s for s in lts.states() if not lts.get_successors(s)}
 
     # Step 3: Find states satisfying the conjunction (AX(false) and Q)
     # A state is in this set if it's deadlocked AND has a quality from qualities_Q.
@@ -99,7 +99,7 @@ def check_weak_compliance(lts, qualities_Q):
     S_disjunction = S_ef_q.union(S_ax_false_and_q)
 
     # Step 5: Find all states reachable from the initial state
-    S_reachable = forward_bfs(lts, lts.initial_state)
+    S_reachable = forward_bfs(lts, lts.initial_state())
 
     # Step 6: Check if the property holds for all reachable states
     if S_reachable.issubset(S_disjunction):

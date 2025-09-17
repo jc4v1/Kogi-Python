@@ -51,13 +51,13 @@ def non_stable_lts():
 # --- Test Functions for the Lts class methods ---
 
 def test_weakly_complient_lts_get_successors(simple_lts):
-    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
     assert simple_lts.get_successors(s0) == {s1}
     assert simple_lts.get_successors(s2) == {s0}
     assert simple_lts.get_successors(State('s_nonexistent')) == set()
 
 def test_weakly_complient_lts_get_predecessors(simple_lts):
-    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
     assert simple_lts.get_predecessors(s0) == {s2}
     assert simple_lts.get_predecessors(s1) == {s0}
     assert simple_lts.get_predecessors(State('s_nonexistent')) == set()
@@ -65,12 +65,12 @@ def test_weakly_complient_lts_get_predecessors(simple_lts):
 # --- Test Functions for BFS algorithms ---
 
 def test_forward_bfs(simple_lts):
-    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
     assert forward_bfs(simple_lts, s0) == {s0, s1, s2}
     assert forward_bfs(simple_lts, s2) == {s0, s1, s2}
 
 def test_backward_bfs(simple_lts):
-    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
     # Find all states that can reach s1
     assert backward_bfs(simple_lts, {s1}) == {s0, s1, s2}
     # Find all states that can reach s0
