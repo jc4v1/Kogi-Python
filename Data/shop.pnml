@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="net1" type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb">
+        <place id="p1">
+            <graphics>
+                <position x="54.42857142857143" y="54"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p2">
+            <graphics>
+                <position x="280.1428571428571" y="54"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p3">
+            <graphics>
+                <position x="505.8571428571429" y="54"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p4">
+            <graphics>
+                <position x="731.5714285714286" y="54"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <transition id="t1">
+            <name>
+                <text>Pick Items</text>
+            </name>
+            <graphics>
+                <position x="167.28571428571428" y="54"/>
+            </graphics>
+        </transition>
+        <transition id="t2">
+            <name>
+                <text>Pack Items</text>
+            </name>
+            <graphics>
+                <position x="393" y="54"/>
+            </graphics>
+        </transition>
+        <transition id="t3">
+            <name>
+                <text>Ship Items</text>
+            </name>
+            <graphics>
+                <position x="618.7142857142857" y="54"/>
+            </graphics>
+        </transition>
+        <arc id="p1,t1" source="p1" target = "t1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t1,p2" source="t1" target = "p2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p2,t2" source="p2" target = "t2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t2,p3" source="t2" target = "p3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p3,t3" source="p3" target = "t3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t3,p4" source="t3" target = "p4">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+    </net>
+</pnml>

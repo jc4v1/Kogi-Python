@@ -1,0 +1,139 @@
+{
+  "actors": [
+    {
+      "id": "21a91947-4d25-42db-9649-956f18b76935",
+      "text": "Actor",
+      "type": "istar.Actor",
+      "x": 84,
+      "y": 56,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "d8e56b64-973a-471c-be28-eda2882d4e38",
+          "text": "Minimize Cost",
+          "type": "istar.Quality",
+          "x": 202,
+          "y": 282,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "e758e07e-0eaa-4b49-bea4-a80d7698e106",
+          "text": "Ensure Customer Satisfaction",
+          "type": "istar.Quality",
+          "x": 315,
+          "y": 71,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d3244692-6d1c-400d-a580-9ab99c725c3f",
+          "text": "Fulfill Order",
+          "type": "istar.Goal",
+          "x": 180,
+          "y": 130,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "a7c1a54e-29f3-4333-9f45-acfa8a523107",
+          "text": "Deliver on Time",
+          "type": "istar.Goal",
+          "x": 182,
+          "y": 65,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "4c806456-8ad0-434b-8ee7-f0feb35aa57c",
+          "text": "Pick Items",
+          "type": "istar.Task",
+          "x": 95,
+          "y": 199,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "4f17a8ca-18f4-40cf-8515-295c2b5287b4",
+          "text": "Pack Items",
+          "type": "istar.Task",
+          "x": 197,
+          "y": 204,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "cc760692-63ae-4fd8-a51b-e4c3d883522e",
+          "text": "Ship Items",
+          "type": "istar.Task",
+          "x": 319,
+          "y": 200,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "d2f9d0ad-3ae5-4885-aefb-25aeaf253ee7",
+      "type": "istar.AndRefinementLink",
+      "source": "4c806456-8ad0-434b-8ee7-f0feb35aa57c",
+      "target": "d3244692-6d1c-400d-a580-9ab99c725c3f"
+    },
+    {
+      "id": "29f095a5-537e-422f-b365-48bc089e9989",
+      "type": "istar.AndRefinementLink",
+      "source": "4f17a8ca-18f4-40cf-8515-295c2b5287b4",
+      "target": "d3244692-6d1c-400d-a580-9ab99c725c3f"
+    },
+    {
+      "id": "dc55f397-feac-4219-be59-f5c22afd7ddf",
+      "type": "istar.AndRefinementLink",
+      "source": "cc760692-63ae-4fd8-a51b-e4c3d883522e",
+      "target": "d3244692-6d1c-400d-a580-9ab99c725c3f"
+    },
+    {
+      "id": "d34ace38-5217-47d8-916b-7e997705e683",
+      "type": "istar.ContributionLink",
+      "source": "cc760692-63ae-4fd8-a51b-e4c3d883522e",
+      "target": "e758e07e-0eaa-4b49-bea4-a80d7698e106",
+      "label": "make"
+    },
+    {
+      "id": "2b75433a-8f3a-45af-acbf-03a97695f793",
+      "type": "istar.ContributionLink",
+      "source": "4f17a8ca-18f4-40cf-8515-295c2b5287b4",
+      "target": "d8e56b64-973a-471c-be28-eda2882d4e38",
+      "label": "break"
+    },
+    {
+      "id": "1e5eed08-80e1-4e7a-b431-2987e1daea12",
+      "type": "istar.OrRefinementLink",
+      "source": "d3244692-6d1c-400d-a580-9ab99c725c3f",
+      "target": "a7c1a54e-29f3-4333-9f45-acfa8a523107"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Mon, 08 Sep 2025 18:53:01 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}
