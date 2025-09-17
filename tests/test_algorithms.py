@@ -1,6 +1,6 @@
 import pytest
-from NewSemantics.algorithms import Lts, check_stable_system, State, forward_bfs, backward_bfs, check_weak_compliance
-
+from NewSemantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
+from NewSemantics.lts import State,Lts
 # --- Fixtures to set up test data ---
 
 @pytest.fixture

@@ -106,20 +106,3 @@ def check_weak_compliance(lts, qualities_Q):
         return True
     else:
         return False
-
-# --- Example Usage (from previous response) ---
-
-# Define states and their qualities (assuming each state has a 'qualities' attribute)
-class State:
-    def __init__(self, name, qualities=None):
-        self.name = name
-        self.qualities = set(qualities) if qualities else set()
-    
-    def __repr__(self):
-        return f"State('{self.name}', qualities={self.qualities})"
-    
-    def __eq__(self, other):
-        return isinstance(other, State) and self.name == other.name
-
-    def __hash__(self):
-        return hash(self.name)

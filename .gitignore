@@ -3,3 +3,5 @@
 satisfaction_analysis.xlsx
 ~$satisfaction_analysis.xlsx
 __pycache__/
+htmlcov/
+.coverage
