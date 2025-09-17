@@ -7,3 +7,4 @@ satisfaction_analysis.xlsx
 __pycache__/
 htmlcov/
 .coverage
+.pytest_cache/
