@@ -45,7 +45,7 @@ def backward_bfs(lts, target_states):
                 queue.append(prev_s)
     return reachable
 
-def check_persistence(lts, qualities_Q):
+def check_stable_system(lts, qualities_Q):
     """
     Checks the CTL formula: for all q in Q, s0 |= AG(q => AG q).
     
@@ -68,7 +68,7 @@ def check_persistence(lts, qualities_Q):
 
     return True
 
-def check_weak_compliance_custom(lts, qualities_Q):
+def check_weak_compliance(lts, qualities_Q):
     """
     Checks the CTL formula: AG((EF(Q)) or (AX(false) and Q)).
 

@@ -1,7 +1,5 @@
 import pytest
-from NewSemantics.algorithms import Lts, check_persistence, State, forward_bfs, backward_bfs, check_weak_compliance_custom
-
-# Note: Replace 'your_module' with the actual name of your Python file.
+from NewSemantics.algorithms import Lts, check_stable_system, State, forward_bfs, backward_bfs, check_weak_compliance
 
 # --- Fixtures to set up test data ---
 
@@ -53,13 +51,13 @@ def non_persistence_lts():
 
 # --- Test Functions for the Lts class methods ---
 
-def test_lts_get_successors(simple_lts):
+def test_weakly_complient_lts_get_successors(simple_lts):
     s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
     assert simple_lts.get_successors(s0) == {s1}
     assert simple_lts.get_successors(s2) == {s0}
     assert simple_lts.get_successors(State('s_nonexistent')) == set()
 
-def test_lts_get_predecessors(simple_lts):
+def test_weakly_complient_lts_get_predecessors(simple_lts):
     s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
     assert simple_lts.get_predecessors(s0) == {s2}
     assert simple_lts.get_predecessors(s1) == {s0}
@@ -79,24 +77,24 @@ def test_backward_bfs(simple_lts):
     # Find all states that can reach s0
     assert backward_bfs(simple_lts, {s0}) == {s0, s1, s2}
 
-# --- Test Functions for the main check_persistence algorithm ---
+# --- Test Functions for the main check_stable_system algorithm ---
 
-def test_check_persistence_holds(persistence_lts):
+def test_check_stable_system_holds(persistence_lts):
     qualities_to_check = {'p'}
-    assert check_persistence(persistence_lts, qualities_to_check) is True
+    assert check_stable_system(persistence_lts, qualities_to_check) is True
 
-def test_check_persistence_fails(non_persistence_lts):
+def test_check_stable_system_fails(non_persistence_lts):
     qualities_to_check = {'p'}
-    assert check_persistence(non_persistence_lts, qualities_to_check) is False
+    assert check_stable_system(non_persistence_lts, qualities_to_check) is False
 
-def test_check_persistence_multiple_qualities(simple_lts):
+def test_check_stable_system_multiple_qualities(simple_lts):
     # s0 has 'p', s1 has 'q', s2 has 'p' and 'q'
     # Check if 'p' is persistent from s0 (s0 -> s1 -> s2 -> s0). It is NOT, because s1 does not have p.
-    assert check_persistence(simple_lts, {'p'}) is False
+    assert check_stable_system(simple_lts, {'p'}) is False
     # Check if 'q' is persistent from s0. It is NOT, because s0 does not have q.
-    assert check_persistence(simple_lts, {'q'}) is False
+    assert check_stable_system(simple_lts, {'q'}) is False
 
-def test_check_persistence_deadlock_case():
+def test_check_stable_system_deadlock_case():
     # LTS with a deadlock state that satisfies the property
     s0 = State('s0', qualities={'p'})
     s1 = State('s1', qualities={'p', 'q'})
@@ -111,7 +109,7 @@ def test_check_persistence_deadlock_case():
     
     # AG(q => AG q) should hold because q is satisfied in s1 (deadlock), and no other state
     # reachable from s0 satisfies q
-    assert check_persistence(lts, {'q'}) is True
+    assert check_stable_system(lts, {'q'}) is True
 
     # AG(p => AG p) should NOT hold, because s0 has p, but its successor s1 also has p,
     # and s1 is deadlocked so AG(p) from s1 holds. The property holds. Wait, the formula is AG(q => AG q), not AF(q).
@@ -124,10 +122,10 @@ def test_check_persistence_deadlock_case():
     # So the property holds.
 
     # My manual check was flawed. The property should hold.
-    assert check_persistence(lts, {'q'}) is True
+    assert check_stable_system(lts, {'q'}) is True
 
 @pytest.fixture
-def custom_lts_holds_cycle():
+def weakly_complient_lts_holds_cycle():
     # s0 -> s1 -> s2 -> s1. 
     # s1 has 'q', so EF(q) is always true for all reachable states.
     s0 = State('s0', qualities={'p'})
@@ -143,7 +141,7 @@ def custom_lts_holds_cycle():
     return Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
 
 @pytest.fixture
-def custom_lts_holds_deadlock():
+def weakly_complient_lts_holds_deadlock():
     # s0 -> s1 (deadlock). s1 has 'q'.
     # From s0, EF(q) holds. From s1, it's a deadlock, and it has 'q', so the condition holds.
     s0 = State('s0', qualities={'p'})
@@ -157,7 +155,7 @@ def custom_lts_holds_deadlock():
     return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
 
 @pytest.fixture
-def custom_lts_fails():
+def weakly_complient_lts_fails():
     # s0 -> s1 (deadlock). Neither s0 nor s1 has 'q'.
     # The condition EF(q) is false for all reachable states.
     # The condition AX(false) and Q is false for all states.
@@ -171,24 +169,24 @@ def custom_lts_fails():
     
     return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
 
-# --- Test Functions for the custom check_weak_compliance algorithm ---
+# --- Test Functions for the check_weak_compliance algorithm ---
 
-def test_custom_weak_compliance_holds_with_cycle(custom_lts_holds_cycle):
+def test_weak_compliance_holds_with_cycle(weakly_complient_lts_holds_cycle):
     # The system can always reach a state with 'q'
-    assert check_weak_compliance_custom(custom_lts_holds_cycle, {'q'}) is True
+    assert check_weak_compliance(weakly_complient_lts_holds_cycle, {'q'}) is True
 
-def test_custom_weak_compliance_holds_with_deadlock(custom_lts_holds_deadlock):
+def test_weak_compliance_holds_with_deadlock(weakly_complient_lts_holds_deadlock):
     # The deadlock state s1 satisfies the second part of the disjunction (AX(false) and Q)
-    assert check_weak_compliance_custom(custom_lts_holds_deadlock, {'q'}) is True
+    assert check_weak_compliance(weakly_complient_lts_holds_deadlock, {'q'}) is True
 
-def test_custom_weak_compliance_fails(custom_lts_fails):
+def test_weak_compliance_fails(weakly_complient_lts_fails):
     # The reachable states (s0, s1) do not satisfy the condition
-    assert check_weak_compliance_custom(custom_lts_fails, {'q'}) is False
+    assert check_weak_compliance(weakly_complient_lts_fails, {'q'}) is False
 
-def test_custom_weak_compliance_with_no_qualities_in_lts(custom_lts_fails):
+def test_weak_compliance_with_no_qualities_in_lts(weakly_complient_lts_fails):
     # No states have the quality 'q', so it should fail
-    assert check_weak_compliance_custom(custom_lts_fails, {'q'}) is False
+    assert check_weak_compliance(weakly_complient_lts_fails, {'q'}) is False
 
-def test_custom_weak_compliance_with_multiple_qualities(custom_lts_holds_cycle):
+def test_weak_compliance_with_multiple_qualities(weakly_complient_lts_holds_cycle):
     # Q can be a set of qualities
-    assert check_weak_compliance_custom(custom_lts_holds_cycle, {'p', 'q'}) is True
+    assert check_weak_compliance(weakly_complient_lts_holds_cycle, {'p', 'q'}) is True
