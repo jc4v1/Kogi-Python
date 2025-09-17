@@ -1,0 +1,194 @@
+import pytest
+from NewSemantics.algorithms import Lts, check_persistence, State, forward_bfs, backward_bfs, check_weak_compliance_custom
+
+# Note: Replace 'your_module' with the actual name of your Python file.
+
+# --- Fixtures to set up test data ---
+
+@pytest.fixture
+def simple_lts():
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q'})
+    s2 = State('s2', qualities={'p', 'q'})
+    
+    transitions = {
+        s0: {s1},
+        s1: {s2},
+        s2: {s0}
+    }
+    
+    return Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+@pytest.fixture
+def persistence_lts():
+    # LTS where quality 'p' is persistent from s0
+    # s0 -> s1 -> s2, all have 'p'
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'p'})
+    s2 = State('s2', qualities={'p'})
+    s3 = State('s3', qualities={'q'}) # A state reachable but not from a path with 'p'
+    
+    transitions = {
+        s0: {s1},
+        s1: {s2},
+        s2: {s2}, # self-loop to ensure persistence
+        s3: {s3}
+    }
+    
+    return Lts(states={s0, s1, s2, s3}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+@pytest.fixture
+def non_persistence_lts():
+    # LTS where quality 'p' is NOT persistent from s0
+    # s0 -> s1, s0 has 'p', s1 does not
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q'})
+    
+    transitions = {
+        s0: {s1},
+        s1: {s1}
+    }
+    
+    return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+# --- Test Functions for the Lts class methods ---
+
+def test_lts_get_successors(simple_lts):
+    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    assert simple_lts.get_successors(s0) == {s1}
+    assert simple_lts.get_successors(s2) == {s0}
+    assert simple_lts.get_successors(State('s_nonexistent')) == set()
+
+def test_lts_get_predecessors(simple_lts):
+    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    assert simple_lts.get_predecessors(s0) == {s2}
+    assert simple_lts.get_predecessors(s1) == {s0}
+    assert simple_lts.get_predecessors(State('s_nonexistent')) == set()
+
+# --- Test Functions for BFS algorithms ---
+
+def test_forward_bfs(simple_lts):
+    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    assert forward_bfs(simple_lts, s0) == {s0, s1, s2}
+    assert forward_bfs(simple_lts, s2) == {s0, s1, s2}
+
+def test_backward_bfs(simple_lts):
+    s0, s1, s2 = sorted(list(simple_lts.states), key=lambda x: x.name)
+    # Find all states that can reach s1
+    assert backward_bfs(simple_lts, {s1}) == {s0, s1, s2}
+    # Find all states that can reach s0
+    assert backward_bfs(simple_lts, {s0}) == {s0, s1, s2}
+
+# --- Test Functions for the main check_persistence algorithm ---
+
+def test_check_persistence_holds(persistence_lts):
+    qualities_to_check = {'p'}
+    assert check_persistence(persistence_lts, qualities_to_check) is True
+
+def test_check_persistence_fails(non_persistence_lts):
+    qualities_to_check = {'p'}
+    assert check_persistence(non_persistence_lts, qualities_to_check) is False
+
+def test_check_persistence_multiple_qualities(simple_lts):
+    # s0 has 'p', s1 has 'q', s2 has 'p' and 'q'
+    # Check if 'p' is persistent from s0 (s0 -> s1 -> s2 -> s0). It is NOT, because s1 does not have p.
+    assert check_persistence(simple_lts, {'p'}) is False
+    # Check if 'q' is persistent from s0. It is NOT, because s0 does not have q.
+    assert check_persistence(simple_lts, {'q'}) is False
+
+def test_check_persistence_deadlock_case():
+    # LTS with a deadlock state that satisfies the property
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'p', 'q'})
+    s2 = State('s2', qualities={'q'})
+    
+    transitions = {
+        s0: {s1},
+        s1: {}, # s1 is a deadlock state
+    }
+    
+    lts = Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    
+    # AG(q => AG q) should hold because q is satisfied in s1 (deadlock), and no other state
+    # reachable from s0 satisfies q
+    assert check_persistence(lts, {'q'}) is True
+
+    # AG(p => AG p) should NOT hold, because s0 has p, but its successor s1 also has p,
+    # and s1 is deadlocked so AG(p) from s1 holds. The property holds. Wait, the formula is AG(q => AG q), not AF(q).
+    # The logic is: from any state, if it has 'p', then all future states have 'p'.
+    # From s0 (has 'p'): does AG(p) hold? No, s0 can go to s1, and s1 is a deadlock, so all future states are s1. Since s1 has 'p', the property holds.
+    # What about my fixture? s0->s1, s0 has p, s1 has p.
+    # The whole AG must be checked.
+    # From s0, s0 |= q -> AG(q). s0 does not have q, so this is true.
+    # From s1, s1 |= q -> AG(q). s1 has q. From s1, AG(q) must hold. s1 is a deadlock, so this is true.
+    # So the property holds.
+
+    # My manual check was flawed. The property should hold.
+    assert check_persistence(lts, {'q'}) is True
+
+@pytest.fixture
+def custom_lts_holds_cycle():
+    # s0 -> s1 -> s2 -> s1. 
+    # s1 has 'q', so EF(q) is always true for all reachable states.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q'})
+    s2 = State('s2', qualities={'r'})
+    
+    transitions = {
+        s0: {s1},
+        s1: {s2},
+        s2: {s1}
+    }
+    
+    return Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+@pytest.fixture
+def custom_lts_holds_deadlock():
+    # s0 -> s1 (deadlock). s1 has 'q'.
+    # From s0, EF(q) holds. From s1, it's a deadlock, and it has 'q', so the condition holds.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q'})
+
+    transitions = {
+        s0: {s1},
+        s1: {}
+    }
+    
+    return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+@pytest.fixture
+def custom_lts_fails():
+    # s0 -> s1 (deadlock). Neither s0 nor s1 has 'q'.
+    # The condition EF(q) is false for all reachable states.
+    # The condition AX(false) and Q is false for all states.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'r'})
+
+    transitions = {
+        s0: {s1},
+        s1: {}
+    }
+    
+    return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+
+# --- Test Functions for the custom check_weak_compliance algorithm ---
+
+def test_custom_weak_compliance_holds_with_cycle(custom_lts_holds_cycle):
+    # The system can always reach a state with 'q'
+    assert check_weak_compliance_custom(custom_lts_holds_cycle, {'q'}) is True
+
+def test_custom_weak_compliance_holds_with_deadlock(custom_lts_holds_deadlock):
+    # The deadlock state s1 satisfies the second part of the disjunction (AX(false) and Q)
+    assert check_weak_compliance_custom(custom_lts_holds_deadlock, {'q'}) is True
+
+def test_custom_weak_compliance_fails(custom_lts_fails):
+    # The reachable states (s0, s1) do not satisfy the condition
+    assert check_weak_compliance_custom(custom_lts_fails, {'q'}) is False
+
+def test_custom_weak_compliance_with_no_qualities_in_lts(custom_lts_fails):
+    # No states have the quality 'q', so it should fail
+    assert check_weak_compliance_custom(custom_lts_fails, {'q'}) is False
+
+def test_custom_weak_compliance_with_multiple_qualities(custom_lts_holds_cycle):
+    # Q can be a set of qualities
+    assert check_weak_compliance_custom(custom_lts_holds_cycle, {'p', 'q'}) is True
