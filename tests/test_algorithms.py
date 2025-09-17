@@ -1,6 +1,6 @@
 import pytest
 from NewSemantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
-from NewSemantics.lts import State,Lts
+from NewSemantics.lts import State, Lts
 # --- Fixtures to set up test data ---
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def simple_lts():
     return Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
 
 @pytest.fixture
-def persistence_lts():
+def stable_lts():
     # LTS where quality 'p' is persistent from s0
     # s0 -> s1 -> s2, all have 'p'
     s0 = State('s0', qualities={'p'})
@@ -29,14 +29,13 @@ def persistence_lts():
     transitions = {
         s0: {s1},
         s1: {s2},
-        s2: {s2}, # self-loop to ensure persistence
         s3: {s3}
     }
     
     return Lts(states={s0, s1, s2, s3}, actions={'a'}, transitions=transitions, initial_state=s0)
 
 @pytest.fixture
-def non_persistence_lts():
+def non_stable_lts():
     # LTS where quality 'p' is NOT persistent from s0
     # s0 -> s1, s0 has 'p', s1 does not
     s0 = State('s0', qualities={'p'})
@@ -79,13 +78,13 @@ def test_backward_bfs(simple_lts):
 
 # --- Test Functions for the main check_stable_system algorithm ---
 
-def test_check_stable_system_holds(persistence_lts):
+def test_check_stable_system_holds(stable_lts):
     qualities_to_check = {'p'}
-    assert check_stable_system(persistence_lts, qualities_to_check) is True
+    assert check_stable_system(stable_lts, qualities_to_check) is True
 
-def test_check_stable_system_fails(non_persistence_lts):
+def test_check_stable_system_fails(non_stable_lts):
     qualities_to_check = {'p'}
-    assert check_stable_system(non_persistence_lts, qualities_to_check) is False
+    assert check_stable_system(non_stable_lts, qualities_to_check) is False
 
 def test_check_stable_system_multiple_qualities(simple_lts):
     # s0 has 'p', s1 has 'q', s2 has 'p' and 'q'
@@ -110,19 +109,7 @@ def test_check_stable_system_deadlock_case():
     # AG(q => AG q) should hold because q is satisfied in s1 (deadlock), and no other state
     # reachable from s0 satisfies q
     assert check_stable_system(lts, {'q'}) is True
-
-    # AG(p => AG p) should NOT hold, because s0 has p, but its successor s1 also has p,
-    # and s1 is deadlocked so AG(p) from s1 holds. The property holds. Wait, the formula is AG(q => AG q), not AF(q).
-    # The logic is: from any state, if it has 'p', then all future states have 'p'.
-    # From s0 (has 'p'): does AG(p) hold? No, s0 can go to s1, and s1 is a deadlock, so all future states are s1. Since s1 has 'p', the property holds.
-    # What about my fixture? s0->s1, s0 has p, s1 has p.
-    # The whole AG must be checked.
-    # From s0, s0 |= q -> AG(q). s0 does not have q, so this is true.
-    # From s1, s1 |= q -> AG(q). s1 has q. From s1, AG(q) must hold. s1 is a deadlock, so this is true.
-    # So the property holds.
-
-    # My manual check was flawed. The property should hold.
-    assert check_stable_system(lts, {'q'}) is True
+    assert check_stable_system(lts, {'p'}) is True
 
 @pytest.fixture
 def weakly_complient_lts_holds_cycle():
