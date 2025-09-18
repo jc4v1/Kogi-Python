@@ -65,7 +65,7 @@ class TransitionSystem(Generic[T_STATE]):
 
     def satisfies_quality(self, state, quality):
         # Placeholder for quality check
-        return quality in state.qualities if hasattr(state, 'qualities') else state[quality] == QualityStatus.FULFILLED
+        return quality in state.qualities if hasattr(state, 'qualities') else state._markings.get(quality,QualityStatus.UNKNOWN) == QualityStatus.FULFILLED
 
 # Define states and their qualities (assuming each state has a 'qualities' attribute)
 class State:

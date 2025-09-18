@@ -176,7 +176,7 @@ def test_weak_compliance_with_multiple_qualities():
         # s0 -> s1 -> s2 -> s1. 
     # s1 has 'q', so EF(q) is always true for all reachable states.
     s0 = State('s0', qualities={'p'})
-    s1 = State('s1', qualities={'q'})
+    s1 = State('s1', qualities={'q','r'})
     s2 = State('s2', qualities={'r'})
     
     transitions = {
@@ -187,4 +187,24 @@ def test_weak_compliance_with_multiple_qualities():
     
     lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
 
-    assert check_weak_compliance(lts, {'p', 'q'}) is True
+    assert check_weak_compliance(lts, {'q', 'r'}) is True
+
+def test_weak_compliance_with_multiple_qualities_fail():
+    # Q can be a set of qualities
+        # s0 -> s1 -> s2 -> s1. 
+    # s1 has 'q', so EF(q) is always true for all reachable states.
+    s0 = State('s0', qualities={'p'})
+    s1 = State('s1', qualities={'q','r'})
+    s2 = State('s2', qualities={'r'})
+    
+    transitions = {
+        s0: {s1},
+        s1: {s2},
+        s2: {s1}
+    }
+    
+    lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
+
+    assert check_weak_compliance(lts, {'q', 'r'}) is True
+    assert check_stable_system(lts, {'q', 'r'}) is False
+    assert check_weak_compliance(lts, {'p', 't'}) is False

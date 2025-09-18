@@ -4,7 +4,7 @@ from pprint import PrettyPrinter
 from typing import Any
 
 def pretty_format(states: set[Any]) -> str:
-    return f"[\n" + ",\n".join(f"  {str(s)}" for s in states) + "\n]"
+    return "-------------------\n" + f"[\n" + ",\n".join(f"  {str(s)}" for s in states) + "\n]" + "\n-------------------"
  
 # pformat = pretty_format # Use our custom formatter by default
 
@@ -52,7 +52,7 @@ def backward_bfs(lts, target_states):
                 queue.append(prev_s)
     return reachable
 
-def check_stable_system(lts, qualities_Q):
+def check_stable_system(lts, qualities_Q, debug=False):
     """
     Checks the CTL formula: for all q in Q, s0 |= AG(q => AG q).
     
@@ -70,12 +70,25 @@ def check_stable_system(lts, qualities_Q):
         S_implication = S_not_q.union(S_ag_q)
         S_reachable = forward_bfs(lts, lts.initial_state())
 
-        if not S_reachable.issubset(S_implication):
-            return False
+        if debug:
+            print("=================================")
+            print(f"States not satisfying {q}: {pretty_format(S_not_q)}")
+            print(f"States satisfying EF(not {q}): {pretty_format(S_ef_not_q)}")
+            print(f"States satisfying AG({q}): {pretty_format(S_ag_q)}")
+            print(f"States satisfying the implication (not {q} or AG {q}): {pretty_format(S_implication)}")
+            print(f"Reachable states from initial state: {pretty_format(S_reachable)}")
+            print("=================================")
 
+        success = True
+        for s in S_reachable:
+            if s not in S_implication:
+                print(f"failing state stability {str(s)}")
+                success = False
+        if not success: 
+            return False
     return True
 
-def check_weak_compliance(lts, qualities_Q):
+def check_weak_compliance(lts, qualities_Q, debug=False):
     """
     Checks the CTL formula: AG((EF(Q)) or (AX(false) and Q)).
 
@@ -92,49 +105,42 @@ def check_weak_compliance(lts, qualities_Q):
     
     # Step 1: Find states satisfying EF(Q)
     # The set S_Q should contain all states that have *any* quality from qualities_Q.
-    S_Q = {s for s in lts.states() for q in qualities_Q if lts.satisfies_quality(s, q)}
-    print("--------------------")
-    print(f"S_Q = {pretty_format(S_Q)}")
-    print("--------------------")
+    S_Q = {s for s in lts.states() if all(lts.satisfies_quality(s, q) for q in qualities_Q)}
+    # S_Q = {s for s in lts.states() for q in qualities_Q if lts.satisfies_quality(s, q)}
     S_ef_q = backward_bfs(lts, S_Q)
-    print("--------------------")
-    print(f"S_ef_q = {pretty_format(S_ef_q)}")
-    print("--------------------")
 
 
     # Step 2: Find states satisfying AX(false)
     S_ax_false = {s for s in lts.states() if not lts.get_successors(s)}
-    print("--------------------")
-    print(f"S_ax_false = {pretty_format(S_ax_false)}")
-    print("--------------------")
 
     # Step 3: Find states satisfying the conjunction (AX(false) and Q)
     # A state is in this set if it's deadlocked AND has a quality from qualities_Q.
     S_ax_false_and_q = S_ax_false.intersection(S_Q)
-    print("--------------------")
-    print(f"S_ax_false_and_q = {pretty_format(S_ax_false_and_q)}")
-    print("--------------------")
-
 
     # Step 4: Find states satisfying the disjunction ((EF(Q)) or (AX(false) and Q))
     S_disjunction = S_ef_q.union(S_ax_false_and_q)
-    print("--------------------")
-    print(f"S_disjunction = {pretty_format(S_disjunction)}")
-    print("--------------------")
     
-
     # Step 5: Find all states reachable from the initial state
     S_reachable = forward_bfs(lts, lts.initial_state())
-    print("--------------------")
-    print(f"S_reachable = {pretty_format(S_reachable)}")
-    print("--------------------")
 
+    if debug:
+        print("=================================")
+        print(f"States satisfying Q: {pretty_format(S_Q)}")
+        print(f"States satisfying EF(Q): {pretty_format(S_ef_q)}")
+        print(f"States satisfying AX(false): {pretty_format(S_ax_false)}")
+        print(f"States satisfying AX(false) and Q: {pretty_format(S_ax_false_and_q)}")
+        print(f"States satisfying the disjunction: {pretty_format(S_disjunction)}")
+        print(f"Reachable states from initial state: {pretty_format(S_reachable)}")
+        print("=================================")
+    
     # Step 6: Check if the property holds for all reachable states
+    success = True
     for s in S_reachable:
         if s not in S_disjunction:
-            print(f"failing state {s}")
-            return False
-    return True
+            print(f"failing state weak comliance {str(s)}")
+            success = False
+    return success
+    
     # if S_reachable.issubset(S_disjunction):
     #     return True
     # else:

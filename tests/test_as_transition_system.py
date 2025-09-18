@@ -14,6 +14,7 @@ def pretty_print(transitions: dict[Any, set[Any]]):
     for state, next_states in transitions.items():
         print(f"{str(state)} -> {'. '.join([str(s) for s in next_states])})")
 
+# @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_real_gm_as_ts_combined():
     # This tests reading a simple goal model and converting it to a transition system
     # based on the =>^* relation (not the -> relation).
@@ -76,6 +77,7 @@ def test_simple_real_gm_as_ts_combined():
     assert check_stable_system(ts, {'q'}) is True
     assert check_weak_compliance(ts, {'q'}) is True
 
+# @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_real_gm_as_ts_original():
     # This tests reading a simple goal model and converting it to a transition system
     # based on the -> relation (not the =>^* relation).
@@ -138,3 +140,25 @@ def test_simple_real_gm_as_ts_original():
     assert check_stable_system(ts, {'q'}) is True
     assert check_weak_compliance(ts, {'q'}) is True
 
+# @pytest.mark.skip(reason="Temporarily disabled")
+def test_more_complex_gm():
+    gm = read_istar_model("tests/data/more-complex_gm.txt")
+    initial_markings = gm.get_markings()
+    ts = gm.as_transition_system()
+    # pretty_print(ts.transitions)
+    print(f"Initial state: {ts.initial_state()}")
+    print(f"Number of states: {len(ts.states())}")
+    print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
+    assert check_stable_system(ts, {'q1', 'q2'}) is True
+    assert check_weak_compliance(ts, {'q1', 'q2'}) is True
+
+def test_gm_with_break():
+    gm = read_istar_model("tests/data/gm_with_break.txt")
+    initial_markings = gm.get_markings()
+    ts = gm.as_transition_system(False)
+    # pretty_print(ts.transitions)
+    print(f"Initial state: {ts.initial_state()}")
+    print(f"Number of states: {len(ts.states())}")
+    print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
+    assert check_stable_system(ts, {'q1'}) is False
+    assert check_weak_compliance(ts, {'q1'}) is True 
