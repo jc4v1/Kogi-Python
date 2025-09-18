@@ -27,7 +27,6 @@ class GoalModel(BaseGoalModel):
     def try_pie_rule(self, element : str) -> bool:
         if self.element_exists(element) and self.is_leaf(element) and not self.get_element_status(element) == ElementStatus.TRUE_FALSE:
             self.set_element_status(element,ElementStatus.TRUE_FALSE)
-            print(f"pie applied for element {element}")
             return True
         return False
         
@@ -37,7 +36,6 @@ class GoalModel(BaseGoalModel):
         if (any(and_links) 
             and all(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in and_links)):
             self.set_element_status(element,ElementStatus.TRUE_FALSE)
-            print(f"pand applied for element {element}")
             return True
         return False
         
@@ -46,7 +44,6 @@ class GoalModel(BaseGoalModel):
         or_links = [link for link in self.links if link[0] == element and link[2] == LinkType.OR]
         if any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in or_links):
             self.set_element_status(element,ElementStatus.TRUE_FALSE)
-            print(f"por applied for element {element}")
             return True
         return False
 
@@ -56,7 +53,6 @@ class GoalModel(BaseGoalModel):
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links) 
             and self.get_quality_status(quality) == QualityStatus.UNKNOWN):
             self.set_quality_status(quality,QualityStatus.FULFILLED)
-            print(f"pmake applied for quality {quality}")
             return True
         return False
 
@@ -66,7 +62,6 @@ class GoalModel(BaseGoalModel):
         if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
             and self.get_quality_status(quality) == QualityStatus.UNKNOWN):
             self.set_quality_status(quality,QualityStatus.DENIED)
-            print(f"pbreak applied for quality {quality}")
             return True
         return False
     
@@ -84,7 +79,6 @@ class GoalModel(BaseGoalModel):
                 for e in true_true_refinements:
                     if self.get_element_status(e) == ElementStatus.TRUE_FALSE:
                         self.set_element_status(e, ElementStatus.TRUE_TRUE)
-            print(f"bpfulfill applied for quality {quality}")
             return True
         return False
     
@@ -102,15 +96,12 @@ class GoalModel(BaseGoalModel):
                 for e in true_false_refinements:
                     if self.get_element_status(e) == ElementStatus.TRUE_FALSE:
                         self.set_element_status(e, ElementStatus.TRUE_TRUE)
-            print(f"bpdeny applied for quality {quality}")
             return True
         return False
 
     def fire_element(self,element: str) -> None:
-        print(f"\nFiring element: {element} current markings {str(MarkingGm(get_markings(self)))}")
         self.changed_elements.clear()
         self.fire_elements({element})
-        print(f"final state markings {str(MarkingGm(get_markings(self)))}")
         
     def fire_elements(self, elements: Set[str]) -> None:
         for e in elements:
@@ -130,7 +121,6 @@ class GoalModel(BaseGoalModel):
         return {link[0] for link in self.links if link[1] == element}
   
     def try_any_rule(self, element: str) -> bool:
-        print(f"Fireing any rule for element {element} and current markings {str(MarkingGm(get_markings(self)))}")
         return (self.try_pie_rule(element) or
                 self.try_por_rule(element) or
                 self.try_pand_rule(element) or
