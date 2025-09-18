@@ -1,12 +1,14 @@
 from collections import deque
+from typing import TypeVar, Generic, Set, Dict
 
-class Lts:
+T_STATE = TypeVar('T_STATE')
+
+class TransitionSystem(Generic[T_STATE]):
     """
-    Represents a Labeled Transition System.
+    Represents a Transition System.
     """
-    def __init__(self, states, actions, transitions, initial_state):
-        self._states = set(states)
-        self.actions = set(actions)
+    def __init__(self, states: Set[T_STATE], transitions: Dict[T_STATE, Set[T_STATE]], initial_state: T_STATE):
+        self._states: Set[T_STATE] = set(states)
         self.transitions = transitions  # A dict {s: {s_prime for (s, a, s_prime) in transitions}}
         self._initial_state = initial_state
         self.predecessors = self._compute_predecessors()
@@ -48,28 +50,3 @@ class State:
 
     def __hash__(self):
         return hash(self.name)
-
-class LtsCombined:
-    def __init__(self,goal_model, petri_net, event_mapping, initial_state) -> None:
-        self.goal_model = goal_model
-        self.petri_net = petri_net
-        self.event_mapping = event_mapping
-        self._initial_state = initial_state
-    
-    def states(self):
-        return set()
-    
-    def initial_state(self):
-        return self._initial_state
-    
-class StateCombined:
-    def __init__(self, gm_state,pm_state):
-        self._gm_state = gm_state
-        self._pm_state = pm_state
-        
-    def gm_state(self):
-        return self._gm_state
-    
-    def pm_state(self):
-        return self._pm_state   
-    

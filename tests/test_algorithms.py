@@ -1,6 +1,6 @@
 import pytest
 from NewSemantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
-from NewSemantics.lts import State, Lts
+from NewSemantics.transition_system import State, TransitionSystem
 # --- Fixtures to set up test data ---
 
 @pytest.fixture
@@ -15,7 +15,7 @@ def simple_lts():
         s2: {s0}
     }
     
-    return Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    return TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
 
 @pytest.fixture
 def stable_lts():
@@ -32,7 +32,7 @@ def stable_lts():
         s3: {s3}
     }
     
-    return Lts(states={s0, s1, s2, s3}, actions={'a'}, transitions=transitions, initial_state=s0)
+    return TransitionSystem(states={s0, s1, s2, s3}, transitions=transitions, initial_state=s0)
 
 @pytest.fixture
 def non_stable_lts():
@@ -46,7 +46,7 @@ def non_stable_lts():
         s1: {s1}
     }
     
-    return Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+    return TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
 
 # --- Test Functions for the Lts class methods ---
 
@@ -104,7 +104,7 @@ def test_check_stable_system_deadlock_case():
         s1: {}, # s1 is a deadlock state
     }
     
-    lts = Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
     
     # AG(q => AG q) should hold because q is satisfied in s1 (deadlock), and no other state
     # reachable from s0 satisfies q
@@ -126,7 +126,7 @@ def test_weak_compliance_holds_with_cycle():
         s1: {s2},
         s2: {s1}
     }
-    lts = Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
     assert check_weak_compliance(lts, {'q'}) is True
     
 def test_weak_compliance_holds_with_deadlock():
@@ -141,7 +141,7 @@ def test_weak_compliance_holds_with_deadlock():
         s1: {}
     }
     
-    lts = Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
 
     assert check_weak_compliance(lts, {'q'}) is True
 
@@ -157,7 +157,7 @@ def test_weak_compliance_fails():
     s1 = State('s1', qualities={'r'})
 
     transitions = {s0: {s1}, s1: {}}
-    lts = Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
     assert check_weak_compliance(lts, {'q'}) is False
 
 def test_weak_compliance_with_no_qualities_in_lts():
@@ -168,7 +168,7 @@ def test_weak_compliance_with_no_qualities_in_lts():
     s1 = State('s1', qualities={'r'})
 
     transitions = {s0: {s1}, s1: {}}
-    lts = Lts(states={s0, s1}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
     assert check_weak_compliance(lts, {'q1'}) is False
 
 def test_weak_compliance_with_multiple_qualities():
@@ -185,6 +185,6 @@ def test_weak_compliance_with_multiple_qualities():
         s2: {s1}
     }
     
-    lts = Lts(states={s0, s1, s2}, actions={'a'}, transitions=transitions, initial_state=s0)
+    lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
 
     assert check_weak_compliance(lts, {'p', 'q'}) is True

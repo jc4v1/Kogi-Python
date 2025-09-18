@@ -1,5 +1,5 @@
 from collections import deque
-from NewSemantics.lts import Lts
+from NewSemantics.transition_system import TransitionSystem
 
 def forward_bfs(lts, start_state):
     """

@@ -2,6 +2,7 @@ from typing import Dict, List, Tuple, Set
 from typing_extensions import Self
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
 from Implementation.goal_model import GoalModel as BaseGoalModel
+from NewSemantics.transition_system import TransitionSystem
 import functools
 
 # Decorator to print successful rule applications
@@ -169,3 +170,6 @@ class GoalModel(BaseGoalModel):
         old_status = self.qualities[quality]
         self.qualities[quality] = status
         print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
+        
+    def as_lts(self):
+        return TransitionSystem(set(),{},None)
