@@ -1,5 +1,6 @@
 from collections import deque
 from NewSemantics.transition_system import TransitionSystem
+from pprint import pformat
 
 def forward_bfs(lts, start_state):
     """
@@ -86,23 +87,49 @@ def check_weak_compliance(lts, qualities_Q):
     # Step 1: Find states satisfying EF(Q)
     # The set S_Q should contain all states that have *any* quality from qualities_Q.
     S_Q = {s for s in lts.states() for q in qualities_Q if lts.satisfies_quality(s, q)}
+    print("--------------------")
+    print(f"S_Q = {pformat(S_Q)}")
+    print("--------------------")
     S_ef_q = backward_bfs(lts, S_Q)
+    print("--------------------")
+    print(f"S_ef_q = {pformat(S_ef_q)}")
+    print("--------------------")
+
 
     # Step 2: Find states satisfying AX(false)
     S_ax_false = {s for s in lts.states() if not lts.get_successors(s)}
+    print("--------------------")
+    print(f"S_ax_false = {pformat(S_ax_false)}")
+    print("--------------------")
 
     # Step 3: Find states satisfying the conjunction (AX(false) and Q)
     # A state is in this set if it's deadlocked AND has a quality from qualities_Q.
     S_ax_false_and_q = S_ax_false.intersection(S_Q)
+    print("--------------------")
+    print(f"S_ax_false_and_q = {pformat(S_ax_false_and_q)}")
+    print("--------------------")
+
 
     # Step 4: Find states satisfying the disjunction ((EF(Q)) or (AX(false) and Q))
     S_disjunction = S_ef_q.union(S_ax_false_and_q)
+    print("--------------------")
+    print(f"S_disjunction = {pformat(S_disjunction)}")
+    print("--------------------")
+    
 
     # Step 5: Find all states reachable from the initial state
     S_reachable = forward_bfs(lts, lts.initial_state())
+    print("--------------------")
+    print(f"S_reachable = {pformat(S_reachable)}")
+    print("--------------------")
 
     # Step 6: Check if the property holds for all reachable states
-    if S_reachable.issubset(S_disjunction):
-        return True
-    else:
-        return False
+    for s in S_reachable:
+        if s not in S_disjunction:
+            print(f"failing state {s}")
+            return False
+    return True
+    # if S_reachable.issubset(S_disjunction):
+    #     return True
+    # else:
+    #     return False

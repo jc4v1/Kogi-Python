@@ -1,6 +1,7 @@
 from collections import deque
 from typing import TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
+from Implementation.enums import QualityStatus
 
 T_STATE = TypeVar('T_STATE')
 
@@ -63,7 +64,7 @@ class TransitionSystem(Generic[T_STATE]):
 
     def satisfies_quality(self, state, quality):
         # Placeholder for quality check
-        return quality in state.qualities if hasattr(state, 'qualities') else False
+        return quality in state.qualities if hasattr(state, 'qualities') else state[quality] == QualityStatus.FULFILLED
 
 # Define states and their qualities (assuming each state has a 'qualities' attribute)
 class State:

@@ -26,6 +26,9 @@ def test_simple_real_gm_as_lts():
     # assert ts.states() == expected_states
     # assert ts.initial_state() == None
     # assert ts.transitions == {}
+    assert check_stable_system(ts, {'q'}) is True
+    assert check_weak_compliance(ts, {'q'}) is True
+
 
 def generate_combinations(data: dict[str, set[ElementStatus|QualityStatus]]) -> set[frozenset[tuple[str, ElementStatus|QualityStatus]]]:
     """
