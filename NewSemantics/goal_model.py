@@ -183,11 +183,12 @@ class GoalModel(BaseGoalModel):
         self.qualities[quality] = status
         print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
         
-    def as_transition_system(self) -> TransitionSystem[MarkingGm]:
+    def as_transition_system(self, original: bool = False) -> TransitionSystem[MarkingGm]:
         """
-        Generates the full Labelled Transition System (LTS) for the goal model.
+        Generates the full Transition System (TS) for the goal model.
         - States are all possible markings (combinations of statuses).
         - Transitions are created by firing leaf elements.
+        - original determines if the original -> relation should be used or =>^* instead.
         """
         all_possible_states = self._generate_all_possible_states()
         transitions: Dict[MarkingGm, Set[MarkingGm]] = {}
@@ -195,29 +196,33 @@ class GoalModel(BaseGoalModel):
         initial_markings = get_markings(self)
         initial_state = MarkingGm(initial_markings)
 
-        leaves = self._get_leaves()
+        elements = self._get_elements(original)
 
         for state_frozenset in all_possible_states:
             current_markings = dict(state_frozenset)
             current_state = MarkingGm(current_markings)
             transitions[current_state] = set()
 
-            # For each leaf, create a potential transition
-            for leaf in leaves:
+            # For each element, create a potential transition
+            for element in elements:
                 # Create a copy of the model to simulate the transition
                 next_model = self.copy()
                 next_model.set_markings(current_state._markings)
                 
-                # Fire the leaf element to see what the next state is
-                # next_model.fire_element(leaf)
-                rule_applied = next_model.try_any_rule(leaf)
+                # Fire the  element to see what the next state is
+                if original:
+                    rule_applied = next_model.try_any_rule(element)
+                else:
+                    next_model.fire_element(element)
                 
                 next_markings = get_markings(next_model)
                 next_state = MarkingGm(next_markings)
                 
                 # Add the transition if the state changes
-                # if current_state != next_state:
-                if rule_applied:
+                if original:
+                    if rule_applied:
+                        transitions[current_state].add(next_state)
+                else:
                     transitions[current_state].add(next_state)
 
         return TransitionSystem(
@@ -247,12 +252,11 @@ class GoalModel(BaseGoalModel):
         result_set = {frozenset(dict(zip(keys, combo)).items()) for combo in combinations}
         return result_set
 
-    def _get_leaves(self) -> Set[str]:
-        """Identifies leaf nodes (elements that are not parents in any link)."""
-        all_elements = set(self.tasks.keys()) | set(self.goals.keys()) | set(self.qualities.keys())
-        parents = {link[0] for link in self.links}
-        # return all_elements - parents
-        return all_elements
+    def _get_elements(self, original:bool) -> set[str]:
+        if original:
+            return set(self.tasks.keys()) | set(self.goals.keys()) | set(self.qualities.keys())
+        else:
+            return set(self.tasks.keys()) | set(self.goals.keys())
 
     def copy(self) -> Self:
         import copy
