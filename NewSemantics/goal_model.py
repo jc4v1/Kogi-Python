@@ -203,6 +203,7 @@ class GoalModel(BaseGoalModel):
             for element in elements:
                 next_model = self.copy()
                 next_model.set_markings(current_state._markings)
+                rule_applied = False
                 if original:
                     rule_applied = next_model.try_any_rule(element)
                 else:

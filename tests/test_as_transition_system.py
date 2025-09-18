@@ -118,7 +118,7 @@ def test_more_complex_gm():
 def test_gm_with_break():
     gm = read_istar_model("tests/data/gm_with_break.txt")
     initial_markings = gm.get_markings()
-    ts = gm.as_transition_system(False)
+    ts = gm.as_transition_system()
     # pretty_print(ts.transitions)
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
@@ -130,7 +130,7 @@ def test_gm_with_break():
 def test_security_gm():
     gm = read_istar_model("Data/example_from_paper.txt")
     initial_markings = gm.get_markings()
-    ts = gm.as_transition_system(False)
+    ts = gm.as_transition_system()
     # pretty_print(ts.transitions)
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
