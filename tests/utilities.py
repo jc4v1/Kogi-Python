@@ -1,8 +1,5 @@
-
+import itertools
 from Implementation.enums import ElementStatus, QualityStatus
-
-def get_markings(model) -> dict[ str, ElementStatus | QualityStatus ]:
-    return {**model.tasks, **model.goals, **model.qualities}
 
 def check_markings(model, expected_markings : dict[ str, ElementStatus | QualityStatus ]) -> None:
     for element, expected_status in expected_markings.items():
@@ -31,3 +28,41 @@ def set_element_status(model, element:str, status:ElementStatus | QualityStatus)
         model.qualities[element] = status
     else: 
         raise ValueError(f"Element {element} not found in model.")
+    
+def generate_combinations(data: dict[str, set[ElementStatus|QualityStatus]]) -> set[frozenset[tuple[str, ElementStatus|QualityStatus]]]:
+    """
+    Generates all possible combinations from a dictionary where keys map to sets of values.
+    Each combination is a dictionary containing one value for each key.
+
+    Args:
+        data: A dictionary mapping strings to sets of strings.
+              Example: {'color': {'red', 'blue'}, 'size': {'S', 'M'}}
+
+    Returns:
+        A set of frozensets, where each frozenset represents an immutable dictionary
+        of a unique combination.
+        Example: {
+            frozenset({'color': 'red', 'size': 'S'}.items()),
+            frozenset({'color': 'red', 'size': 'M'}.items()),
+            frozenset({'color': 'blue', 'size': 'S'}.items()),
+            frozenset({'color': 'blue', 'size': 'M'}.items())
+        }
+    """
+    if not data:
+        return {frozenset()}
+
+    keys = list(data.keys())
+    value_sets = [data[key] for key in keys]
+
+    # itertools.product computes the Cartesian product of the value sets
+    combinations = itertools.product(*value_sets)
+
+    # We need to build dictionaries from the combinations and make them hashable
+    result_set = set()
+    for combo in combinations:
+        # Create a dictionary for the current combination
+        combo_dict = dict(zip(keys, combo))
+        # Convert to a frozenset of items to make it hashable for the outer set
+        result_set.add(frozenset(combo_dict.items()))
+
+    return result_set

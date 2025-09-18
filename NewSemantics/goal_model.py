@@ -3,7 +3,6 @@ from typing_extensions import Self
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
 from Implementation.goal_model import GoalModel as BaseGoalModel
 from NewSemantics.transition_system import TransitionSystem, MarkingGm
-from tests.utilities import get_markings
 import itertools
 import functools
 
@@ -183,7 +182,7 @@ class GoalModel(BaseGoalModel):
         all_possible_states = self._generate_all_possible_states()
         transitions: Dict[MarkingGm, Set[MarkingGm]] = {}
         
-        initial_markings = get_markings(self)
+        initial_markings = self.get_markings()
         initial_state = MarkingGm(initial_markings)
 
         elements = self._get_elements(original)
@@ -205,7 +204,7 @@ class GoalModel(BaseGoalModel):
                 else:
                     next_model.fire_element(element)
                 
-                next_markings = get_markings(next_model)
+                next_markings = next_model.get_markings()
                 next_state = MarkingGm(next_markings)
                 
                 # Add the transition if the state changes
@@ -247,6 +246,12 @@ class GoalModel(BaseGoalModel):
             return set(self.tasks.keys()) | set(self.goals.keys()) | set(self.qualities.keys())
         else:
             return set(self.tasks.keys()) | set(self.goals.keys())
+
+    def get_markings(self) -> dict[str, ElementStatus | QualityStatus]:
+        """
+        Returns a dictionary of all element and quality statuses in the model.
+        """
+        return {**self.tasks, **self.goals, **self.qualities}
 
     def copy(self) -> Self:
         import copy
