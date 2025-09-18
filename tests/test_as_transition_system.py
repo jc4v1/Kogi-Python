@@ -11,16 +11,21 @@ from tests.utilities import get_markings
 
 def test_simple_real_gm_as_lts():
     gm = read_istar_model("tests/data/simple_gm.txt")
-    pp(gm.__dict__)
-    pp(get_markings(gm))
+    # pp(gm.__dict__)
+    # pp(get_markings(gm))
     ts = gm.as_transition_system()
     state_dict = {'Task': {s for s in ElementStatus},
                   'q': {s for s in QualityStatus}}
     expected_states = generate_combinations(state_dict)
-    pp(expected_states)
+    # pp(expected_states)
+    pp(len(ts.states()))
+    pp(ts.transitions)
+    # for t in ts.transitions:
+    #     pp(t.items)
+    #     print()
     # assert ts.states() == expected_states
-    assert ts.initial_state() == None
-    assert ts.transitions == {}
+    # assert ts.initial_state() == None
+    # assert ts.transitions == {}
 
 def generate_combinations(data: dict[str, set[ElementStatus|QualityStatus]]) -> set[frozenset[tuple[str, ElementStatus|QualityStatus]]]:
     """

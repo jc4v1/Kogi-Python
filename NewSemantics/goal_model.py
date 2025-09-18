@@ -2,7 +2,9 @@ from typing import Dict, List, Tuple, Set
 from typing_extensions import Self
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
 from Implementation.goal_model import GoalModel as BaseGoalModel
-from NewSemantics.transition_system import TransitionSystem
+from NewSemantics.transition_system import TransitionSystem, ImmutableDict
+from tests.utilities import get_markings
+import itertools
 import functools
 
 # Decorator to print successful rule applications
@@ -171,5 +173,83 @@ class GoalModel(BaseGoalModel):
         self.qualities[quality] = status
         print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
         
-    def as_transition_system(self):
-        return TransitionSystem(set(),{},None)
+    def as_transition_system(self) -> TransitionSystem[ImmutableDict]:
+        """
+        Generates the full Labelled Transition System (LTS) for the goal model.
+        - States are all possible markings (combinations of statuses).
+        - Transitions are created by firing leaf elements.
+        """
+        all_possible_states = self._generate_all_possible_states()
+        transitions: Dict[ImmutableDict, Set[ImmutableDict]] = {}
+        
+        initial_markings = get_markings(self)
+        initial_state = ImmutableDict(initial_markings)
+
+        leaves = self._get_leaves()
+
+        for state_frozenset in all_possible_states:
+            current_markings = dict(state_frozenset)
+            current_state_immutable = ImmutableDict(current_markings)
+            transitions[current_state_immutable] = set()
+
+            # For each leaf, create a potential transition
+            for leaf in leaves:
+                # Create a copy of the model to simulate the transition
+                next_model = self.copy()
+                next_model.set_markings(current_markings)
+                
+                # Fire the leaf element to see what the next state is
+                next_model.fire_element(leaf)
+                
+                next_markings = get_markings(next_model)
+                next_state_immutable = ImmutableDict(next_markings)
+                
+                # Add the transition if the state changes
+                if current_state_immutable != next_state_immutable:
+                    transitions[current_state_immutable].add(next_state_immutable)
+
+        return TransitionSystem(
+            states={ImmutableDict(dict(s)) for s in all_possible_states},
+            transitions=transitions,
+            initial_state=initial_state
+        )
+
+    def _generate_all_possible_states(self) -> Set[frozenset]:
+        """Generates all possible markings of the goal model."""
+        element_domains = {}
+        for task in self.tasks:
+            element_domains[task] = set(ElementStatus)
+        for goal in self.goals:
+            element_domains[goal] = set(ElementStatus)
+        for quality in self.qualities:
+            element_domains[quality] = set(QualityStatus)
+
+        if not element_domains:
+            return {frozenset()}
+
+        keys = list(element_domains.keys())
+        value_sets = [element_domains[key] for key in keys]
+
+        combinations = itertools.product(*value_sets)
+
+        result_set = {frozenset(dict(zip(keys, combo)).items()) for combo in combinations}
+        return result_set
+
+    def _get_leaves(self) -> Set[str]:
+        """Identifies leaf nodes (elements that are not parents in any link)."""
+        all_elements = set(self.tasks.keys()) | set(self.goals.keys()) | set(self.qualities.keys())
+        parents = {link[0] for link in self.links}
+        return all_elements - parents
+
+    def copy(self) -> Self:
+        import copy
+        return copy.deepcopy(self)
+
+    def set_markings(self, markings: Dict[str, ElementStatus | QualityStatus]) -> None:
+        for element, status in markings.items():
+            if element in self.tasks:
+                self.tasks[element] = status
+            elif element in self.goals:
+                self.goals[element] = status
+            elif element in self.qualities:
+                self.qualities[element] = status

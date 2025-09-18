@@ -1,7 +1,36 @@
 from collections import deque
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Mapping, Iterator, Any
+from pprint import pformat
 
 T_STATE = TypeVar('T_STATE')
+
+class ImmutableDict(Mapping[str, Any]):
+    """An immutable, hashable dictionary-like object."""
+    def __init__(self, *args, **kwargs):
+        self._d = dict(*args, **kwargs)
+        self._hash = None
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._d)
+
+    def __len__(self) -> int:
+        return len(self._d)
+
+    def __getitem__(self, key: str) -> Any:
+        return self._d[key]
+
+    def __hash__(self):
+        if self._hash is None:
+            # Calculate hash from a frozenset of items, which is stable.
+            self._hash = hash(frozenset(self._d.items()))
+        return self._hash
+
+    # def __repr__(self):
+    #     return f"{self.__class__.__name__}({self._d})"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({pformat(self._d)})"
+
 
 class TransitionSystem(Generic[T_STATE]):
     """
