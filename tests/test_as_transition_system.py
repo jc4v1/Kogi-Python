@@ -126,10 +126,9 @@ def test_gm_with_break():
     assert check_stable_system(ts, {'q1'}) is False
     assert check_weak_compliance(ts, {'q1'}) is True 
 
-# @pytest.mark.skip(reason="Too slow for regular testing")
+# @pytest.mark.skip(reason="temporarily disabled")
 def test_security_gm():
     gm = read_istar_model("Data/example_from_paper.txt")
-    initial_markings = gm.get_markings()
     ts = gm.as_transition_system()
     # pretty_print(ts.transitions)
     print(f"Initial state: {ts.initial_state()}")
@@ -137,3 +136,15 @@ def test_security_gm():
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
     assert check_stable_system(ts, {'DPA'}) is False
     assert check_weak_compliance(ts, {'DPA'}) is True 
+    
+# @pytest.mark.skip(reason="temporarily disabled")
+def test_airport_gm():
+    gm = read_istar_model("tests/data/airport_gm.txt")
+    ts = gm.as_transition_system()
+    # pretty_print(ts.transitions)
+    print(f"Initial state: {ts.initial_state()}")
+    print(f"Number of states: {len(ts.states())}")
+    print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
+    assert check_stable_system(ts, {'nothing'}) is True # if not q implies AG (q => AG q)
+    assert check_stable_system(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'}) is True
+    assert check_weak_compliance(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'}) is True 
