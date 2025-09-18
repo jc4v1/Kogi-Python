@@ -2,7 +2,7 @@ from typing import Dict, List, Tuple, Set
 from typing_extensions import Self
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
 from Implementation.goal_model import GoalModel as BaseGoalModel
-from NewSemantics.transition_system import TransitionSystem, ImmutableDict
+from NewSemantics.transition_system import TransitionSystem, MarkingGm
 from tests.utilities import get_markings
 import itertools
 import functools
@@ -173,43 +173,43 @@ class GoalModel(BaseGoalModel):
         self.qualities[quality] = status
         print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
         
-    def as_transition_system(self) -> TransitionSystem[ImmutableDict]:
+    def as_transition_system(self) -> TransitionSystem[MarkingGm]:
         """
         Generates the full Labelled Transition System (LTS) for the goal model.
         - States are all possible markings (combinations of statuses).
         - Transitions are created by firing leaf elements.
         """
         all_possible_states = self._generate_all_possible_states()
-        transitions: Dict[ImmutableDict, Set[ImmutableDict]] = {}
+        transitions: Dict[MarkingGm, Set[MarkingGm]] = {}
         
         initial_markings = get_markings(self)
-        initial_state = ImmutableDict(initial_markings)
+        initial_state = MarkingGm(initial_markings)
 
         leaves = self._get_leaves()
 
         for state_frozenset in all_possible_states:
             current_markings = dict(state_frozenset)
-            current_state_immutable = ImmutableDict(current_markings)
-            transitions[current_state_immutable] = set()
+            current_state = MarkingGm(current_markings)
+            transitions[current_state] = set()
 
             # For each leaf, create a potential transition
             for leaf in leaves:
                 # Create a copy of the model to simulate the transition
                 next_model = self.copy()
-                next_model.set_markings(current_markings)
+                next_model.set_markings(current_state._markings)
                 
                 # Fire the leaf element to see what the next state is
                 next_model.fire_element(leaf)
                 
                 next_markings = get_markings(next_model)
-                next_state_immutable = ImmutableDict(next_markings)
+                next_state = MarkingGm(next_markings)
                 
                 # Add the transition if the state changes
-                if current_state_immutable != next_state_immutable:
-                    transitions[current_state_immutable].add(next_state_immutable)
+                if current_state != next_state:
+                    transitions[current_state].add(next_state)
 
         return TransitionSystem(
-            states={ImmutableDict(dict(s)) for s in all_possible_states},
+            states={MarkingGm(dict(s)) for s in all_possible_states},
             transitions=transitions,
             initial_state=initial_state
         )

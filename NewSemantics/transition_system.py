@@ -2,6 +2,7 @@ from collections import deque
 from typing import TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
 from Implementation.enums import QualityStatus
+from Implementation.enums import ElementStatus, QualityStatus
 
 T_STATE = TypeVar('T_STATE')
 
@@ -80,3 +81,49 @@ class State:
 
     def __hash__(self):
         return hash(self.name)
+
+class MarkingGm:
+    def __init__(self, markings: dict[str,ElementStatus|QualityStatus]):
+        self._markings = markings
+        self._hash = None
+    
+    def get_element_status(self, element: str) -> ElementStatus|QualityStatus:
+        return self._markings[element]
+    
+    def __getitem__(self, key: str) -> ElementStatus|QualityStatus:
+        return self.get_element_status(key)
+    
+    def __str__(self):
+        items = [f"{key}={self._format_status(value)}" for key, value in sorted(self._markings.items())]
+        if not items:
+            return "<>"
+        return f"<{', '.join(items)}>"
+    
+    def __eq__(self, other):
+        if not isinstance(other, MarkingGm):
+            return NotImplemented
+        return self._markings == other._markings
+
+    def __hash__(self):
+        if self._hash is None:
+            # Hash a frozenset of the dictionary items for a stable hash
+            self._hash = hash(frozenset(self._markings.items()))
+        return self._hash
+    
+    def _format_status(self, status):
+        """Format status for display"""
+        if isinstance(status, ElementStatus):
+            if status == ElementStatus.UNKNOWN:
+                return "(?, ?)"
+            elif status == ElementStatus.TRUE_FALSE:
+                return "(⊤, ⊥)"
+            elif status == ElementStatus.TRUE_TRUE:
+                return "(⊤, ⊤)"
+        elif isinstance(status, QualityStatus):
+            if status == QualityStatus.UNKNOWN:
+                return "(?)"
+            elif status == QualityStatus.FULFILLED:
+                return "(⊤)"
+            elif status == QualityStatus.DENIED:
+                return "(⊥)"
+        return str(status)    

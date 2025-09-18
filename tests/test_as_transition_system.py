@@ -1,5 +1,6 @@
 import pytest
 import itertools
+from typing import Any
 from NewSemantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
 from NewSemantics.transition_system import State, TransitionSystem
 from NewSemantics.goal_model import GoalModel
@@ -8,6 +9,10 @@ from NewSemantics.petri_net_processor import read_petri_net
 from pprint import pp
 from Implementation.enums import ElementStatus, QualityStatus
 from tests.utilities import get_markings
+
+def pretty_print(transitions: dict[Any, set[Any]]):
+    for state, next_states in transitions.items():
+        print(f"{str(state)} -> {'. '.join([str(s) for s in next_states])})")
 
 def test_simple_real_gm_as_lts():
     gm = read_istar_model("tests/data/simple_gm.txt")
@@ -19,7 +24,7 @@ def test_simple_real_gm_as_lts():
     expected_states = generate_combinations(state_dict)
     # pp(expected_states)
     pp(len(ts.states()))
-    pp(ts.transitions)
+    pretty_print(ts.transitions)
     # for t in ts.transitions:
     #     pp(t.items)
     #     print()
