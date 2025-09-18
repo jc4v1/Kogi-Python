@@ -109,10 +109,10 @@ class GoalModel(BaseGoalModel):
                 self.fire_elements(self._parents(e))
     
     def process_event(self, event: str) -> None:
-        print(f"\nProcessing event: {event}")
-        print(f"find element for {event}, {self.event_mapping[event]}")
+        # print(f"\nProcessing event: {event}")
+        # print(f"find element for {event}, {self.event_mapping[event]}")
         for target_set in self.event_mapping[event]:
-            print(f"target set = {target_set}")
+            # print(f"target set = {target_set}")
             for element in target_set:
                 self.fire_element(element)
             
@@ -153,11 +153,11 @@ class GoalModel(BaseGoalModel):
         if element in self.tasks:
             old_status = self.tasks[element]
             self.tasks[element] = status
-            print(f"Task {element}: {self._format_status(old_status)} -> {self._format_status(self.tasks[element])} {'(executed pending)' if status == ElementStatus.TRUE_TRUE else ''}")
+            # print(f"Task {element}: {self._format_status(old_status)} -> {self._format_status(self.tasks[element])} {'(executed pending)' if status == ElementStatus.TRUE_TRUE else ''}")
         elif element in self.goals:
             old_status = self.goals[element]
             self.goals[element] = status
-            print(f"Goal {element}: {self._format_status(old_status)} -> {self._format_status(self.goals[element])} {'(executed pending)' if status == ElementStatus.TRUE_TRUE else ''}")
+            # print(f"Goal {element}: {self._format_status(old_status)} -> {self._format_status(self.goals[element])} {'(executed pending)' if status == ElementStatus.TRUE_TRUE else ''}")
         else:
             raise ValueError(f"Element {element} does not exist in tasks or goals.")    
             
@@ -170,7 +170,7 @@ class GoalModel(BaseGoalModel):
     def set_quality_status(self, quality: str, status: QualityStatus) -> None:
         old_status = self.qualities[quality]
         self.qualities[quality] = status
-        print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
+        # print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
         
     def as_transition_system(self, original: bool = False) -> TransitionSystem[MarkingGm]:
         """
@@ -186,12 +186,17 @@ class GoalModel(BaseGoalModel):
         initial_state = MarkingGm(initial_markings)
 
         elements = self._get_elements(original)
+        print(f"number of states: {len(all_possible_states)}, number of elements: {len(elements)}")
+        total = len(all_possible_states)
+        count = 0
 
         for state_frozenset in all_possible_states:
+            count += 1
             current_markings = dict(state_frozenset)
             current_state = MarkingGm(current_markings)
             transitions[current_state] = set()
 
+            print(f"Processing intentional element ({count}/{total})", end='\r')
             # For each element, create a potential transition
             for element in elements:
                 # Create a copy of the model to simulate the transition
