@@ -171,8 +171,64 @@ class GoalModel(BaseGoalModel):
         old_status = self.qualities[quality]
         self.qualities[quality] = status
         # print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
-        
+
     def as_transition_system(self, original: bool = False) -> TransitionSystem[MarkingGm]:
+        """
+        Generates the Transition System (TS) for the goal model,
+        but only includes states that are reachable from the initial state.
+        """
+        from collections import deque
+
+        initial_markings = self.get_markings()
+        initial_state = MarkingGm(initial_markings)
+        elements = self._get_elements(original)
+
+        visited = set()
+        transitions: Dict[MarkingGm, Set[MarkingGm]] = {}
+        queue = deque([initial_state])
+
+        total_possible_states = 3**(len(self.tasks) + len(self.goals) + len(self.qualities))
+        count = 0
+        print()
+        
+        while queue:
+            count += 1
+            print(f"Explored {len(visited)} states, queue size {len(queue)}, total possible states {total_possible_states}, iteration {count}", end='\r')
+            current_state = queue.popleft()
+            if current_state in visited:
+                continue
+            visited.add(current_state)
+            transitions[current_state] = set()
+
+            for element in elements:
+                next_model = self.copy()
+                next_model.set_markings(current_state._markings)
+                if original:
+                    rule_applied = next_model.try_any_rule(element)
+                else:
+                    next_model.fire_element(element)
+                next_markings = next_model.get_markings()
+                next_state = MarkingGm(next_markings)
+
+                # Only add transition if state changes
+                if original:
+                    if rule_applied:
+                        transitions[current_state].add(next_state)
+                        if next_state not in visited:
+                            queue.append(next_state)
+                else:
+                    transitions[current_state].add(next_state)
+                    if next_state not in visited:
+                        queue.append(next_state)
+        print()  # For newline after progress output
+        return TransitionSystem(
+            states=visited,
+            transitions=transitions,
+            initial_state=initial_state
+        )
+
+
+    def as_transition_system_old(self, original: bool = False) -> TransitionSystem[MarkingGm]:
         """
         Generates the full Transition System (TS) for the goal model.
         - States are all possible markings (combinations of statuses).

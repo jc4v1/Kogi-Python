@@ -82,7 +82,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
         success = True
         for s in S_reachable:
             if s not in S_implication:
-                print(f"failing state stability {str(s)}")
+                # print(f"failing state stability {str(s)}")
                 success = False
         if not success: 
             return False
