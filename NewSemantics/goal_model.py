@@ -171,5 +171,5 @@ class GoalModel(BaseGoalModel):
         self.qualities[quality] = status
         print(f"Quality {quality}: {self._format_status(old_status)} -> {self._format_status(self.qualities[quality])}")
         
-    def as_lts(self):
+    def as_transition_system(self):
         return TransitionSystem(set(),{},None)

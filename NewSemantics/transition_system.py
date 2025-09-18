@@ -1,5 +1,5 @@
 from collections import deque
-from typing import TypeVar, Generic, Set, Dict
+from typing import TypeVar, Generic
 
 T_STATE = TypeVar('T_STATE')
 
@@ -7,16 +7,16 @@ class TransitionSystem(Generic[T_STATE]):
     """
     Represents a Transition System.
     """
-    def __init__(self, states: Set[T_STATE], transitions: Dict[T_STATE, Set[T_STATE]], initial_state: T_STATE):
-        self._states: Set[T_STATE] = set(states)
+    def __init__(self, states: set[T_STATE], transitions: dict[T_STATE, set[T_STATE]], initial_state: T_STATE):
+        self._states: set[T_STATE] = set(states)
         self.transitions = transitions  # A dict {s: {s_prime for (s, a, s_prime) in transitions}}
         self._initial_state = initial_state
         self.predecessors = self._compute_predecessors()
 
-    def states(self):
+    def states(self) -> set[T_STATE]: 
         return self._states
     
-    def initial_state(self):
+    def initial_state(self) -> T_STATE:
         return self._initial_state
 
     def _compute_predecessors(self):

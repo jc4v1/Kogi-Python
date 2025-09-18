@@ -1,6 +1,9 @@
 
 from Implementation.enums import ElementStatus, QualityStatus
 
+def get_markings(model) -> dict[ str, ElementStatus | QualityStatus ]:
+    return {**model.tasks, **model.goals, **model.qualities}
+
 def check_markings(model, expected_markings : dict[ str, ElementStatus | QualityStatus ]) -> None:
     for element, expected_status in expected_markings.items():
         actual_status = get_element_status(model, element)
