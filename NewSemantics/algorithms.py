@@ -1,6 +1,4 @@
 from collections import deque
-from NewSemantics.transition_system import TransitionSystem, MarkingGm
-from pprint import PrettyPrinter
 from typing import Any
 
 def pretty_format(states: set[Any]) -> str:

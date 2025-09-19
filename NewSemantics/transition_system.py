@@ -1,8 +1,9 @@
 from collections import deque
 from typing import TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
-from Implementation.enums import QualityStatus
 from Implementation.enums import ElementStatus, QualityStatus
+# from NewSemantics.goal_model import GoalModel
+# from NewSemantics.petri_net import PetriNet
 
 T_STATE = TypeVar('T_STATE')
 
@@ -80,6 +81,12 @@ class TransitionSystem(Generic[T_STATE]):
     def satisfies_quality(self, state, quality):
         # Placeholder for quality check
         return quality in state.qualities if hasattr(state, 'qualities') else state._markings.get(quality,QualityStatus.UNKNOWN) == QualityStatus.FULFILLED
+    
+    def get_enabled_actions(self, state: T_STATE) -> list[Any]:
+        """
+        Returns the set of enabled actions for a given state.
+        """
+        return list(set(self.transitions.get(state, {}).keys()))
 
 # Define states and their qualities (assuming each state has a 'qualities' attribute)
 class State:
@@ -174,3 +181,127 @@ class MarkingPn:
         self_items = sorted(self._markings.items())
         other_items = sorted(other._markings.items())
         return self_items > other_items
+    
+def combine_goal_model_and_petri_net(gm: 'GoalModel', pn: 'PetriNet', event_mapping = None) -> 'CombinedTransitionSystem':
+    gm_ts = gm.as_transition_system()
+    pn_ts = pn.as_transition_system()
+    if not event_mapping:
+        pn.set_event_mapping(gm)
+        event_map = gm.event_mapping
+    combined_ts = CombinedTransitionSystem(gm_ts, pn_ts, event_map)
+    return combined_ts
+
+class Marking:
+    """
+    Represents a combined marking: (GoalModel marking, PetriNet marking)
+    """
+    def __init__(self, gm_marking: MarkingGm, pn_marking: MarkingPn):
+        self.gm_marking = gm_marking
+        self.pn_marking = pn_marking
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Marking)
+            and self.gm_marking == other.gm_marking
+            and self.pn_marking == other.pn_marking
+        )
+
+    def __hash__(self):
+        return hash((self.gm_marking, self.pn_marking))
+
+    def __repr__(self):
+        return f"Marking(gm={self.gm_marking}, pn={self.pn_marking})"
+
+    def __str__(self):
+        return f"({str(self.gm_marking)}, {str(self.pn_marking)})"
+
+    def __lt__(self, other):
+        if not isinstance(other, Marking):
+            return NotImplemented
+        return (str(self.gm_marking), str(self.pn_marking)) < (str(other.gm_marking), str(other.pn_marking))
+
+
+class CombinedTransitionSystem:
+    """
+    Represents a combined transition system of a GoalModel and a PetriNet.
+    States are pairs of (MarkingGm, MarkingPn).
+    Transitions are based on PetriNet actions and a mapping dict[str, set[str]].
+    """
+    def __init__(
+        self,
+        gm_ts: TransitionSystem[MarkingGm],
+        pn_ts: TransitionSystem[MarkingPn],
+        event_map: dict[str, set[str]]
+    ):
+        self.gm_ts = gm_ts
+        self.pn_ts = pn_ts
+        self.event_map = event_map
+
+        self._states: set[Marking] = set()
+        self.transitions: dict[Marking,dict[Any,set[Marking]]] = {}
+        self._initial_state: Marking
+        self._states, self.transitions, self._initial_state = self._compute_combined_ts()
+
+    def _compute_combined_ts(self):
+        from collections import deque
+
+        initial_state = Marking(self.gm_ts.initial_state(), self.pn_ts.initial_state())
+        visited = set()
+        transitions: dict[Marking, dict[str, set[Marking]]] = {}
+        queue = deque([initial_state])
+
+        while queue:
+            current = queue.popleft()
+            if current in visited:
+                continue
+            visited.add(current)
+            transitions[current] = {}
+
+            # Get enabled PetriNet actions from the PetriNet transition system
+            pn_actions = self.pn_ts.get_enabled_actions(current.pn_marking)
+            for pn_action in pn_actions:
+                pn_successors = self.pn_ts.get_successors(current.pn_marking, pn_action)
+                gm_elements = list(self.event_map.get(pn_action, set()))
+
+                # Compute all reachable GM markings by firing all elements in gm_elements
+                gm_successors = {current.gm_marking}
+                for element in gm_elements:
+                    next_gm = set()
+                    for gm_marking in gm_successors:
+                        next_gm.update(self.gm_ts.get_successors(gm_marking, element))
+                    if next_gm:
+                        gm_successors = next_gm
+
+                for pn_target in pn_successors:
+                    for gm_target in gm_successors:
+                        next_state = Marking(gm_target, pn_target)
+                        transitions[current].setdefault(pn_action, set()).add(next_state)
+                        if next_state not in visited:
+                            queue.append(next_state)
+
+        return visited, transitions, initial_state
+
+    def states(self) -> set[Marking]:
+        return self._states
+
+    def initial_state(self) -> Marking:
+        return self._initial_state
+
+    def get_successors(self, state, action=None):
+        if action is None:
+            action_dict = self.transitions.get(state, {})
+            result = set()
+            for next_states in action_dict.values():
+                result.update(next_states)
+            return result
+        else:
+            return self.transitions.get(state, {}).get(action, set())
+
+    def get_predecessors(self, state):
+        predecessors = {s: set() for s in self._states}
+        for s, action_dict in self.transitions.items():
+            for action, next_states in action_dict.items():
+                for next_s in next_states:
+                    predecessors[next_s].add(s)
+        return predecessors.get(state, set())
+
