@@ -127,3 +127,32 @@ class MarkingGm:
             elif status == QualityStatus.DENIED:
                 return "(⊥)"
         return str(status)    
+    
+class MarkingPn:
+    """
+    Represents a marking (state) of a Petri net.
+    """
+    def __init__(self, markings: dict[str, int]):
+        self._markings = dict(markings)
+
+    def __eq__(self, other):
+        return isinstance(other, MarkingPn) and self._markings == other._markings
+
+    def __hash__(self):
+        # Hash based on the frozenset of items for immutability
+        return hash(frozenset(self._markings.items()))
+
+    def __repr__(self):
+        return f"MarkingPn({self._markings})"
+    
+    def __str__(self):
+        marked_places = [p for p, v in sorted(self._markings.items()) if v == 1]
+        return "{" + ", ".join(marked_places) + "}"
+
+    def __lt__(self, other):
+        if not isinstance(other, MarkingPn):
+            return NotImplemented
+        # Sort by keys, then by values
+        self_items = sorted(self._markings.items())
+        other_items = sorted(other._markings.items())
+        return self_items > other_items

@@ -1,11 +1,6 @@
-# from pm4py.visualization.petri_net import visualizer as pn_vis
-# from pm4py.objects.petri_net.utils import reachability_graph
-# from pm4py.visualization.transition_system import visualizer as ts_visualizer
-# from pm4py.objects.petri_net.exporter import exporter as pnml_exporter
-# from pm4py.objects.petri_net.importer import importer as pnml_importer
-# from NewSemantics.goal_model import GoalModel
-# import xml.etree.ElementTree as ET
-# from pprint import pp
+from NewSemantics.transition_system import TransitionSystem
+from NewSemantics.transition_system import MarkingPn  # Use MarkingPn for Petri net states
+
 
 class PetriNet():
     def __init__(self,net,init,final,positions):
@@ -54,3 +49,47 @@ class PetriNet():
         max_x = max(p[0] for p in positions)
         max_y = max(p[1] for p in positions)
         return ((min_x,min_y),(max_x,max_y))
+
+    def as_transition_system(self):
+        """
+        Converts the Petri net to a TransitionSystem instance using MarkingPn for states.
+        """
+        from collections import deque
+
+        # Initial marking: assume each place is either marked (1) or not (0)
+        initial_marking = {p.name: 1 if p.name == self.initial_place() else 0 for p in self.net.places}
+        initial_state = MarkingPn(initial_marking)
+        visited = set()
+        transitions = {}
+        queue = deque([initial_state])
+
+        while queue:
+            current_state = queue.popleft()
+            if current_state in visited:
+                continue
+            visited.add(current_state)
+            transitions[current_state] = set()
+
+            # Find enabled transitions for current marking
+            enabled = self.enabled_transitions([p for p, v in current_state._markings.items() if v > 0])
+            for t_name in enabled:
+                # Fire transition: consume input places, produce output places
+                next_marking = dict(current_state._markings)
+                input_places, output_places = self.transitions()[t_name]
+                for p in input_places:
+                    next_marking[p] -= 1
+                for p in output_places:
+                    next_marking[p] += 1
+                # Only keep places with non-negative marking
+                for p in next_marking:
+                    next_marking[p] = max(0, next_marking[p])
+                next_state = MarkingPn(next_marking)
+                transitions[current_state].add(next_state)
+                if next_state not in visited:
+                    queue.append(next_state)
+
+        return TransitionSystem(
+            states=visited,
+            transitions=transitions,
+            initial_state=initial_state
+        )
