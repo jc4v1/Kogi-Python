@@ -4,6 +4,7 @@ from pprint import pformat
 from Implementation.enums import ElementStatus, QualityStatus
 # from NewSemantics.goal_model import GoalModel
 # from NewSemantics.petri_net import PetriNet
+from NewSemantics.algorithms import check_stable_system, check_weak_compliance
 
 T_STATE = TypeVar('T_STATE')
 
@@ -187,8 +188,8 @@ def combine_goal_model_and_petri_net(gm: 'GoalModel', pn: 'PetriNet', event_mapp
     pn_ts = pn.as_transition_system()
     if not event_mapping:
         pn.set_event_mapping(gm)
-        event_map = gm.event_mapping
-    combined_ts = CombinedTransitionSystem(gm_ts, pn_ts, event_map)
+        event_mapping = gm.event_mapping
+    combined_ts = CombinedTransitionSystem(gm_ts, pn_ts, event_mapping)
     return combined_ts
 
 class Marking:
@@ -219,7 +220,9 @@ class Marking:
         if not isinstance(other, Marking):
             return NotImplemented
         return (str(self.gm_marking), str(self.pn_marking)) < (str(other.gm_marking), str(other.pn_marking))
-
+    
+    def satisfies_quality(self, quality):
+        return self.gm_marking[quality] == QualityStatus.FULFILLED
 
 class CombinedTransitionSystem:
     """
@@ -244,43 +247,48 @@ class CombinedTransitionSystem:
 
     def _compute_combined_ts(self):
         from collections import deque
-
+    
         initial_state = Marking(self.gm_ts.initial_state(), self.pn_ts.initial_state())
         visited = set()
         transitions: dict[Marking, dict[str, set[Marking]]] = {}
         queue = deque([initial_state])
-
+    
         while queue:
             current = queue.popleft()
             if current in visited:
                 continue
             visited.add(current)
             transitions[current] = {}
-
+    
             # Get enabled PetriNet actions from the PetriNet transition system
             pn_actions = self.pn_ts.get_enabled_actions(current.pn_marking)
             for pn_action in pn_actions:
                 pn_successors = self.pn_ts.get_successors(current.pn_marking, pn_action)
-                gm_elements = list(self.event_map.get(pn_action, set()))
-
-                # Compute all reachable GM markings by firing all elements in gm_elements
-                gm_successors = {current.gm_marking}
-                for element in gm_elements:
-                    next_gm = set()
-                    for gm_marking in gm_successors:
-                        next_gm.update(self.gm_ts.get_successors(gm_marking, element))
-                    if next_gm:
-                        gm_successors = next_gm
-
-                for pn_target in pn_successors:
-                    for gm_target in gm_successors:
-                        next_state = Marking(gm_target, pn_target)
-                        transitions[current].setdefault(pn_action, set()).add(next_state)
-                        if next_state not in visited:
-                            queue.append(next_state)
-
-        return visited, transitions, initial_state
-
+                event_sequences = self.event_map.get(pn_action, [])
+    
+                # If no event sequences, treat as empty event (goal model state unchanged)
+                if not event_sequences:
+                    event_sequences = [[]]
+    
+                # Each event_sequence is a list of elements to fire in order
+                for event_sequence in event_sequences:
+                    gm_successors = {current.gm_marking}
+                    for element in event_sequence:
+                        next_gm = set()
+                        for gm_marking in gm_successors:
+                            next_gm.update(self.gm_ts.get_successors(gm_marking, element))
+                        if next_gm:
+                            gm_successors = next_gm
+    
+                    for pn_target in pn_successors:
+                        for gm_target in gm_successors:
+                            next_state = Marking(gm_target, pn_target)
+                            transitions[current].setdefault(pn_action, set()).add(next_state)
+                            if next_state not in visited:
+                                queue.append(next_state)
+    
+        return visited, transitions, initial_state  
+      
     def states(self) -> set[Marking]:
         return self._states
 
@@ -304,4 +312,12 @@ class CombinedTransitionSystem:
                 for next_s in next_states:
                     predecessors[next_s].add(s)
         return predecessors.get(state, set())
+    
+    def satisfies_quality(self, state, quality):
+        return state.satisfies_quality(quality)
 
+    def check_stability(self,qualities):
+        return check_stable_system(self, qualities)
+
+    def check_weak_compliance(self,qualities):
+        return check_weak_compliance(self, qualities)

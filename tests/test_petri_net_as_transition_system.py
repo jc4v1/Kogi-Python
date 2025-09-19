@@ -37,6 +37,8 @@ def test_demo_pm_as_ts():
     ts = pn.as_transition_system()
     pretty_print_states(ts.states())
     pretty_print(ts.transitions)
+    
+    assert ts.initial_state() == MarkingPn({'p0': 1, 'p1': 0, 'p2': 0, 'p3': 0, 'p4': 0, 'p5': 0, 'p6': 0, 'p7': 0, 'p8': 0, 'p9': 0, 'p10': 0})    
 
     expected_states_str = """{
 {p0},
