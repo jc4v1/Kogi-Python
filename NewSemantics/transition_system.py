@@ -36,11 +36,16 @@ class ImmutableDict(Mapping[str, Any]):
 
 class TransitionSystem(Generic[T_STATE]):
     """
-    Represents a Transition System.
+    Represents a Transition System with actions.
     """
-    def __init__(self, states: set[T_STATE], transitions: dict[T_STATE, set[T_STATE]], initial_state: T_STATE):
+    def __init__(
+        self,
+        states: set[T_STATE],
+        transitions: dict[T_STATE, dict[Any, set[T_STATE]]],
+        initial_state: T_STATE
+    ):
         self._states: set[T_STATE] = set(states)
-        self.transitions = transitions  # A dict {s: {s_prime for (s, a, s_prime) in transitions}}
+        self.transitions = transitions  # Dict[state, Dict[action, Set[state]]]
         self._initial_state = initial_state
         self.predecessors = self._compute_predecessors()
 
@@ -52,13 +57,22 @@ class TransitionSystem(Generic[T_STATE]):
 
     def _compute_predecessors(self):
         predecessors = {s: set() for s in self.states()}
-        for s, next_states in self.transitions.items():
-            for next_s in next_states:
-                predecessors[next_s].add(s)
+        for s, action_dict in self.transitions.items():
+            for action, next_states in action_dict.items():
+                for next_s in next_states:
+                    predecessors[next_s].add(s)
         return predecessors
 
-    def get_successors(self, state):
-        return self.transitions.get(state, set())
+    def get_successors(self, state, action=None):
+        if action is None:
+            # Return all successors for all actions
+            action_dict = self.transitions.get(state, {})
+            result = set()
+            for next_states in action_dict.values():
+                result.update(next_states)
+            return result
+        else:
+            return self.transitions.get(state, {}).get(action, set())
 
     def get_predecessors(self, state):
         return self.predecessors.get(state, set())
@@ -127,6 +141,10 @@ class MarkingGm:
             elif status == QualityStatus.DENIED:
                 return "(⊥)"
         return str(status)    
+    def __lt__(self, other):
+        if not isinstance(other, MarkingGm):
+            return NotImplemented
+        return str(self) < str(other)    
     
 class MarkingPn:
     """

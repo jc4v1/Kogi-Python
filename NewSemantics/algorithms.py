@@ -137,7 +137,7 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
     success = True
     for s in S_reachable:
         if s not in S_disjunction:
-            print(f"failing state weak comliance {str(s)}")
+            # print(f"failing state weak comliance {str(s)}")
             success = False
     return success
     

@@ -1,5 +1,6 @@
 import itertools
 from Implementation.enums import ElementStatus, QualityStatus
+from typing import Any
 
 def check_markings(model, expected_markings : dict[ str, ElementStatus | QualityStatus ]) -> None:
     for element, expected_status in expected_markings.items():
@@ -66,3 +67,27 @@ def generate_combinations(data: dict[str, set[ElementStatus|QualityStatus]]) -> 
         result_set.add(frozenset(combo_dict.items()))
 
     return result_set
+
+def transitions_to_str(transitions: dict[Any, dict[str, set[Any]]]) -> str:
+    lines = []
+    for state in sorted(transitions):
+        action_dict = transitions[state]
+        if not action_dict:
+            lines.append(f"{str(state)} -> {{}}")
+        else:
+            for action, next_states in sorted(action_dict.items()):
+                if next_states:
+                    targets = ', '.join([str(s) for s in sorted(next_states)])
+                    lines.append(f"({str(state)} -{action}-> {targets})")
+                else:
+                    lines.append(f"{str(state)} -> {{}}")
+    return "\n".join(lines)
+
+def pretty_print(transitions: dict[Any, dict[str, set[Any]]]):
+    print(transitions_to_str(transitions))
+
+def states_to_str(states: set[Any]) -> str:
+    return "{\n" + ',\n '.join([str(s) for s in sorted(states)]) + "\n}"
+
+def pretty_print_states(states: set[Any]):
+    print(states_to_str(states))
