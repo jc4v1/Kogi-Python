@@ -51,8 +51,8 @@ def test_demo_combined_system():
     pretty_print_states(lts.states())
     qualities = { q for q, _ in gm.qualities.items()}
     print(f"qualities: {qualities}")
-    assert lts.check_stability(qualities) is False
-    assert lts.check_weak_compliance(qualities) is True
+    assert not lts.check_stability(qualities)[0]
+    assert lts.check_weak_compliance(qualities)[0]
 
 def test_demo_combined_system_fail():
     # We make weak compliance fail by removing the mapping for t_6
@@ -70,5 +70,5 @@ def test_demo_combined_system_fail():
     # pretty_print_states(lts.states())
     qualities = { q for q, _ in gm.qualities.items()}
     print(f"qualities: {qualities}")
-    assert lts.check_stability(qualities) is False
-    assert lts.check_weak_compliance(qualities) is False
+    assert not lts.check_stability(qualities)[0]
+    assert not lts.check_weak_compliance(qualities)[0]

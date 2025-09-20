@@ -8,13 +8,6 @@ from NewSemantics.transition_system import MarkingGm
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_real_gm_as_ts_combined():
-    # This tests reading a simple goal model and converting it to a transition system
-    # based on the =>^* relation (not the -> relation).
-    # the =>^* relation is as defined *after* the definition of the GoalModel.
-    # This is the default behavior of as_transition_system.
-    # The difference can be seen that Task=?? and q=? goes to Task=TF and q=T in one step,
-    # and not to Task=TF and q=? as in the other test.
-
     gm = read_istar_model("tests/data/simple_gm.txt")
     initial_markings = gm.get_markings()
     ts = gm.as_transition_system()
@@ -42,25 +35,18 @@ def test_simple_real_gm_as_ts_combined():
         MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED}): {
             'Task': {MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED})}
         },
-}
+    }
     # Check that transitions match expected
     assert ts.transitions == expected_transitions
     # Optionally, print transitions for manual inspection
     # print("Transitions:")
     # pretty_print(ts.transitions)
     # Check stable system and weak compliance
-    assert check_stable_system(ts, {'q'}) is True
-    assert check_weak_compliance(ts, {'q'}) is True
+    assert check_stable_system(ts, {'q'})[0]
+    assert check_weak_compliance(ts, {'q'})[0]
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_real_gm_as_ts_original():
-    # This tests reading a simple goal model and converting it to a transition system
-    # based on the -> relation (not the =>^* relation).
-    # the -> relation is as defined in the definition of the GoalModel.
-    # This is done by passing original=True to as_transition_system.
-    # The difference can be seen that Task=?? and q=? goes to Task=TF and q=? in one step,
-    # and not to Task=TF and q=T as in the previous test.
-
     gm = read_istar_model("tests/data/simple_gm.txt")
     initial_markings = gm.get_markings()
     ts = gm.as_transition_system(True)
@@ -91,8 +77,8 @@ def test_simple_real_gm_as_ts_original():
     # print("Transitions:")
     # pretty_print(ts.transitions)
     # Check stable system and weak compliance
-    assert check_stable_system(ts, {'q'}) is True
-    assert check_weak_compliance(ts, {'q'}) is True
+    assert check_stable_system(ts, {'q'})[0]
+    assert check_weak_compliance(ts, {'q'})[0]
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_more_complex_gm():
@@ -103,8 +89,8 @@ def test_more_complex_gm():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert check_stable_system(ts, {'q1', 'q2'}) is True
-    assert check_weak_compliance(ts, {'q1', 'q2'}) is True
+    assert check_stable_system(ts, {'q1', 'q2'})[0]
+    assert check_weak_compliance(ts, {'q1', 'q2'})[0]
 
 def test_gm_with_break():
     gm = read_istar_model("tests/data/gm_with_break.txt")
@@ -114,8 +100,8 @@ def test_gm_with_break():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert check_stable_system(ts, {'q1'}) is False
-    assert check_weak_compliance(ts, {'q1'}) is True 
+    assert not check_stable_system(ts, {'q1'})[0]
+    assert check_weak_compliance(ts, {'q1'})[0] 
 
 # @pytest.mark.skip(reason="temporarily disabled")
 def test_security_gm():
@@ -125,8 +111,8 @@ def test_security_gm():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert check_stable_system(ts, {'DPA'}) is False
-    assert check_weak_compliance(ts, {'DPA'}) is True 
+    assert not check_stable_system(ts, {'DPA'})[0]
+    assert check_weak_compliance(ts, {'DPA'})[0]
     
 # @pytest.mark.skip(reason="temporarily disabled")
 def test_airport_gm():
@@ -136,6 +122,6 @@ def test_airport_gm():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert check_stable_system(ts, {'nothing'}) is True # if not q implies AG (q => AG q)
-    assert check_stable_system(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'}) is True
-    assert check_weak_compliance(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'}) is True 
+    assert check_stable_system(ts, {'nothing'})[0]
+    assert check_stable_system(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})[0]
+    assert check_weak_compliance(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})[0]

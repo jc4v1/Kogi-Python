@@ -61,6 +61,8 @@ def check_stable_system(lts, qualities_Q, debug=False):
     Returns:
         bool: True if the formula holds, False otherwise.
     """
+    failing_states = {}
+    success = True
     for q in qualities_Q:
         S_not_q = {s for s in lts.states() if not lts.satisfies_quality(s, q)}
         S_ef_not_q = backward_bfs(lts, S_not_q)
@@ -77,14 +79,17 @@ def check_stable_system(lts, qualities_Q, debug=False):
             print(f"Reachable states from initial state: {pretty_format(S_reachable)}")
             print("=================================")
 
-        success = True
         for s in S_reachable:
             if s not in S_implication:
-                # print(f"failing state stability {str(s)}")
+                if q not in failing_states:
+                    failing_states[q] = set()
+                failing_states[q].add(s)
+                if debug:
+                    print(f"failing state stability for quality {q}: {str(s)}")
                 success = False
-        if not success: 
-            return False
-    return True
+    if not success: 
+        return (False, failing_states)
+    return (True, {})
 
 def check_weak_compliance(lts, qualities_Q, debug=False):
     """
@@ -101,6 +106,7 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
     # We will assume Q is a single quality, or the formula is for the combined set.
     # The structure of your request implies the latter.
     
+    failing_states: set[Any] = set()
     # Step 1: Find states satisfying EF(Q)
     # The set S_Q should contain all states that have *any* quality from qualities_Q.
     S_Q = {s for s in lts.states() if all(lts.satisfies_quality(s, q) for q in qualities_Q)}
@@ -135,9 +141,11 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
     success = True
     for s in S_reachable:
         if s not in S_disjunction:
-            # print(f"failing state weak comliance {str(s)}")
+            failing_states.add(s)
+            if debug:
+                print(f"failing state weak comliance {str(s)}")
             success = False
-    return success
+    return (success, failing_states)
     
     # if S_reachable.issubset(S_disjunction):
     #     return True

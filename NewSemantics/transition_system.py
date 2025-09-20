@@ -316,8 +316,8 @@ class CombinedTransitionSystem:
     def satisfies_quality(self, state, quality):
         return state.satisfies_quality(quality)
 
-    def check_stability(self,qualities):
-        return check_stable_system(self, qualities)
+    def check_stability(self,qualities, debug=False):
+        return check_stable_system(self, qualities, debug)
 
-    def check_weak_compliance(self,qualities):
-        return check_weak_compliance(self, qualities)
+    def check_weak_compliance(self,qualities, debug=False):
+        return check_weak_compliance(self, qualities, debug)
