@@ -115,8 +115,8 @@ def test_security_gm():
     assert check_weak_compliance(ts, {'DPA'})[0]
     
 # @pytest.mark.skip(reason="temporarily disabled")
-def test_airport_gm():
-    gm = read_istar_model("tests/data/airport_gm.txt")
+def test_airline():
+    gm = read_istar_model("tests/data/airline_gm.txt")
     ts = gm.as_transition_system()
     # pretty_print(ts.transitions)
     print(f"Initial state: {ts.initial_state()}")
