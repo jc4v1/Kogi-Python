@@ -1,6 +1,3 @@
-import sys
-import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from NewSemantics.goal_model import GoalModel
 # rest of your imports
 import pytest
