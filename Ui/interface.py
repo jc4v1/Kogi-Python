@@ -27,11 +27,13 @@ def get_status_color_from_model(model, element_id):
             return 'lightblue'
     return 'white'
 
-def create_interface(model, petri_net, executed_events, petri_tokens, handler_debug=True):
+def create_interface(model, petri_net, debug=False):
     """
     Creates the complete airline process interface as a widget.
     All graphical and interactive logic is encapsulated here.
     """
+    executed_events = []
+    petri_tokens = {petri_net.initial_place(): 1}
     # Header
     header = widgets.HTML(f"""
     <div style='text-align: center; margin-bottom: 20px;'>
@@ -55,7 +57,7 @@ def create_interface(model, petri_net, executed_events, petri_tokens, handler_de
     trace_output = widgets.Output()
     status_output = widgets.Output()
     viz_output = widgets.Output()
-    debug_output = widgets.Output() if handler_debug else None
+    debug_output = widgets.Output() if debug else None
 
     # Controls Panel
     options = petri_net.transition_names()
@@ -160,7 +162,7 @@ def create_interface(model, petri_net, executed_events, petri_tokens, handler_de
         _update_state['pending_update'] = False
 
         try:
-            if handler_debug:
+            if debug:
                 print("DEBUG: safe_update_visualization() called - Starting render")
                 print(f"Current petri_tokens: {petri_tokens}")
 
@@ -335,7 +337,7 @@ def create_interface(model, petri_net, executed_events, petri_tokens, handler_de
                 _update_state['pending_update'] = False
                 import threading
                 threading.Timer(0.1, safe_update_visualization).start()
-            if handler_debug:
+            if debug:
                 print("DEBUG: safe_update_visualization() completed - Render finished")
 
     def update_petri_tokens(event_name):
@@ -361,7 +363,7 @@ def create_interface(model, petri_net, executed_events, petri_tokens, handler_de
             update_status_info(f"Event {selected_event} completed successfully")
         except Exception as e:
             update_status_info(f"Error executing event: {str(e)}")
-            if handler_debug:
+            if debug:
                 print(f"Error in event execution: {e}")
 
     def reset_model_handler(b):
