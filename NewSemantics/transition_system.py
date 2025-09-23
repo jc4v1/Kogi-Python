@@ -291,3 +291,12 @@ class CombinedTransitionSystem:
 
     def check_weak_compliance(self,qualities, debug=False):
         return check_weak_compliance(self, qualities, debug)
+
+    def check_strong_compliance(self,qualities, debug=False):
+        stable = check_stable_system(self, qualities, debug)
+        weakly_compliant = check_weak_compliance(self, qualities, debug)
+        return (
+            stable[0] and weakly_compliant[0],
+            stable[1],
+            weakly_compliant[1]
+        )
