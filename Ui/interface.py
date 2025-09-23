@@ -271,19 +271,43 @@ def create_interface(model, petri_net, executed_events, petri_tokens, handler_de
                         status_text = f"{element_id}\n{model._format_status(model.tasks[element_id])}"
                         ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale)
 
+                # for parent, child, link_type, _ in model.links:
+                #     arrow_color = {
+                #         "MAKE": 'green',
+                #         "BREAK": 'red',
+                #         "AND": 'purple',
+                #         "OR": 'orange'
+                #     }.get(link_type.name if hasattr(link_type, 'name') else link_type, 'blue')
+                #     style = '->'
+                #     connector_arrow = patches.FancyArrowPatch(
+                #         posA=positions[child], posB=positions[parent],
+                #         patchA=shapes[child], patchB=shapes[parent],
+                #         arrowstyle=style, color=arrow_color, linewidth=4,
+                #         shrinkB=2 if link_type != "AND" else 20, mutation_scale=20)
+                #     ax2.add_patch(connector_arrow)
+
                 for parent, child, link_type, _ in model.links:
-                    arrow_color = {
-                        "MAKE": 'green',
-                        "BREAK": 'red',
-                        "AND": 'purple',
-                        "OR": 'orange'
-                    }.get(link_type.name if hasattr(link_type, 'name') else link_type, 'blue')
-                    style = '->'
+                    if link_type.name == "MAKE":
+                        arrow_color = 'green'
+                        style = '->'
+                    elif link_type.name == "BREAK":
+                        arrow_color = 'red'
+                        style = '->'
+                    elif link_type.name == "AND":
+                        arrow_color = 'purple'
+                        style = '|-|,widthA=0,widthB=0.5'
+                    elif link_type.name == "OR":
+                        arrow_color = 'orange'
+                        style = '->'
+                    else:
+                        arrow_color = 'blue'
+                        style = '->'
+                    
                     connector_arrow = patches.FancyArrowPatch(
                         posA=positions[child], posB=positions[parent],
                         patchA=shapes[child], patchB=shapes[parent],
                         arrowstyle=style, color=arrow_color, linewidth=4,
-                        shrinkB=2 if link_type != "AND" else 20, mutation_scale=20)
+                        shrinkB=2 if link_type.name != "AND" else 20, mutation_scale=20)
                     ax2.add_patch(connector_arrow)
 
                 ax2.set_xticks([])
@@ -344,6 +368,7 @@ def create_interface(model, petri_net, executed_events, petri_tokens, handler_de
         executed_events.clear()
         petri_tokens.clear()
         petri_tokens.update({petri_net.initial_place(): 1})
+        model.reset()
         update_trace()
         update_token_status()
         safe_update_visualization()
