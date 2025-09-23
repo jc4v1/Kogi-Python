@@ -1,4 +1,4 @@
-from Implementation.enums import ElementStatus, QualityStatus, LinkType
+from NewSemantics.enums import ElementStatus, QualityStatus, LinkType
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
@@ -366,50 +366,7 @@ def create_dual_model_visualization():
             ax1.set_xticks([])
             ax1.set_yticks([])
             ax1.grid(True, alpha=0.3)
-            
-            # # Right side: Process Model
-            # ax2.set_title("Process Model & Event Mappings", fontsize=16, fontweight='bold', pad=20)
-            # ax2.set_xlim(0, 10)
-            # ax2.set_ylim(0, 12)
-            
-            # # Draw process model as a sequence
-            # events = list(model.event_mapping.keys())
-            # y_positions = [10, 8.5, 7, 5.5, 4, 2.5, 1, 0.5]  # Different heights for visual appeal
-            
-            # for i, event in enumerate(events):
-            #     if i < len(y_positions):
-            #         x_pos = 2
-            #         y_pos = y_positions[i]
-                    
-            #         # Process transition as rectangle
-            #         rect = FancyBboxPatch((x_pos-0.4, y_pos-0.25), 0.8, 0.5,
-            #                             boxstyle="round,pad=0.05",
-            #                             facecolor='lightgray', edgecolor='black', linewidth=2)
-            #         ax2.add_patch(rect)
-            #         ax2.text(x_pos, y_pos, event, ha='center', va='center', fontweight='bold', fontsize=12)
-                    
-            #         # Show mapping with arrow
-            #         targets = model.event_mapping[event]
-            #         if isinstance(targets[0], list):
-            #             target_str = ', '.join(targets[0])
-            #         else:
-            #             target_str = targets[0][0] if isinstance(targets[0], list) else str(targets[0])
-                    
-            #         # Arrow pointing to mapping
-            #         ax2.annotate('', xy=(x_pos + 1.5, y_pos), xytext=(x_pos + 0.5, y_pos),
-            #                     arrowprops=dict(arrowstyle='->', color='black', lw=2))
-                    
-            #         # Target box
-            #         target_rect = FancyBboxPatch((x_pos + 1.5, y_pos-0.2), 2.5, 0.4,
-            #                                    boxstyle="round,pad=0.05",
-            #                                    facecolor='lightyellow', edgecolor='gray')
-            #         ax2.add_patch(target_rect)
-            #         ax2.text(x_pos + 2.75, y_pos, target_str, ha='center', va='center', fontsize=10)
-            
-            # ax2.set_xticks([])
-            # ax2.set_yticks([])
-            # ax2.grid(True, alpha=0.3)
-            
+                        
             plt.tight_layout()
             plt.show()
             plt.close()
