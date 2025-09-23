@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple, Set
 from typing_extensions import Self
-from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-from Implementation.goal_model import GoalModel as BaseGoalModel
+from NewSemantics.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+from NewSemantics.goal_model_old import GoalModel as BaseGoalModel
 from NewSemantics.transition_system import TransitionSystem, MarkingGm
 import itertools
 import functools

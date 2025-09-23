@@ -2,7 +2,7 @@ import pytest
 from typing import Any
 from NewSemantics.algorithms import check_stable_system, check_weak_compliance
 from NewSemantics.istar_processor import read_istar_model
-from Implementation.enums import ElementStatus, QualityStatus
+from NewSemantics.enums import ElementStatus, QualityStatus
 from tests.utilities import pretty_print_states, states_to_str, transitions_to_str, pretty_print
 from NewSemantics.transition_system import MarkingGm
 

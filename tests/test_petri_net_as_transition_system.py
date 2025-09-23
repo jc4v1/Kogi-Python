@@ -6,7 +6,7 @@ from NewSemantics.goal_model import GoalModel
 from NewSemantics.istar_processor import read_istar_model
 from NewSemantics.petri_net_processor import read_petri_net
 from pprint import pp
-from Implementation.enums import ElementStatus, QualityStatus
+from NewSemantics.enums import ElementStatus, QualityStatus
 from tests.utilities import pretty_print_states, states_to_str, transitions_to_str, pretty_print
 from NewSemantics.transition_system import MarkingPn
 

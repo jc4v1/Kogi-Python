@@ -1,5 +1,5 @@
-from Implementation.enums import LinkType, ElementStatus, QualityStatus
-from Implementation.goal_model import GoalModel
+from NewSemantics.enums import LinkType, ElementStatus, QualityStatus
+from NewSemantics.goal_model_old import GoalModel
 from utilities import *
 
 # CELL 2 - Model Creation Function

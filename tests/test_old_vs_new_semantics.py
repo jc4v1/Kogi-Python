@@ -2,8 +2,8 @@ from NewSemantics.goal_model import GoalModel as NewGoalModel
 # rest of your imports
 
 import pytest
-from Implementation.goal_model import GoalModel as OldGoalModel
-from Implementation.enums import ElementStatus, LinkType, QualityStatus
+from NewSemantics.goal_model_old import GoalModel as OldGoalModel
+from NewSemantics.enums import ElementStatus, LinkType, QualityStatus
 from tests.utilities import check_markings, set_markings
 
 def test_and_the_same():

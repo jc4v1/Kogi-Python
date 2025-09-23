@@ -1,9 +1,7 @@
 from collections import deque
 from typing import TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
-from Implementation.enums import ElementStatus, QualityStatus
-# from NewSemantics.goal_model import GoalModel
-# from NewSemantics.petri_net import PetriNet
+from NewSemantics.enums import ElementStatus, QualityStatus
 from NewSemantics.algorithms import check_stable_system, check_weak_compliance
 
 T_STATE = TypeVar('T_STATE')
