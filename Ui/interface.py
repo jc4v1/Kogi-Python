@@ -5,6 +5,7 @@ import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch
 from datetime import datetime
 from Ui.Layout import Layout
+from NewSemantics.enums import LinkType
 
 def get_status_color_from_model(model, element_id):
     from NewSemantics.enums import ElementStatus, QualityStatus
@@ -311,39 +312,28 @@ class InterfaceBuilder:
     
         # Draw links (with AND as perpendicular bar)
         for parent, child, link_type, _ in self.model.links:
-            pos_parent = positions[parent]
-            pos_child = positions[child]
-            link_type_name = link_type.name if hasattr(link_type, 'name') else str(link_type)
-            if link_type_name == "AND":
-                # Draw a perpendicular bar at the midpoint
-                x1, y1 = pos_child
-                x2, y2 = pos_parent
-                mx, my = (x1 + x2) / 2, (y1 + y2) / 2
-                dx, dy = x2 - x1, y2 - y1
-                length = math.hypot(dx, dy)
-                if length == 0:
-                    perp_dx, perp_dy = 0, 0
-                else:
-                    perp_dx, perp_dy = -dy / length, dx / length
-                bar_length = 0.4
-                px1 = mx + perp_dx * bar_length / 2
-                py1 = my + perp_dy * bar_length / 2
-                px2 = mx - perp_dx * bar_length / 2
-                py2 = my - perp_dy * bar_length / 2
-                ax2.plot([px1, px2], [py1, py2], color='purple', linewidth=4, solid_capstyle='round')
-            else:
-                arrow_color = {
-                    "MAKE": 'green',
-                    "BREAK": 'red',
-                    "OR": 'orange'
-                }.get(link_type_name, 'blue')
+            if link_type == LinkType.MAKE:
+                arrow_color = 'green'
                 style = '->'
-                connector_arrow = patches.FancyArrowPatch(
-                    posA=pos_child, posB=pos_parent,
-                    patchA=shapes[child], patchB=shapes[parent],
-                    arrowstyle=style, color=arrow_color, linewidth=4,
-                    shrinkB=2, mutation_scale=20)
-                ax2.add_patch(connector_arrow)
+            elif link_type == LinkType.BREAK:
+                arrow_color = 'red'
+                style = '->'
+            elif link_type == LinkType.AND:
+                arrow_color = 'purple'
+                style = '|-|,widthA=0,widthB=0.5'
+            elif link_type == LinkType.OR:
+                arrow_color = 'orange'
+                style = '->'
+            else:
+                arrow_color = 'blue'
+                style = '->'
+            
+            connector_arrow = patches.FancyArrowPatch(
+                posA=positions[child], posB=positions[parent],
+                patchA=shapes[child], patchB=shapes[parent],
+                arrowstyle=style, color=arrow_color, linewidth=4,
+                shrinkB=2 if link_type != LinkType.AND else 20, mutation_scale=20)
+            ax2.add_patch(connector_arrow)
     
         ax2.set_xticks([])
         ax2.set_yticks([])
