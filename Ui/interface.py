@@ -6,6 +6,8 @@ from matplotlib.patches import FancyBboxPatch
 from datetime import datetime
 from Ui.Layout import Layout
 from NewSemantics.enums import LinkType
+from NewSemantics.transition_system import combine_goal_model_and_petri_net
+from typing import Any
 
 def get_status_color_from_model(model, element_id):
     from NewSemantics.enums import ElementStatus, QualityStatus
@@ -84,6 +86,27 @@ class InterfaceBuilder:
             layout=widgets.Layout(width='100%', margin='5px 0px')
         )
 
+        # Add new buttons for stability and weak compliance
+        self.check_stability_button = widgets.Button(
+            description='Check Stability',
+            disabled=False,
+            button_style='info',
+            tooltip='Check stability for the goal model qualities',
+            layout=widgets.Layout(width='100%', margin='5px 0px')
+        )
+
+        self.check_weak_compliance_button = widgets.Button(
+            description='Check Weak Compliance',
+            disabled=False,
+            button_style='info',
+            tooltip='Check weak compliance for the goal model qualities',
+            layout=widgets.Layout(width='100%', margin='5px 0px')
+        )
+
+        # Attach handlers
+        self.check_stability_button.on_click(self.check_stability_handler)
+        self.check_weak_compliance_button.on_click(self.check_weak_compliance_handler)
+
         self.token_status = widgets.HTML(
             value="<b>Tokens:</b><br>No tokens (execute events to see tokens)",
             layout=widgets.Layout(width='100%', margin='10px 0px')
@@ -94,14 +117,28 @@ class InterfaceBuilder:
             layout=widgets.Layout(width='100%', margin='10px 0px')
         )
 
+        # Dropdown for failed markings (initially hidden)
+        self.failed_markings_dropdown = widgets.Dropdown(
+            options=[],
+            description='Failed marking:',
+            disabled=True,
+            layout=widgets.Layout(width='100%', margin='5px 0px')
+        )
+        self.failed_markings_dropdown.observe(self.on_failed_marking_selected, names='value')
+
+        self._last_failed_markings: list[Any] = []
+
         self.controls_panel = widgets.VBox([
             widgets.HTML("<h3 style='margin: 0 0 15px 0; color: #2E86AB;'>Controls</h3>"),
             self.process_dropdown,
             self.execute_button,
+            self.check_stability_button,
+            self.check_weak_compliance_button,
             self.reset_button,
             widgets.HTML("<hr style='margin: 15px 0;'>"),
             self.token_status,
             self.status_info,
+            self.failed_markings_dropdown,
             self.trace_output
         ], layout=widgets.Layout(
             width='18%',
@@ -388,6 +425,90 @@ class InterfaceBuilder:
         self.update_token_status()
         self.safe_update_visualization()
         self.update_status_info("Model reset to initial state")
+        self.failed_markings_dropdown.options = []
+        self.failed_markings_dropdown.disabled = True
+        self._last_failed_markings = []
+        
+    def check_stability_handler(self, b):
+        try:
+            self.update_status_info("Checking stability...")
+            self.executed_events.clear()
+            self.model.reset()
+            self.petri_tokens = {self.petri_net.initial_place(): 1}
+            lts = combine_goal_model_and_petri_net(self.model, self.petri_net,self.model.event_mapping)
+            result = lts.check_stability(list(self.model.qualities.keys()))
+            if result[0] is True:
+                self.update_status_info("Stability check: TRUE")
+                self.failed_markings_dropdown.options = []
+                self.failed_markings_dropdown.disabled = True
+                self._last_failed_markings = []
+            else:
+                failed = sorted(result[1])
+                self.update_status_info(f"Stability check: FALSE ({len(failed)} counterexamples)")
+                self.failed_markings_dropdown.options = [
+                    (str(failed[i]), i) for i in range(len(failed))
+                ]
+                self.failed_markings_dropdown.disabled = False
+                self._last_failed_markings = sorted(failed)
+        except Exception as e:
+            self.update_status_info(f"Error checking stability: {str(e)}")
+            self.failed_markings_dropdown.options = []
+            self.failed_markings_dropdown.disabled = True
+            self._last_failed_markings = []
+        finally:
+            self.update_trace()
+            self.update_token_status()
+            self.safe_update_visualization()
+
+
+    def check_weak_compliance_handler(self, b):
+        try:
+            self.update_status_info("Checking weak compliance...")
+            self.executed_events.clear()
+            self.model.reset()
+            self.petri_tokens = {self.petri_net.initial_place(): 1}
+            lts = combine_goal_model_and_petri_net(self.model, self.petri_net,self.model.event_mapping)
+            result = lts.check_weak_compliance(list(self.model.qualities.keys()))
+            if result[0] is True:
+                self.update_status_info("Weak compliance: TRUE")
+                self.failed_markings_dropdown.options = []
+                self.failed_markings_dropdown.disabled = True
+                self._last_failed_markings = []
+            else:
+                failed = sorted(result[1])
+                self.update_status_info(f"Weak compliance: FALSE ({len(failed)} counterexamples)")
+                self.failed_markings_dropdown.options = [
+                    (str(failed[i]), i) for i in range(len(failed))
+                ]
+                self.failed_markings_dropdown.disabled = False
+                self._last_failed_markings = failed
+        except Exception as e:
+            self.update_status_info(f"Error checking weak compliance: {str(e)}")
+            self.failed_markings_dropdown.options = []
+            self.failed_markings_dropdown.disabled = True
+            self._last_failed_markings = []
+        finally:
+            self.update_trace()
+            self.update_token_status()
+            self.safe_update_visualization()
+
+    def on_failed_marking_selected(self, change):
+        if change['type'] == 'change' and change['name'] == 'value':
+            idx = change['new']
+            if idx is None or not self._last_failed_markings:
+                return
+            marking = self._last_failed_markings[idx]
+            # Expect marking to be a tuple: (goal_model_status_dict, petri_tokens_dict)
+            goal_status, petri_tokens = marking.gm_marking, marking.pn_marking
+            # Set goal model status
+            self.model.set_markings(goal_status.markings())
+            # Set petri tokens
+            self.petri_tokens.clear()
+            self.petri_tokens.update({ p:v for p,v in petri_tokens.markings().items() if v > 0 })
+            self.update_trace()
+            self.update_token_status()
+            self.safe_update_visualization()
+            self.update_status_info("Set to selected failed marking.")
 
     def create_interface(self):
         return self.complete_interface

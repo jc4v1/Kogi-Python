@@ -78,6 +78,9 @@ class MarkingGm:
     def __init__(self, markings: dict[str,ElementStatus|QualityStatus]):
         self._markings = markings
         self._hash = None
+        
+    def markings(self) -> dict[str, ElementStatus|QualityStatus]:
+        return self._markings
     
     def get_element_status(self, element: str) -> ElementStatus|QualityStatus:
         return self._markings[element]
@@ -130,6 +133,9 @@ class MarkingPn:
     """
     def __init__(self, markings: dict[str, int]):
         self._markings = dict(markings)
+        
+    def markings(self) -> dict[str, int]:
+        return self._markings
 
     def __eq__(self, other):
         return isinstance(other, MarkingPn) and self._markings == other._markings
@@ -153,7 +159,7 @@ class MarkingPn:
         other_items = sorted(other._markings.items())
         return self_items > other_items
     
-def combine_goal_model_and_petri_net(gm: 'GoalModel', pn: 'PetriNet', event_mapping = None) -> 'CombinedTransitionSystem':
+def combine_goal_model_and_petri_net(gm, pn, event_mapping = None) -> 'CombinedTransitionSystem':
     gm_ts = gm.as_transition_system()
     pn_ts = pn.as_transition_system()
     if not event_mapping:
@@ -181,10 +187,11 @@ class Marking:
         return hash((self.gm_marking, self.pn_marking))
 
     def __repr__(self):
-        return f"Marking(gm={self.gm_marking}, pn={self.pn_marking})"
+        # return f"Marking(gm={self.gm_marking}, pn={self.pn_marking})"
+        return str(self.pn_marking)
 
     def __str__(self):
-        return f"({str(self.gm_marking)}, {str(self.pn_marking)})"
+        return str(self.pn_marking)
 
     def __lt__(self, other):
         if not isinstance(other, Marking):

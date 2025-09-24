@@ -61,7 +61,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
     Returns:
         bool: True if the formula holds, False otherwise.
     """
-    failing_states = {}
+    failing_states = set()
     success = True
     for q in qualities_Q:
         S_not_q = {s for s in lts.states() if not lts.satisfies_quality(s, q)}
@@ -81,9 +81,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
 
         for s in S_reachable:
             if s not in S_implication:
-                if q not in failing_states:
-                    failing_states[q] = set()
-                failing_states[q].add(s)
+                failing_states.add(s)
                 if debug:
                     print(f"failing state stability for quality {q}: {str(s)}")
                 success = False
