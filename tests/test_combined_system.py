@@ -1,9 +1,9 @@
 import pytest
-from NewSemantics.istar_processor import read_istar_model
-from NewSemantics.petri_net_processor import read_petri_net
-from NewSemantics.transition_system import combine_goal_model_and_petri_net, Marking, MarkingGm, MarkingPn, ElementStatus, QualityStatus
+from Semantics.istar_processor import read_istar_model
+from Semantics.petri_net_processor import read_petri_net
+from Semantics.transition_system import combine_goal_model_and_petri_net, Marking, MarkingGm, MarkingPn, ElementStatus, QualityStatus
 from tests.utilities import pretty_print, pretty_print_states
-from NewSemantics.enums import ElementStatus, QualityStatus
+from Semantics.enums import ElementStatus, QualityStatus
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_combined_system():

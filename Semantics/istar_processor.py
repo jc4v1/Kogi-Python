@@ -1,6 +1,6 @@
 import json
-from NewSemantics.goal_model import GoalModel
-from NewSemantics.enums import LinkType
+from Semantics.goal_model import GoalModel
+from Semantics.enums import LinkType
 
 def read_istar_model(file_path):
     """Process the iStar goal model file."""

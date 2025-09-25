@@ -1,5 +1,5 @@
 import json
-from NewSemantics.goal_model import GoalModel
+from Semantics.goal_model import GoalModel
 from Implementation.enums import LinkType
 
 def read_istar_model(file_path):

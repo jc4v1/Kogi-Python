@@ -1,5 +1,5 @@
-from NewSemantics.transition_system import TransitionSystem
-from NewSemantics.transition_system import MarkingPn  # Use MarkingPn for Petri net states
+from Semantics.transition_system import TransitionSystem
+from Semantics.transition_system import MarkingPn  # Use MarkingPn for Petri net states
 
 
 class PetriNet():

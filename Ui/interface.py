@@ -5,12 +5,12 @@ import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch
 from datetime import datetime
 from Ui.Layout import Layout
-from NewSemantics.enums import LinkType
-from NewSemantics.transition_system import combine_goal_model_and_petri_net
+from Semantics.enums import LinkType
+from Semantics.transition_system import combine_goal_model_and_petri_net
 from typing import Any
 
 def get_status_color_from_model(model, element_id):
-    from NewSemantics.enums import ElementStatus, QualityStatus
+    from Semantics.enums import ElementStatus, QualityStatus
     if element_id in model.qualities:
         status = model.qualities[element_id]
         if status == QualityStatus.UNKNOWN:
@@ -42,7 +42,7 @@ class InterfaceBuilder:
         self.header = widgets.HTML(f"""
         <div style='text-align: center; margin-bottom: 20px;'>
             <h1 style='color: #2E86AB; margin-bottom: 10px;'>A unified view - Interactive High-Level Business Requirements Evaluation</h1>
-            <p style='font-size: 14px; color: #666;'>Using GoalModel class from: NewSemantics</p>
+            <p style='font-size: 14px; color: #666;'>Using GoalModel class from: Semantics</p>
             <p style='font-size: 12px; color: #888;'>Last Updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
         </div>
         """)

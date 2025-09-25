@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple, Set
 from typing_extensions import Self
-from NewSemantics.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-from NewSemantics.transition_system import TransitionSystem, MarkingGm
+from Semantics.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
+from Semantics.transition_system import TransitionSystem, MarkingGm
 import itertools
 import functools
 

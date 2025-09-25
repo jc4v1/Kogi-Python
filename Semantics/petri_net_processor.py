@@ -3,8 +3,8 @@ from pm4py.objects.petri_net.utils import reachability_graph
 from pm4py.visualization.transition_system import visualizer as ts_visualizer
 from pm4py.objects.petri_net.exporter import exporter as pnml_exporter
 from pm4py.objects.petri_net.importer import importer as pnml_importer
-from NewSemantics.goal_model import GoalModel
-from NewSemantics.petri_net import PetriNet
+from Semantics.goal_model import GoalModel
+from Semantics.petri_net import PetriNet
 import xml.etree.ElementTree as ET
 from pprint import pp
 

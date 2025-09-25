@@ -1,4 +1,4 @@
-from NewSemantics.enums import ElementStatus, QualityStatus, LinkType
+from Semantics.enums import ElementStatus, QualityStatus, LinkType
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
@@ -494,5 +494,5 @@ def create_interface(mdl):
     return interface
 
 from collections import defaultdict
-from NewSemantics.goal_model import GoalModel
+from Semantics.goal_model import GoalModel
 from Implementation.enums import LinkType

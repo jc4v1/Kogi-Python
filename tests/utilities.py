@@ -1,5 +1,5 @@
 import itertools
-from NewSemantics.enums import ElementStatus, QualityStatus
+from Semantics.enums import ElementStatus, QualityStatus
 from typing import Any
 
 def check_markings(model, expected_markings : dict[ str, ElementStatus | QualityStatus ]) -> None:

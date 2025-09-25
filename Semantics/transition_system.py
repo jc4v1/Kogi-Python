@@ -1,8 +1,8 @@
 from collections import deque
 from typing import TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
-from NewSemantics.enums import ElementStatus, QualityStatus
-from NewSemantics.algorithms import check_stable_system, check_weak_compliance
+from Semantics.enums import ElementStatus, QualityStatus
+from Semantics.algorithms import check_stable_system, check_weak_compliance
 
 T_STATE = TypeVar('T_STATE')
 

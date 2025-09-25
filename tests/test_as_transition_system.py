@@ -1,10 +1,10 @@
 import pytest
 from typing import Any
-from NewSemantics.algorithms import check_stable_system, check_weak_compliance
-from NewSemantics.istar_processor import read_istar_model
-from NewSemantics.enums import ElementStatus, QualityStatus
+from Semantics.algorithms import check_stable_system, check_weak_compliance
+from Semantics.istar_processor import read_istar_model
+from Semantics.enums import ElementStatus, QualityStatus
 from tests.utilities import pretty_print_states, states_to_str, transitions_to_str, pretty_print
-from NewSemantics.transition_system import MarkingGm
+from Semantics.transition_system import MarkingGm
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_real_gm_as_ts_combined():

@@ -1,6 +1,6 @@
 import pytest
-from NewSemantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
-from NewSemantics.transition_system import State, TransitionSystem
+from Semantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
+from Semantics.transition_system import State, TransitionSystem
 
 @pytest.fixture
 def simple_lts():

@@ -27,8 +27,8 @@ for path in [implementation_path, app_path, new_semantics_path]:
         sys.path.append(path)
 
 from Implementation.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-from NewSemantics.goal_model import GoalModel
-from NewSemantics.istar_processor import read_istar_model
+from Semantics.goal_model import GoalModel
+from Semantics.istar_processor import read_istar_model
 from Ui.Layout import Layout
 
 print("All libraries imported successfully!")
