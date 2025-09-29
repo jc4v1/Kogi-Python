@@ -7,8 +7,8 @@ from datetime import datetime
 # Add the Implementation directory to the path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from Implementation.goal_model import GoalModel
-from Implementation.enums import LinkType, ElementStatus, QualityStatus
+from Semantics.goal_model import GoalModel
+from Semantics.enums import LinkType, ElementStatus, QualityStatus
 
 def create_model():
     """Create the goal model with all tasks, goals, qualities, links, and requirements"""

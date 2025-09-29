@@ -42,8 +42,7 @@ class PetriNet():
     def set_event_mapping(self, model):
         model.event_mapping = {}
         for t in self.net.transitions:
-            model.add_event_mapping(t.name, t.label)
-            # model.add_event_mapping(t.name, t.label if t.label != t.name else [])
+            model.add_event_mapping(t.name, t.label if t.label != t.name else [])
             
     def min_max(self):
         positions = self.positions['places'] + self.positions['transitions']

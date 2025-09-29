@@ -7,6 +7,7 @@ from datetime import datetime
 from Ui.Layout import Layout
 from Semantics.enums import LinkType
 from Semantics.transition_system import combine_goal_model_and_petri_net
+from Semantics.petri_net import PetriNet
 from typing import Any
 
 def get_status_color_from_model(model, element_id):
@@ -30,12 +31,17 @@ def get_status_color_from_model(model, element_id):
     return 'white'
 
 class InterfaceBuilder:
-    def __init__(self, model, petri_net, debug=False):
+    def __init__(self, model, petri_net: PetriNet | None = None, whatif=False, debug=False):
         self.model = model
         self.petri_net = petri_net
         self.debug = debug
+        self.whatif = whatif
+        if self.petri_net is None and not self.whatif:
+            raise Exception("Petri net must be provided if whatif is False")
+        if self.whatif and self.petri_net is None:
+            self.petri_net = self.model.generate_all_events_petri_net()
         self.executed_events = []
-        self.petri_tokens = {petri_net.initial_place(): 1}
+        self.petri_tokens = {self.petri_net.initial_place(): 1}
         self._update_state = {'updating': False, 'pending_update': False}
 
         # Widgets
@@ -61,7 +67,7 @@ class InterfaceBuilder:
         self.viz_output = widgets.Output()
         self.debug_output = widgets.Output() if debug else None
 
-        options = petri_net.transition_names()
+        options = self.petri_net.transition_names()
         self.process_dropdown = widgets.Dropdown(
             options=options,
             value=options[0],
@@ -224,14 +230,17 @@ class InterfaceBuilder:
             with self.viz_output:
                 clear_output(wait=True)
                 fig = plt.figure(figsize=(18, 16))
-                gs = fig.add_gridspec(3, 1, height_ratios=[1.2, 1.2, 0.4], hspace=0.35)
-                ax1 = fig.add_subplot(gs[0, 0])  # Petri net
-                ax2 = fig.add_subplot(gs[1, 0])  # Goal model
-                ax3 = fig.add_subplot(gs[2, 0])  # Mappings
+                if not self.whatif:
+                    gs = fig.add_gridspec(3, 1, height_ratios=[1.2, 1.2, 0.4], hspace=0.35)
+                else: 
+                    gs = fig.add_gridspec(1, 1, height_ratios=[1], hspace=0.35)   
+                ax1 = fig.add_subplot(gs[0, 0]) if not self.whatif else None # Petri net
+                ax2 = fig.add_subplot(gs[1, 0]) if not self.whatif else fig.add_subplot(gs[0,0]) # Goal model
+                ax3 = fig.add_subplot(gs[2, 0]) if not self.whatif else None # Mappings
     
-                self._draw_petri_net(ax1)
+                self._draw_petri_net(ax1) if not self.whatif else None
                 self._draw_goal_model(ax2)
-                self._draw_mapping_table(ax3)
+                self._draw_mapping_table(ax3) if not self.whatif else None
     
                 plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05, hspace=0.35)
                 plt.show()
@@ -319,6 +328,7 @@ class InterfaceBuilder:
         ax2.set_aspect('equal')
         from builtins import max as fmax
         font_scale = 10/fmax(layout.max[0], layout.max[1])
+        font_scale = font_scale if not self.whatif else font_scale*3
         positions = layout.positions
         shapes = {}
     
@@ -512,3 +522,4 @@ class InterfaceBuilder:
 
     def create_interface(self):
         return self.complete_interface
+    
