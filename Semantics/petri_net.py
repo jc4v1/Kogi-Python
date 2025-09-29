@@ -28,6 +28,8 @@ class PetriNet():
        return [ t for t, actions in self.transitions().items() if all(p in markings for p in actions[0] ) ]
     
     def initial_place(self):
+        if len(self.net.places) == 1:
+            return self.net.places[0].name
         inital_places = [p for p in [p1.name for p1 in self.net.places] if not any(p in actions[1] for t, actions in self.transitions().items())]
         if len(inital_places) != 1:
             raise Exception(f"Number of initial places is not equal to one {inital_places}")
@@ -40,7 +42,8 @@ class PetriNet():
     def set_event_mapping(self, model):
         model.event_mapping = {}
         for t in self.net.transitions:
-            model.add_event_mapping(t.name, t.label if t.label != t.name else [])
+            model.add_event_mapping(t.name, t.label)
+            # model.add_event_mapping(t.name, t.label if t.label != t.name else [])
             
     def min_max(self):
         positions = self.positions['places'] + self.positions['transitions']

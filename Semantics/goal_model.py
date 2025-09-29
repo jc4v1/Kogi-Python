@@ -4,6 +4,7 @@ from Semantics.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
 from Semantics.transition_system import TransitionSystem, MarkingGm
 import itertools
 import functools
+from Semantics.petri_net import PetriNet
 
 # Decorator to print successful rule applications
 def log_rule(func):
@@ -393,3 +394,71 @@ class GoalModel:
         for quality_id, status in self.qualities.items():
             print(f"  {quality_id}: {self._format_status(status)}")
         print("-" * 50)
+        
+    def get_events(self) -> list[str]:
+        leaves = [e for e in list(self.goals.keys()) + list(self.tasks.keys()) if e not in {link[0] for link in self.links}]
+        return leaves
+        
+        
+def generate_all_events_petri_net(event_names):
+    """
+    Generate a PetriNet instance with a single place and a loop for each event.
+    Each event is a transition that consumes and produces a token in the place.
+    """
+    # Minimal Petri net classes for construction
+    class Place:
+        def __init__(self, name):
+            self.name = name
+
+    class Transition:
+        def __init__(self, name):
+            self.name = name
+            self.label = name
+            self.in_arcs = []
+            self.out_arcs = []
+
+    class Arc:
+        def __init__(self, source, target):
+            self.source = source
+            self.target = target
+
+    class Net:
+        def __init__(self, places, transitions, arcs):
+            self.places = places
+            self.transitions = transitions
+            self.arcs = arcs
+
+    # Create one place
+    place = Place("p1")
+    places = [place]
+
+    # Create transitions and arcs
+    transitions = []
+    arcs = []
+    for event in event_names:
+        t = Transition(event)
+        # Arc from place to transition
+        arc_in = Arc(place, t)
+        t.in_arcs.append(arc_in)
+        arcs.append(arc_in)
+        # Arc from transition to place
+        arc_out = Arc(t, place)
+        t.out_arcs.append(arc_out)
+        arcs.append(arc_out)
+        transitions.append(t)
+
+    net = Net(places, transitions, arcs)
+
+    # Positions for drawing (optional, simple layout)
+    positions = {
+        'places': [(68, 75, "p1")],
+        'transitions': [
+            (199 + i*40, 75 + (i%2)*60 - 30, t.name, t.label) for i, t in enumerate(transitions)
+        ]
+    }
+
+    # Initial marking: one token in p1
+    init = {"p1": 1}
+    final = {}
+
+    return PetriNet(net, init, final, positions)
