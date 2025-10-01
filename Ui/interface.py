@@ -523,3 +523,6 @@ class InterfaceBuilder:
     def create_interface(self):
         return self.complete_interface
     
+class WhatIfInterfaceBuilder(InterfaceBuilder):
+    def __init__(self, model, debug=False):
+        super().__init__(model, None, whatif=True, debug=debug)
