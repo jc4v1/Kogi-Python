@@ -9,6 +9,7 @@ from Semantics.enums import LinkType
 from Semantics.transition_system import combine_goal_model_and_petri_net
 from Semantics.petri_net import PetriNet
 from typing import Any
+import re
 
 def get_status_color_from_model(model, element_id):
     from Semantics.enums import ElementStatus, QualityStatus
@@ -29,6 +30,13 @@ def get_status_color_from_model(model, element_id):
         elif status == ElementStatus.TRUE_TRUE:
             return 'lightblue'
     return 'white'
+
+def whitespace_to_newlines(s: str) -> str:
+    if s is None:
+        return s
+    if '@' in s:
+        return s.replace('@ ', '\n')
+    return re.sub(r'\s+', '\n', s)
 
 class InterfaceBuilder:
     def __init__(self, model, petri_net: PetriNet | None = None, whatif=False, debug=False):
@@ -300,7 +308,7 @@ class InterfaceBuilder:
             ax1.add_patch(square)
             label_text = f"{label}"
             if not is_silent and event_name:
-                label_text += f"\n({event_name})"
+                label_text += f"\n({whitespace_to_newlines(event_name)})"
             ax1.text(x, y-0.35, label_text, ha='center', va='top', fontsize=8*font_scale, fontweight='bold')
     
         for arc in self.petri_net.net.arcs:
@@ -340,21 +348,21 @@ class InterfaceBuilder:
                                       facecolor=color, edgecolor='black', linewidth=2)
                 ax2.add_patch(cloud)
                 shapes[element_id] = cloud
-                status_text = f"{element_id}\n{self.model._format_status(self.model.qualities[element_id])}"
+                status_text = f"{whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.qualities[element_id])}"
                 ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale, zorder=10)
             elif self.model._get_element_type(element_id) == "Goal":
                 ellipse = patches.Ellipse((x, y), 1.0, 0.6,
                                           facecolor=color, edgecolor='black', linewidth=2)
                 ax2.add_patch(ellipse)
                 shapes[element_id] = ellipse
-                status_text = f"{element_id}\n{self.model._format_status(self.model.goals[element_id])}"
+                status_text = f"{whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.goals[element_id])}"
                 ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale)
             else:
                 hexagon = patches.RegularPolygon((x, y), 6, radius=0.5,
                                                  facecolor=color, edgecolor='black', linewidth=2)
                 ax2.add_patch(hexagon)
                 shapes[element_id] = hexagon
-                status_text = f"{element_id}\n{self.model._format_status(self.model.tasks[element_id])}"
+                status_text = f"{whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.tasks[element_id])}"
                 ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale)
     
         # Draw links (with AND as perpendicular bar)
@@ -391,7 +399,7 @@ class InterfaceBuilder:
         ax3.axis('off')
         mapping = self.model.event_mapping
         transitions = sorted(list(mapping.keys()))
-        elements = ['' if not mapping[k] else mapping[k][0][0] for k in transitions]
+        elements = ['' if not mapping[k] else whitespace_to_newlines(mapping[k][0][0]) for k in transitions]
         table = ax3.table(cellText=[transitions, elements],
                           rowLabels=['Process Transition', 'Goal Element'],
                           cellLoc='center', loc='center',
