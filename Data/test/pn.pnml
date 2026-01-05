@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="net1" type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb">
+        <place id="p1">
+            <graphics>
+                <position x="52" y="146.66665649414062"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p2">
+            <graphics>
+                <position x="277" y="146.66665649414062"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p3">
+            <graphics>
+                <position x="483" y="145.66665649414062"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <transition id="t1">
+            <name>
+                <text>Task1</text>
+            </name>
+            <graphics>
+                <position x="175" y="150.66665649414062"/>
+            </graphics>
+        </transition>
+        <transition id="t2">
+            <name>
+                <text>Task2</text>
+            </name>
+            <graphics>
+                <position x="379" y="145.66665649414062"/>
+            </graphics>
+        </transition>
+        <arc id="p1,t1" source="p1" target = "t1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t1,p2" source="t1" target = "p2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p2,t2" source="p2" target = "t2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t2,p3" source="t2" target = "p3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+    </net>
+</pnml>

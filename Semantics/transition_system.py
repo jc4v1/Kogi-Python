@@ -59,6 +59,19 @@ class TransitionSystem(Generic[T_STATE]):
         """
         return list(set(self.transitions.get(state, {}).keys()))
 
+    def size(self) -> tuple[int, int]:
+        """Return a tuple (number_of_states, number_of_transitions).
+
+        number_of_transitions is computed as the total number of target states
+        across all actions for all source states (i.e. sum over source->action->|targets|).
+        """
+        num_states = len(self._states)
+        num_transitions = 0
+        for action_dict in self.transitions.values():
+            for targets in action_dict.values():
+                num_transitions += len(targets)
+        return num_states, num_transitions
+
 # Define states and their qualities (assuming each state has a 'qualities' attribute)
 class State:
     def __init__(self, name, qualities=None):
@@ -93,6 +106,9 @@ class MarkingGm:
         if not items:
             return "<>"
         return f"<{', '.join(items)}>"
+    def __repr__(self):
+        return f"MarkingGm(gm={self.markings()})"
+        # return str(self.pn_marking)
     
     def __eq__(self, other):
         if not isinstance(other, MarkingGm):
@@ -187,8 +203,8 @@ class Marking:
         return hash((self.gm_marking, self.pn_marking))
 
     def __repr__(self):
-        # return f"Marking(gm={self.gm_marking}, pn={self.pn_marking})"
-        return str(self.pn_marking)
+        return f"Marking(gm={self.gm_marking}, pn={self.pn_marking})"
+        # return str(self.pn_marking)
 
     def __str__(self):
         return str(self.pn_marking)
@@ -221,6 +237,10 @@ class CombinedTransitionSystem:
         self.transitions: dict[Marking,dict[Any,set[Marking]]] = {}
         self._initial_state: Marking
         self._states, self.transitions, self._initial_state = self._compute_combined_ts()
+        print(f"Goal Model Transistion System has {gm_ts.size()} states and transitions.")  
+        print(f"Petri Net Transistion System has {pn_ts.size()} states and transitions.")  
+        print(f"Combined TS has {self.size()} states and transitions.")  
+        
 
     def _compute_combined_ts(self):
         from collections import deque
@@ -292,6 +312,19 @@ class CombinedTransitionSystem:
     
     def satisfies_quality(self, state, quality):
         return state.satisfies_quality(quality)
+
+    def size(self) -> tuple[int, int]:
+        """Return a tuple (number_of_states, number_of_transitions).
+
+        number_of_transitions is computed as the total number of target states
+        across all actions for all source states.
+        """
+        num_states = len(self._states)
+        num_transitions = 0
+        for action_dict in self.transitions.values():
+            for targets in action_dict.values():
+                num_transitions += len(targets)
+        return num_states, num_transitions
 
     def check_stability(self,qualities, debug=False):
         return check_stable_system(self, qualities, debug)

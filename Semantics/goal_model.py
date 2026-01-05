@@ -407,9 +407,9 @@ class GoalModel:
                 self.name = name
 
         class Transition:
-            def __init__(self, name):
+            def __init__(self, name, label):
                 self.name = name
-                self.label = name
+                self.label = label
                 self.in_arcs = []
                 self.out_arcs = []
 
@@ -431,8 +431,10 @@ class GoalModel:
         # Create transitions and arcs
         transitions = []
         arcs = []
+        counter = 1
         for event in event_names:
-            t = Transition(event)
+            t = Transition("t"+str(counter),event)
+            counter += 1
             # Arc from place to transition
             arc_in = Arc(place, t)
             t.in_arcs.append(arc_in)

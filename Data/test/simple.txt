@@ -1,0 +1,75 @@
+{
+  "actors": [
+    {
+      "id": "32db75bf-d27d-43ba-9246-f3197fb3ba5a",
+      "text": "Actor",
+      "type": "istar.Actor",
+      "x": 118,
+      "y": 105,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "51b11922-f7a7-4677-a6a2-349b595885f6",
+          "text": "Task1",
+          "type": "istar.Task",
+          "x": 188,
+          "y": 229,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "2d2d39ff-5111-4505-8d29-25ced858ef2f",
+          "text": "Quality",
+          "type": "istar.Quality",
+          "x": 189,
+          "y": 115,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "baf61e2f-31b2-4a84-b374-ff4cee886977",
+          "text": "Task2",
+          "type": "istar.Task",
+          "x": 295,
+          "y": 227,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "e910be52-c67f-49ef-8810-3b854abaf73a",
+      "type": "istar.ContributionLink",
+      "source": "51b11922-f7a7-4677-a6a2-349b595885f6",
+      "target": "2d2d39ff-5111-4505-8d29-25ced858ef2f",
+      "label": "make"
+    },
+    {
+      "id": "b3c49f72-50e8-4f26-92e8-612384d68dd6",
+      "type": "istar.ContributionLink",
+      "source": "baf61e2f-31b2-4a84-b374-ff4cee886977",
+      "target": "2d2d39ff-5111-4505-8d29-25ced858ef2f",
+      "label": "break"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Mon, 05 Jan 2026 13:57:22 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}
