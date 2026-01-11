@@ -39,8 +39,10 @@ def whitespace_to_newlines(s: str) -> str:
     return re.sub(r'\s+', '\n', s)
 
 class InterfaceBuilder:
-    def __init__(self, model, petri_net: PetriNet | None = None, whatif=False, debug=False):
+    def __init__(self, model, petri_net: PetriNet | None = None, event_mapping = None, whatif=False, debug=False):
         self.model = model
+        if event_mapping is not None:
+            self.model.event_mapping = event_mapping
         self.petri_net = petri_net
         self.debug = debug
         self.whatif = whatif
@@ -533,4 +535,4 @@ class InterfaceBuilder:
     
 class WhatIfInterfaceBuilder(InterfaceBuilder):
     def __init__(self, model, debug=False):
-        super().__init__(model, None, whatif=True, debug=debug)
+        super().__init__(model, None, event_mapping=None,whatif=True, debug=debug)

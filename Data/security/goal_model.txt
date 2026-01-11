@@ -1,0 +1,220 @@
+{
+  "actors": [
+    {
+      "id": "37e3342a-e4d3-4dc9-9ae5-4d8343a20153",
+      "text": "Actor",
+      "type": "istar.Actor",
+      "x": 116,
+      "y": 100,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+          "text": "Data Protected Appropriately",
+          "type": "istar.Quality",
+          "x": 448,
+          "y": 202,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "a815c5df-3f58-481e-b29c-5e07e19248ee",
+          "text": "Data Breach Detected",
+          "type": "istar.Goal",
+          "x": 306,
+          "y": 212,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea",
+          "text": "Data Protected",
+          "type": "istar.Goal",
+          "x": 589,
+          "y": 213,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "42bed458-3fd5-4142-888a-724517efc520",
+          "text": "Apply Vulnerability Patch",
+          "type": "istar.Task",
+          "x": 443,
+          "y": 308,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c5fbb652-0153-4f31-ad54-d0a3044c6834",
+          "text": "Perform Penetration Tests",
+          "type": "istar.Task",
+          "x": 180,
+          "y": 169,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1edfd362-3334-44dc-b7ee-68e385bcee90",
+          "text": "Flag Suspicious Activity",
+          "type": "istar.Task",
+          "x": 180,
+          "y": 259,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b2702878-298c-46e4-84ec-a44ed3ba9aef",
+          "text": "Deploy DataGrail",
+          "type": "istar.Task",
+          "x": 863,
+          "y": 304,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3ead4f1d-5122-436d-9260-e95c2181abcf",
+          "text": "Deploy OneTrust",
+          "type": "istar.Task",
+          "x": 869,
+          "y": 241,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "82d1f808-3a94-49c3-91e2-de3349e196de",
+          "text": "Revise Access Controls",
+          "type": "istar.Task",
+          "x": 867,
+          "y": 181,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "221ff2f3-1cec-431e-855c-5a5d1f2ad261",
+          "text": "Update Encryption Standards",
+          "type": "istar.Task",
+          "x": 871,
+          "y": 100,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "18b02dd3-401d-47d5-932d-203f77528ee4",
+          "text": "Implement Password Policy",
+          "type": "istar.Task",
+          "x": 709,
+          "y": 150,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd",
+          "text": "Deploy Monitoring Tools",
+          "type": "istar.Task",
+          "x": 713,
+          "y": 273,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "a2435c1a-2540-44e5-853f-33b3616b8fc0",
+      "type": "istar.OrRefinementLink",
+      "source": "3ead4f1d-5122-436d-9260-e95c2181abcf",
+      "target": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd"
+    },
+    {
+      "id": "aa2433ce-26dc-40b7-953f-432105e01f25",
+      "type": "istar.OrRefinementLink",
+      "source": "b2702878-298c-46e4-84ec-a44ed3ba9aef",
+      "target": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd"
+    },
+    {
+      "id": "bca32386-63f0-47e2-bc0f-4d1d8a1848d0",
+      "type": "istar.AndRefinementLink",
+      "source": "221ff2f3-1cec-431e-855c-5a5d1f2ad261",
+      "target": "18b02dd3-401d-47d5-932d-203f77528ee4"
+    },
+    {
+      "id": "a6636dcf-4127-49ad-8d8c-c0f6f39bcf93",
+      "type": "istar.AndRefinementLink",
+      "source": "82d1f808-3a94-49c3-91e2-de3349e196de",
+      "target": "18b02dd3-401d-47d5-932d-203f77528ee4"
+    },
+    {
+      "id": "953fff58-2085-4ed2-a9e7-a8f9819a005a",
+      "type": "istar.AndRefinementLink",
+      "source": "18b02dd3-401d-47d5-932d-203f77528ee4",
+      "target": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea"
+    },
+    {
+      "id": "de47de1b-ea17-45b8-8b9d-7359dd1cb5c2",
+      "type": "istar.AndRefinementLink",
+      "source": "95b246c6-fbc4-4b04-b65f-1ac1a00477dd",
+      "target": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea"
+    },
+    {
+      "id": "dfc87106-679d-42c0-9bff-9d04e61cd2e7",
+      "type": "istar.AndRefinementLink",
+      "source": "c5fbb652-0153-4f31-ad54-d0a3044c6834",
+      "target": "a815c5df-3f58-481e-b29c-5e07e19248ee"
+    },
+    {
+      "id": "f1862089-6b31-437c-8048-07080bb9b775",
+      "type": "istar.AndRefinementLink",
+      "source": "1edfd362-3334-44dc-b7ee-68e385bcee90",
+      "target": "a815c5df-3f58-481e-b29c-5e07e19248ee"
+    },
+    {
+      "id": "d86ba952-7698-40b3-8dc4-f6d899b1b839",
+      "type": "istar.ContributionLink",
+      "source": "42bed458-3fd5-4142-888a-724517efc520",
+      "target": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+      "label": "make"
+    },
+    {
+      "id": "51247c7a-3745-46d8-b3fc-82fb51498aa7",
+      "type": "istar.ContributionLink",
+      "source": "a815c5df-3f58-481e-b29c-5e07e19248ee",
+      "target": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+      "label": "break"
+    },
+    {
+      "id": "c3c14791-dbdc-4df2-818e-1ba2c3a9d8b9",
+      "type": "istar.ContributionLink",
+      "source": "0f511958-41a4-4d3e-86fb-fa6bcf7b8dea",
+      "target": "50e66a1b-6bfd-46cd-adba-1f42c28994ae",
+      "label": "make"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Mon, 08 Dec 2025 17:25:05 GMT",
+  "diagram": {
+    "width": 1517,
+    "height": 781,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}
