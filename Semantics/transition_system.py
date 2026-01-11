@@ -176,8 +176,6 @@ class MarkingPn:
         return self_items > other_items
     
 def combine_goal_model_and_petri_net(gm, pn, event_mapping = None) -> 'CombinedTransitionSystem':
-    _gm_original = gm.as_transition_system(original=True)
-    print(f"Original Goal Model TS has {_gm_original.size()} states and transitions.")
     gm_ts = gm.as_transition_system()
     pn_ts = pn.as_transition_system()
     if not event_mapping:
@@ -239,9 +237,6 @@ class CombinedTransitionSystem:
         self.transitions: dict[Marking,dict[Any,set[Marking]]] = {}
         self._initial_state: Marking
         self._states, self.transitions, self._initial_state = self._compute_combined_ts()
-        print(f"Goal Model TS has {gm_ts.size()} states and transitions.")  
-        print(f"Petri Net TS has {pn_ts.size()} states and transitions.")  
-        print(f"Combined TS has {self.size()} states and transitions.")  
         
 
     def _compute_combined_ts(self):

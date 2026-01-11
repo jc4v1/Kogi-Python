@@ -40,10 +40,20 @@ class PetriNet():
         return sorted([t.name for t in self.net.transitions])
     
     def set_event_mapping(self, model):
-        model.event_mapping = {}
+        model.event_mapping = self.get_default_event_mapping()
+    
+    def get_default_event_mapping(self):
+        event_mapping = {}
         for t in self.net.transitions:
-            model.add_event_mapping(t.name, t.label if t.label != t.name else [])
-            
+            self._add_event_mapping(event_mapping,t.name,t.label if t.label != t.name else [])
+        return event_mapping
+    
+    def _add_event_mapping(self, ev_map, event: str, target):
+        if isinstance(target, list):
+            ev_map[event] = target
+        else:
+            ev_map[event] = [[target]]
+
     def min_max(self):
         positions = self.positions['places'] + self.positions['transitions']
         min_x = min(p[0] for p in positions)
