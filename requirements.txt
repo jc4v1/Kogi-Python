@@ -5,3 +5,7 @@ openpyxl
 perl
 pytest  # for running tests
 pytest-cov # for running tests with coverage
+approvaltests
+jupyter
+jupytext
+
