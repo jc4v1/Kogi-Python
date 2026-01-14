@@ -1,5 +1,5 @@
 from collections import deque
-from typing import TypeVar, Generic, Mapping, Iterator, Any
+from typing import List, TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
 from Semantics.enums import ElementStatus, QualityStatus
 from Semantics.algorithms import check_stable_system, check_weak_compliance
@@ -227,8 +227,7 @@ class CombinedTransitionSystem:
         self,
         gm_ts: TransitionSystem[MarkingGm],
         pn_ts: TransitionSystem[MarkingPn],
-        event_map: dict[str, set[str]]
-    ):
+        event_map: dict[str, list[list[str]]]    ):
         self.gm_ts = gm_ts
         self.pn_ts = pn_ts
         self.event_map = event_map

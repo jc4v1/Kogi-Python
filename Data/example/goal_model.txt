@@ -1,0 +1,190 @@
+{
+  "actors": [
+    {
+      "id": "7e40d822-969c-4b8a-9c87-f7e01188295f",
+      "text": "Role",
+      "type": "istar.Role",
+      "x": 134,
+      "y": 75,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "43ddea7c-06bf-403e-ab94-7163b0fc0779",
+          "text": "Receive application",
+          "type": "istar.Task",
+          "x": 172,
+          "y": 272,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "6501ab3f-45c5-4d59-985b-db44910fe617",
+          "text": "Assess application",
+          "type": "istar.Task",
+          "x": 302,
+          "y": 273,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8071de31-05ed-4a92-9bb3-82bae0fe53fb",
+          "text": "Approve",
+          "type": "istar.Task",
+          "x": 431,
+          "y": 272,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "ca738aea-bc60-4ea4-bc8d-5c5f150f26f0",
+          "text": "Deny",
+          "type": "istar.Task",
+          "x": 591,
+          "y": 167,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "a93d73fc-2594-46fe-a157-b8915930a7a8",
+          "text": "Required documentation received",
+          "type": "istar.Goal",
+          "x": 163,
+          "y": 156,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d4894397-9428-41db-a773-90e04a9f27af",
+          "text": "Application assessed",
+          "type": "istar.Goal",
+          "x": 298,
+          "y": 156,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b9ee15b8-8aa9-4b47-9b0e-be05cf96cefe",
+          "text": "Decision-making completed",
+          "type": "istar.Goal",
+          "x": 427,
+          "y": 154,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "93bc7836-18b4-40ef-bfa1-6752c7fba4a2",
+          "text": "Application closed",
+          "type": "istar.Goal",
+          "x": 304,
+          "y": 88,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "7bbddaff-d6c7-4839-9eac-611f373f9265",
+          "text": "City business growth",
+          "type": "istar.Quality",
+          "x": 591,
+          "y": 263,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "4c6b9918-d339-4f22-a06d-bc3e04f9be44",
+      "type": "istar.AndRefinementLink",
+      "source": "a93d73fc-2594-46fe-a157-b8915930a7a8",
+      "target": "93bc7836-18b4-40ef-bfa1-6752c7fba4a2"
+    },
+    {
+      "id": "37b0d1c8-3e48-4595-a036-f848ca879f13",
+      "type": "istar.AndRefinementLink",
+      "source": "d4894397-9428-41db-a773-90e04a9f27af",
+      "target": "93bc7836-18b4-40ef-bfa1-6752c7fba4a2"
+    },
+    {
+      "id": "e7f705d0-e238-45c9-8b6e-f887665916ba",
+      "type": "istar.AndRefinementLink",
+      "source": "b9ee15b8-8aa9-4b47-9b0e-be05cf96cefe",
+      "target": "93bc7836-18b4-40ef-bfa1-6752c7fba4a2"
+    },
+    {
+      "id": "0f75390e-8082-4df1-8508-e20e1fcd884b",
+      "type": "istar.OrRefinementLink",
+      "source": "ca738aea-bc60-4ea4-bc8d-5c5f150f26f0",
+      "target": "b9ee15b8-8aa9-4b47-9b0e-be05cf96cefe"
+    },
+    {
+      "id": "6d90d10c-3c4d-46bd-a843-e9dad78e8a0e",
+      "type": "istar.ContributionLink",
+      "source": "ca738aea-bc60-4ea4-bc8d-5c5f150f26f0",
+      "target": "7bbddaff-d6c7-4839-9eac-611f373f9265",
+      "label": "break"
+    },
+    {
+      "id": "8968c271-3530-41b7-b223-36a6b6f8d16e",
+      "type": "istar.ContributionLink",
+      "source": "8071de31-05ed-4a92-9bb3-82bae0fe53fb",
+      "target": "7bbddaff-d6c7-4839-9eac-611f373f9265",
+      "label": "make"
+    },
+    {
+      "id": "ada97c4a-d047-4b5b-bf67-f5867741c389",
+      "type": "istar.OrRefinementLink",
+      "source": "43ddea7c-06bf-403e-ab94-7163b0fc0779",
+      "target": "a93d73fc-2594-46fe-a157-b8915930a7a8"
+    },
+    {
+      "id": "a48e6fc2-ac5f-4e6b-a746-e4c441df8ded",
+      "type": "istar.OrRefinementLink",
+      "source": "6501ab3f-45c5-4d59-985b-db44910fe617",
+      "target": "d4894397-9428-41db-a773-90e04a9f27af"
+    },
+    {
+      "id": "fdfa8608-3449-45eb-acbc-ad8b01ef0b55",
+      "type": "istar.OrRefinementLink",
+      "source": "8071de31-05ed-4a92-9bb3-82bae0fe53fb",
+      "target": "b9ee15b8-8aa9-4b47-9b0e-be05cf96cefe"
+    }
+  ],
+  "display": {
+    "a93d73fc-2594-46fe-a157-b8915930a7a8": {
+      "width": 111.203125,
+      "height": 53.5078125
+    },
+    "d4894397-9428-41db-a773-90e04a9f27af": {
+      "width": 104.203125,
+      "height": 50.5078125
+    },
+    "b9ee15b8-8aa9-4b47-9b0e-be05cf96cefe": {
+      "width": 99.203125,
+      "height": 54.5078125
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Wed, 14 Jan 2026 20:56:37 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}
