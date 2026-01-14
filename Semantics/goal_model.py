@@ -433,7 +433,7 @@ class GoalModel:
         arcs = []
         counter = 1
         for event in event_names:
-            t = Transition("t"+str(counter),event)
+            t = Transition(event,event)
             counter += 1
             # Arc from place to transition
             arc_in = Arc(place, t)
@@ -462,6 +462,6 @@ class GoalModel:
         petri_net = PetriNet(net, init, final, positions)
         self.event_mapping = {}
         for t in net.transitions:
-            self.add_event_mapping(t.name, t.label)
+            self.add_event_mapping(t.name, t.name)
 
         return petri_net

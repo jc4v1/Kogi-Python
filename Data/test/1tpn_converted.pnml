@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="imported_1768411156.5935612" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text>imported_1768411156.5935612</text>
+    </name>
+    <page>
+      <place id="p1">
+        <name>
+          <text>p1</text>
+        </name>
+      </place>
+      <place id="p2">
+        <name>
+          <text>p2</text>
+        </name>
+      </place>
+      <transition id="t1">
+        <name>
+          <text>e1</text>
+        </name>
+      </transition>
+      <arc id="4977440784" source="p1" target="t1">
+        <inscription>1</inscription>
+      </arc>
+      <arc id="4977441808" source="t1" target="p2">
+        <inscription>2</inscription>
+      </arc>
+      </page>
+  </net>
+</pnml>
