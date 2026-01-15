@@ -45,7 +45,7 @@ class PetriNet():
     def get_default_event_mapping(self):
         event_mapping = {}
         for t in self.net.transitions:
-            self._add_event_mapping(event_mapping,t.name,t.label if t.label != t.name else [])
+            self._add_event_mapping(event_mapping,t.name,t.label if t.label != t.name and t.label is not None else [])
         return event_mapping
     
     def _add_event_mapping(self, ev_map, event: str, target):

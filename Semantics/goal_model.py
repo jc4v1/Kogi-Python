@@ -395,6 +395,9 @@ class GoalModel:
             print(f"  {quality_id}: {self._format_status(status)}")
         print("-" * 50)
         
+    def all_events(self) -> list[str]:
+        return list(self.goals.keys()) + list(self.tasks.keys())
+    
     def get_events(self) -> list[str]:
         leaves = [e for e in list(self.goals.keys()) + list(self.tasks.keys()) if e not in {link[0] for link in self.links}]
         return leaves

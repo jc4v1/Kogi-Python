@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="net1" type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb">
+        <place id="p0">
+            <graphics>
+                <position x="636" y="264.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p1">
+            <graphics>
+                <position x="236" y="264.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p2">
+            <graphics>
+                <position x="436" y="214.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p3">
+            <graphics>
+                <position x="1036" y="264.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p4">
+            <graphics>
+                <position x="836" y="264.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p5">
+            <graphics>
+                <position x="36" y="264.5"/>
+            </graphics>
+            <initialMarking>
+                <text>1</text>
+            </initialMarking>
+        </place>
+        <place id="p6">
+            <graphics>
+                <position x="1236" y="264.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <transition id="t1">
+            <name>
+                <text>t1</text>
+            </name>
+            <graphics>
+                <position x="136" y="264.5"/>
+            </graphics>
+        </transition>
+        <transition id="t2">
+            <name>
+                <text>Assess</text>
+            </name>
+            <graphics>
+                <position x="536" y="214.5"/>
+            </graphics>
+        </transition>
+        <transition id="t3">
+            <name>
+                <text>Approve</text>
+            </name>
+            <graphics>
+                <position x="936" y="314.5"/>
+            </graphics>
+        </transition>
+        <transition id="t4">
+            <name>
+                <text>t4</text>
+            </name>
+            <graphics>
+                <position x="1136" y="264.5"/>
+            </graphics>
+        </transition>
+        <transition id="t5">
+            <name>
+                <text>Deny</text>
+            </name>
+            <graphics>
+                <position x="936" y="214.5"/>
+            </graphics>
+        </transition>
+        <transition id="t6">
+            <name>
+                <text>t6</text>
+            </name>
+            <graphics>
+                <position x="336" y="314.5"/>
+            </graphics>
+        </transition>
+        <transition id="t7">
+            <name>
+                <text>t7</text>
+            </name>
+            <graphics>
+                <position x="736" y="264.5"/>
+            </graphics>
+        </transition>
+        <transition id="t8">
+            <name>
+                <text>Register</text>
+            </name>
+            <graphics>
+                <position x="336" y="214.5"/>
+            </graphics>
+        </transition>
+        <arc id="p0,t7" source="p0" target = "t7">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p4,t3" source="p4" target = "t3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t3,p3" source="t3" target = "p3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t2,p0" source="t2" target = "p0">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p1,t8" source="p1" target = "t8">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t1,p1" source="t1" target = "p1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t5,p3" source="t5" target = "p3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p2,t2" source="p2" target = "t2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p3,t4" source="p3" target = "t4">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p5,t1" source="p5" target = "t1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t8,p2" source="t8" target = "p2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t7,p4" source="t7" target = "p4">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t4,p6" source="t4" target = "p6">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t6,p1" source="t6" target = "p1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p4,t5" source="p4" target = "t5">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p0,t6" source="p0" target = "t6">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics>
+                <position x="536" y="314.5"/>
+                <position x="436" y="314.5"/>
+            </graphics>
+        </arc>
+    </net>
+</pnml>

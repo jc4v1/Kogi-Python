@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text></text>
+    </name>
+    <page id="n0">
+      <place id="source">
+        <name>
+          <text>source</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="sid-1F6D5AF5-20FE-44D8-B405-AC4BD4E5F8DD">
+        <name>
+          <text>sid-1F6D5AF5-20FE-44D8-B405-AC4BD4E5F8DD</text>
+        </name>
+      </place>
+      <place id="ent_sid-38162DD8-8327-4B14-A20E-FB8C4941DF72">
+        <name>
+          <text>ent_sid-38162DD8-8327-4B14-A20E-FB8C4941DF72</text>
+        </name>
+      </place>
+      <place id="exi_sid-38BFF0E3-7C10-4E91-9AA6-448CD7718A08">
+        <name>
+          <text>exi_sid-38BFF0E3-7C10-4E91-9AA6-448CD7718A08</text>
+        </name>
+      </place>
+      <place id="ent_sid-13EFD34F-F605-4870-80C9-6837C05F8599">
+        <name>
+          <text>ent_sid-13EFD34F-F605-4870-80C9-6837C05F8599</text>
+        </name>
+      </place>
+      <place id="sink">
+        <name>
+          <text>sink</text>
+        </name>
+      </place>
+      <place id="ent_sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F">
+        <name>
+          <text>ent_sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F</text>
+        </name>
+      </place>
+      <place id="ent_sid-06EBC4FA-101D-410B-884F-38FCAB182511">
+        <name>
+          <text>ent_sid-06EBC4FA-101D-410B-884F-38FCAB182511</text>
+        </name>
+      </place>
+      <place id="sid-B1EE1494-263A-4079-B140-596C65F543AC">
+        <name>
+          <text>sid-B1EE1494-263A-4079-B140-596C65F543AC</text>
+        </name>
+      </place>
+      <transition id="sid-DCA3844E-4A80-4CD3-A3F4-F2D5010E9022">
+        <name>
+          <text>e4</text>
+        </name>
+      </transition>
+      <transition id="sid-BC760514-61FF-475B-AD4C-A8F3BBE4CD1D">
+        <name>
+          <text>e1</text>
+        </name>
+      </transition>
+      <transition id="sid-BDB258CA-2777-4814-BDE5-E671AC4EBF4F">
+        <name>
+          <text>e6</text>
+        </name>
+      </transition>
+      <transition id="sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F">
+        <name>
+          <text>e5</text>
+        </name>
+      </transition>
+      <transition id="sid-38162DD8-8327-4B14-A20E-FB8C4941DF72">
+        <name>
+          <text>e3</text>
+        </name>
+      </transition>
+      <transition id="sid-13EFD34F-F605-4870-80C9-6837C05F8599">
+        <name>
+          <text>e2</text>
+        </name>
+      </transition>
+      <transition id="sid-06EBC4FA-101D-410B-884F-38FCAB182511">
+        <name>
+          <text>e7</text>
+        </name>
+      </transition>
+      <transition id="sid-D615ECAD-3E46-44C2-87E3-F3C68CE5AADD">
+        <name>
+          <text>e8</text>
+        </name>
+      </transition>
+      <arc id="6005566992" source="ent_sid-13EFD34F-F605-4870-80C9-6837C05F8599" target="sid-13EFD34F-F605-4870-80C9-6837C05F8599"/>
+      <arc id="6004985936" source="ent_sid-38162DD8-8327-4B14-A20E-FB8C4941DF72" target="sid-38162DD8-8327-4B14-A20E-FB8C4941DF72"/>
+      <arc id="5994591760" source="sid-BC760514-61FF-475B-AD4C-A8F3BBE4CD1D" target="sink"/>
+      <arc id="5994579472" source="sid-BDB258CA-2777-4814-BDE5-E671AC4EBF4F" target="ent_sid-38162DD8-8327-4B14-A20E-FB8C4941DF72"/>
+      <arc id="5994582096" source="sid-DCA3844E-4A80-4CD3-A3F4-F2D5010E9022" target="ent_sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F"/>
+      <arc id="6005555792" source="ent_sid-06EBC4FA-101D-410B-884F-38FCAB182511" target="sid-06EBC4FA-101D-410B-884F-38FCAB182511"/>
+      <arc id="5994593360" source="sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F" target="ent_sid-06EBC4FA-101D-410B-884F-38FCAB182511"/>
+      <arc id="5994585744" source="sid-D615ECAD-3E46-44C2-87E3-F3C68CE5AADD" target="sink"/>
+      <arc id="5994584272" source="sid-06EBC4FA-101D-410B-884F-38FCAB182511" target="exi_sid-38BFF0E3-7C10-4E91-9AA6-448CD7718A08"/>
+      <arc id="5994579152" source="sid-BDB258CA-2777-4814-BDE5-E671AC4EBF4F" target="ent_sid-13EFD34F-F605-4870-80C9-6837C05F8599"/>
+      <arc id="5994592528" source="sid-38162DD8-8327-4B14-A20E-FB8C4941DF72" target="sid-B1EE1494-263A-4079-B140-596C65F543AC"/>
+      <arc id="5994586384" source="sid-B1EE1494-263A-4079-B140-596C65F543AC" target="sid-DCA3844E-4A80-4CD3-A3F4-F2D5010E9022"/>
+      <arc id="5994583312" source="sid-13EFD34F-F605-4870-80C9-6837C05F8599" target="sid-1F6D5AF5-20FE-44D8-B405-AC4BD4E5F8DD"/>
+      <arc id="6005563216" source="ent_sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F" target="sid-04E2BE1E-CB0E-4FB4-AC6F-307E5993135F"/>
+      <arc id="5994586448" source="exi_sid-38BFF0E3-7C10-4E91-9AA6-448CD7718A08" target="sid-D615ECAD-3E46-44C2-87E3-F3C68CE5AADD"/>
+      <arc id="5994592080" source="sid-1F6D5AF5-20FE-44D8-B405-AC4BD4E5F8DD" target="sid-DCA3844E-4A80-4CD3-A3F4-F2D5010E9022"/>
+      <arc id="5994584208" source="exi_sid-38BFF0E3-7C10-4E91-9AA6-448CD7718A08" target="sid-BC760514-61FF-475B-AD4C-A8F3BBE4CD1D"/>
+      <arc id="5994588112" source="source" target="sid-BDB258CA-2777-4814-BDE5-E671AC4EBF4F"/>
+    </page>
+  </net>
+</pnml>
