@@ -14,7 +14,7 @@ def test_load_dcr_ts():
     enabled = ts.get_enabled_actions(ts.initial_state())
     assert len(enabled) >= 1
 
-def make_graph(events, conditions=None, responses=None, excludes=None, includes=None, labels=None):
+def make_graph(events, conditions=None, responses=None, excludes=None, includes=None, milestones=None, labels=None):
     g = DcrGraph()
     for e in events:
         g.events.add(e)
@@ -30,6 +30,7 @@ def make_graph(events, conditions=None, responses=None, excludes=None, includes=
     _add(g.responses, responses)
     _add(g.excludes, excludes)
     _add(g.includes, includes)
+    _add(g.milestones, milestones)
     return g
 
 def make_marking(executed=None, included=None, pending=None, labels=None):
@@ -132,3 +133,49 @@ def test_include_relation():
     for src, act_map in expected_transitions.items():
         for act, targets in act_map.items():
             assert ts.transitions.get(src, {}).get(act) == targets
+
+
+def test_milestone_relation():
+    # a -> b is a milestone: b enabled only if a is included and NOT pending
+    g = make_graph(['a', 'b'], milestones={'a': {'b'}})
+    # case 1: a included and not pending => both a and b enabled
+    init1 = make_marking(executed=set(), included={'a', 'b'}, pending=set())
+    ts1 = DcrTransitionSystem(g, init1).as_transition_system()
+    print("milestone TS1 size:", ts1.size())
+
+    m0 = init1
+    m1 = DcrMarking({'a'}, {'a', 'b'}, set())
+    m3 = DcrMarking({'b'}, {'a', 'b'}, set())
+    m2 = DcrMarking({'a', 'b'}, {'a', 'b'}, set())
+
+    assert {m0, m1, m2, m3}.issubset(ts1.states())
+
+    expected_transitions_1 = {
+        m0: {'a': {m1}, 'b': {m3}},
+        m1: {'a': {m1}, 'b': {m2}},
+        m3: {'a': {m2}, 'b': {m3}},
+        m2: {'a': {m2}, 'b': {m2}}
+    }
+    for src, act_map in expected_transitions_1.items():
+        for act, targets in act_map.items():
+            assert ts1.transitions.get(src, {}).get(act) == targets
+
+    # case 2: a included but pending => b disabled until a executed
+    init2 = make_marking(executed=set(), included={'a', 'b'}, pending={'a'})
+    ts2 = DcrTransitionSystem(g, init2).as_transition_system()
+    print("milestone TS2 size:", ts2.size())
+
+    m0p = init2
+    m1 = DcrMarking({'a'}, {'a', 'b'}, set())
+    m2 = DcrMarking({'a', 'b'}, {'a', 'b'}, set())
+
+    assert {m0p, m1, m2}.issubset(ts2.states())
+
+    expected_transitions_2 = {
+        m0p: {'a': {m1}},
+        m1: {'a': {m1}, 'b': {m2}},
+        m2: {'a': {m2}, 'b': {m2}}
+    }
+    for src, act_map in expected_transitions_2.items():
+        for act, targets in act_map.items():
+            assert ts2.transitions.get(src, {}).get(act) == targets

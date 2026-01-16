@@ -14,6 +14,7 @@ class DcrGraph:
         self.conditions: Dict[str, Set[str]] = {}
         self.responses: Dict[str, Set[str]] = {}
         self.excludes: Dict[str, Set[str]] = {}
+        self.milestones: Dict[str, Set[str]] = {}
         self.includes: Dict[str, Set[str]] = {}
 
     @classmethod
@@ -56,6 +57,10 @@ class DcrGraph:
         for inc in root.findall('.//specification/constraints/includes/include'):
             add_rel(g.includes, inc.get('sourceId'), inc.get('targetId'))
 
+        # optional milestones: source -> target
+        for ms in root.findall('.//specification/constraints/milestones/milestone'):
+            add_rel(g.milestones, ms.get('sourceId'), ms.get('targetId'))
+
         return g
 
 
@@ -96,6 +101,11 @@ class DcrTransitionSystem:
         preds = {s for s, targets in self.graph.conditions.items() if event in targets}
         for p in preds:
             if p in marking.included and p not in marking.executed:
+                return False
+        # milestone predecessors: event enabled only if each milestone source is included and NOT pending
+        m_preds = {s for s, targets in self.graph.milestones.items() if event in targets}
+        for p in m_preds:
+            if p not in marking.included or p in marking.pending:
                 return False
         return True
 
