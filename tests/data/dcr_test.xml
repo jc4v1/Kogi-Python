@@ -35,6 +35,14 @@
             </visualization>
           </custom>
         </event>
+        <event id="Event_16lc4tv">
+          <custom>
+            <visualization>
+              <location xLoc="1140" yLoc="455"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
       </events>
       <subProcesses/>
       <labels>
@@ -42,12 +50,14 @@
         <label id="Assess"/>
         <label id="Approve"/>
         <label id="Deny"/>
+        <label id="Test"/>
       </labels>
       <labelMappings>
         <labelMapping eventId="Event_0u85g36" labelId="Register"/>
         <labelMapping eventId="Event_19l9sss" labelId="Assess"/>
         <labelMapping eventId="Event_0nzjf99" labelId="Approve"/>
         <labelMapping eventId="Event_0kzq7c6" labelId="Deny"/>
+        <labelMapping eventId="Event_16lc4tv" labelId="Test"/>
       </labelMappings>
       <variables/>
       <expressions/>
@@ -196,7 +206,17 @@
           </custom>
         </include>
       </includes>
-      <milestones/>
+      <milestones>
+        <milestone sourceId="Event_0kzq7c6" targetId="Event_16lc4tv">
+          <custom>
+            <waypoints>
+              <waypoint x="1030" y="530"/>
+              <waypoint x="1140" y="530"/>
+            </waypoints>
+            <id id="Relation_04gfohp"/>
+          </custom>
+        </milestone>
+      </milestones>
       <updates/>
       <spawns/>
     </constraints>
@@ -210,6 +230,7 @@
         <event id="Event_19l9sss"/>
         <event id="Event_0nzjf99"/>
         <event id="Event_0kzq7c6"/>
+        <event id="Event_16lc4tv"/>
       </included>
       <pendingResponses/>
     </marking>
