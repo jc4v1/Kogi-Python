@@ -14,8 +14,6 @@ def test_load_dcr_ts():
     enabled = ts.get_enabled_actions(ts.initial_state())
     assert len(enabled) >= 1
 
-
-
 def make_graph(events, conditions=None, responses=None, excludes=None, includes=None, labels=None):
     g = DcrGraph()
     for e in events:
@@ -34,60 +32,82 @@ def make_graph(events, conditions=None, responses=None, excludes=None, includes=
     _add(g.includes, includes)
     return g
 
-
 def make_marking(executed=None, included=None, pending=None, labels=None):
     return DcrMarking(executed or set(), included or set(), pending or set(), labels=labels)
-
 
 def test_condition_relation():
     # a -> b is a condition: b disabled until a executed
     g = make_graph(['a', 'b'], conditions={'a': {'b'}})
     init = make_marking(executed=set(), included={'a', 'b'}, pending=set())
     ts = DcrTransitionSystem(g, init).as_transition_system()
+    print(ts.size())
 
-    init_state = ts.initial_state()
-    enabled_init = set(ts.get_enabled_actions(init_state))
-    assert enabled_init == {'a'}
+    # expected reachable markings
+    m0 = init
+    m1 = DcrMarking({'a'}, {'a', 'b'}, set())
+    m2 = DcrMarking({'a', 'b'}, {'a', 'b'}, set())
 
-    succs = ts.get_successors(init_state, 'a')
-    assert len(succs) == 1
-    m2 = next(iter(succs))
-    assert m2.executed == {'a'}
+    assert {m0, m1, m2}.issubset(ts.states())
 
-    enabled_m2 = set(ts.get_enabled_actions(m2))
-    # after executing 'a', 'b' should be enabled (executed events remain included
-    # in this semantics, so 'a' may still be enabled as well)
-    assert 'b' in enabled_m2
-
+    expected_transitions = {
+        m0: {'a': {m1}},
+        m1: {'a': {m1}, 'b': {m2}},
+        m2: {'a': {m2}, 'b': {m2}}
+    }
+    for src, act_map in expected_transitions.items():
+        for act, targets in act_map.items():
+            assert ts.transitions.get(src, {}).get(act) == targets
 
 def test_response_relation():
     # a -> b is a response: executing a makes b pending
     g = make_graph(['a', 'b'], responses={'a': {'b'}})
     init = make_marking(executed=set(), included={'a', 'b'}, pending=set())
     ts = DcrTransitionSystem(g, init).as_transition_system()
+    print(ts.size())
 
-    init_state = ts.initial_state()
-    assert set(ts.get_enabled_actions(init_state)) == {'a', 'b'} or set(ts.get_enabled_actions(init_state)) == {'a', 'b'}
+    # observed reachable markings (order-independent)
+    m0 = init
+    m1 = DcrMarking({'a'}, {'a', 'b'}, {'b'})
+    m2 = DcrMarking({'a', 'b'}, {'a', 'b'}, set())
+    m3 = DcrMarking({'a', 'b'}, {'a', 'b'}, {'b'})
+    m4 = DcrMarking({'b'}, {'a', 'b'}, set())
 
-    succs = ts.get_successors(init_state, 'a')
-    assert len(succs) == 1
-    m2 = next(iter(succs))
-    assert 'b' in m2.pending
+    assert {m0, m1, m2, m3, m4}.issubset(ts.states())
 
+    expected_transitions = {
+        m0: {'a': {m1}, 'b': {m4}},
+        m1: {'a': {m1}, 'b': {m2}},
+        m4: {'a': {m3}, 'b': {m4}},
+        m2: {'a': {m3}, 'b': {m2}},
+        m3: {'a': {m3}, 'b': {m2}}
+    }
+    for src, act_map in expected_transitions.items():
+        for act, targets in act_map.items():
+            assert ts.transitions.get(src, {}).get(act) == targets
 
 def test_exclude_relation():
     # a excludes b: executing a removes b from included
     g = make_graph(['a', 'b'], excludes={'a': {'b'}})
     init = make_marking(executed=set(), included={'a', 'b'}, pending=set())
     ts = DcrTransitionSystem(g, init).as_transition_system()
+    print(ts.size())
 
-    init_state = ts.initial_state()
-    assert set(ts.get_enabled_actions(init_state)) == {'a', 'b'} or set(ts.get_enabled_actions(init_state)) == {'a', 'b'}
+    m0 = init
+    m1 = DcrMarking({'a'}, {'a'}, set())
+    m2 = DcrMarking({'b'}, {'a', 'b'}, set())
+    m3 = DcrMarking({'a', 'b'}, {'a'}, set())
 
-    succs = ts.get_successors(init_state, 'a')
-    assert len(succs) == 1
-    m2 = next(iter(succs))
-    assert 'b' not in m2.included
+    assert {m0, m1, m2, m3}.issubset(ts.states())
+
+    expected_transitions = {
+        m0: {'a': {m1}, 'b': {m2}},
+        m1: {'a': {m1}},
+        m2: {'a': {m3}, 'b': {m2}},
+        m3: {'a': {m3}}
+    }
+    for src, act_map in expected_transitions.items():
+        for act, targets in act_map.items():
+            assert ts.transitions.get(src, {}).get(act) == targets
 
 
 def test_include_relation():
@@ -96,11 +116,19 @@ def test_include_relation():
     # initially only a included
     init = make_marking(executed=set(), included={'a'}, pending=set())
     ts = DcrTransitionSystem(g, init).as_transition_system()
+    print(ts.size())
 
-    init_state = ts.initial_state()
-    assert set(ts.get_enabled_actions(init_state)) == {'a'}
+    m0 = init
+    m1 = DcrMarking({'a'}, {'a', 'b'}, set())
+    m2 = DcrMarking({'a', 'b'}, {'a', 'b'}, set())
 
-    succs = ts.get_successors(init_state, 'a')
-    assert len(succs) == 1
-    m2 = next(iter(succs))
-    assert 'b' in m2.included
+    assert {m0, m1, m2}.issubset(ts.states())
+
+    expected_transitions = {
+        m0: {'a': {m1}},
+        m1: {'a': {m1}, 'b': {m2}},
+        m2: {'a': {m2}, 'b': {m2}}
+    }
+    for src, act_map in expected_transitions.items():
+        for act, targets in act_map.items():
+            assert ts.transitions.get(src, {}).get(act) == targets
