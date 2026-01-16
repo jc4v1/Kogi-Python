@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dcrgraph>
+  <specification>
+    <resources>
+      <events>
+        <event id="Event_0xwdpwr">
+          <custom>
+            <visualization>
+              <location xLoc="240" yLoc="170"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_10mi2qv">
+          <custom>
+            <visualization>
+              <location xLoc="460" yLoc="170"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+      </events>
+      <subProcesses/>
+      <labels>
+        <label id="A"/>
+        <label id="B"/>
+      </labels>
+      <labelMappings>
+        <labelMapping eventId="Event_0xwdpwr" labelId="A"/>
+        <labelMapping eventId="Event_10mi2qv" labelId="B"/>
+      </labelMappings>
+      <variables/>
+      <expressions/>
+      <variableAccesses>
+        <readAccessess/>
+        <writeAccessess/>
+      </variableAccesses>
+    </resources>
+    <constraints>
+      <conditions>
+        <condition sourceId="Event_0xwdpwr" targetId="Event_10mi2qv">
+          <custom>
+            <waypoints>
+              <waypoint x="370" y="245"/>
+              <waypoint x="460" y="245"/>
+            </waypoints>
+            <id id="Relation_0wxrnrq"/>
+          </custom>
+        </condition>
+      </conditions>
+      <responses/>
+      <coresponces/>
+      <excludes/>
+      <includes/>
+      <milestones/>
+      <updates/>
+      <spawns/>
+    </constraints>
+  </specification>
+  <runtime>
+    <marking>
+      <globalStore/>
+      <executed/>
+      <included>
+        <event id="Event_0xwdpwr"/>
+        <event id="Event_10mi2qv"/>
+      </included>
+      <pendingResponses/>
+    </marking>
+  </runtime>
+</dcrgraph>

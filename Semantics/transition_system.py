@@ -59,6 +59,13 @@ class TransitionSystem(Generic[T_STATE]):
         """
         return list(set(self.transitions.get(state, {}).keys()))
 
+    def actions(self) -> set[Any]:
+        """Return the set of all actions in this transition system."""
+        acts = set()
+        for action_dict in self.transitions.values():
+            acts.update(action_dict.keys())
+        return acts
+
     def size(self) -> tuple[int, int]:
         """Return a tuple (number_of_states, number_of_transitions).
 
@@ -336,3 +343,10 @@ class CombinedTransitionSystem:
             stable[1],
             weakly_compliant[1]
         )
+    
+    def actions(self) -> set[Any]:
+        """Return the set of all actions in the combined transition system."""
+        acts = set()
+        for action_dict in self.transitions.values():
+            acts.update(action_dict.keys())
+        return acts
