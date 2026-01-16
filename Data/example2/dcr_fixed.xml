@@ -81,8 +81,8 @@
         <response sourceId="Event_0u85g36" targetId="Event_19l9sss">
           <custom>
             <waypoints>
-              <waypoint x="500" y="390"/>
-              <waypoint x="650" y="390"/>
+              <waypoint x="500" y="430"/>
+              <waypoint x="650" y="430"/>
             </waypoints>
             <id id="Relation_0wbm99o"/>
           </custom>
@@ -155,6 +155,26 @@
             <id id="Relation_1pueup4"/>
           </custom>
         </exclude>
+        <exclude sourceId="Event_0nzjf99" targetId="Event_0u85g36">
+          <custom>
+            <waypoints>
+              <waypoint x="900" y="280"/>
+              <waypoint x="435" y="280"/>
+              <waypoint x="435" y="340"/>
+            </waypoints>
+            <id id="Relation_0pbiuks"/>
+          </custom>
+        </exclude>
+        <exclude sourceId="Event_0kzq7c6" targetId="Event_0u85g36">
+          <custom>
+            <waypoints>
+              <waypoint x="900" y="530"/>
+              <waypoint x="435" y="530"/>
+              <waypoint x="435" y="490"/>
+            </waypoints>
+            <id id="Relation_1as4rgw"/>
+          </custom>
+        </exclude>
       </excludes>
       <includes>
         <include sourceId="Event_0u85g36" targetId="Event_19l9sss">
@@ -169,30 +189,10 @@
         <include sourceId="Event_19l9sss" targetId="Event_0u85g36">
           <custom>
             <waypoints>
-              <waypoint x="650" y="415"/>
-              <waypoint x="500" y="415"/>
+              <waypoint x="650" y="390"/>
+              <waypoint x="500" y="390"/>
             </waypoints>
             <id id="Relation_1tdpvmt"/>
-          </custom>
-        </include>
-        <include sourceId="Event_0u85g36" targetId="Event_0nzjf99">
-          <custom>
-            <waypoints>
-              <waypoint x="435" y="340"/>
-              <waypoint x="435" y="270"/>
-              <waypoint x="900" y="270"/>
-            </waypoints>
-            <id id="Relation_1fwn76a"/>
-          </custom>
-        </include>
-        <include sourceId="Event_0u85g36" targetId="Event_0kzq7c6">
-          <custom>
-            <waypoints>
-              <waypoint x="435" y="490"/>
-              <waypoint x="435" y="590"/>
-              <waypoint x="900" y="590"/>
-            </waypoints>
-            <id id="Relation_0j0vibg"/>
           </custom>
         </include>
       </includes>

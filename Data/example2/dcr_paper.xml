@@ -81,8 +81,8 @@
         <response sourceId="Event_0u85g36" targetId="Event_19l9sss">
           <custom>
             <waypoints>
-              <waypoint x="500" y="390"/>
-              <waypoint x="650" y="390"/>
+              <waypoint x="500" y="430"/>
+              <waypoint x="650" y="430"/>
             </waypoints>
             <id id="Relation_0wbm99o"/>
           </custom>
@@ -169,8 +169,8 @@
         <include sourceId="Event_19l9sss" targetId="Event_0u85g36">
           <custom>
             <waypoints>
-              <waypoint x="650" y="415"/>
-              <waypoint x="500" y="415"/>
+              <waypoint x="650" y="390"/>
+              <waypoint x="500" y="390"/>
             </waypoints>
             <id id="Relation_1tdpvmt"/>
           </custom>

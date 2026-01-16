@@ -110,11 +110,7 @@ class DcrTransitionSystem:
         # (ii) pending responses: remove event itself, add responses targets
         pen.discard(event)
         for t in self.graph.responses.get(event, set()):
-            if t in inc:
-                pen.add(t)
-            else:
-                # if target not included currently, it still becomes pending per many DCR semantics
-                pen.add(t)
+            pen.add(t)
 
         # (iii) update inclusion: remove excludes, add includes
         for t in self.graph.excludes.get(event, set()):
