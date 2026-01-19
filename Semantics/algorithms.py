@@ -101,13 +101,57 @@ def check_stable_system(lts, qualities_Q, debug=False):
         bool: True if the formula holds, False otherwise.
     """
     failing_states = set()
+    counterexamples: set[Any] = set()
     success = True
+
+    # Helper: find an action sequence from `start` to any state in `targets`.
+    def _find_action_path(start: Any, targets: set[Any]) -> list[Any]:
+        if start in targets:
+            return []
+        q = deque([start])
+        visited = {start}
+        parent: dict[Any, tuple[Any, Any]] = {start: (None, None)}
+        while q:
+            cur = q.popleft()
+            # prefer enabled actions when available
+            try:
+                actions = list(lts.get_enabled_actions(cur))
+            except Exception:
+                actions = list(lts.actions())
+            for action in actions:
+                for nxt in lts.get_successors(cur, action):
+                    if nxt in visited:
+                        continue
+                    parent[nxt] = (cur, action)
+                    if nxt in targets:
+                        # reconstruct
+                        acts = []
+                        node = nxt
+                        while True:
+                            p = parent.get(node)
+                            if not p:
+                                break
+                            pst, pact = p
+                            if pst is None:
+                                break
+                            acts.append(pact)
+                            node = pst
+                        acts.reverse()
+                        return acts
+                    visited.add(nxt)
+                    q.append(nxt)
+        return []
+
+    # Compute reachable states once (also populates `traces` on states via forward_bfs)
+    S_reachable = forward_bfs(lts, lts.initial_state())
+
     for q in qualities_Q:
         S_not_q = {s for s in lts.states() if not lts.satisfies_quality(s, q)}
         S_ef_not_q = backward_bfs(lts, S_not_q)
         S_ag_q = lts.states().difference(S_ef_not_q)
         S_implication = S_not_q.union(S_ag_q)
-        S_reachable = forward_bfs(lts, lts.initial_state())
+
+        # use the global `counterexamples` set declared above
 
         if debug:
             print("=================================")
@@ -124,9 +168,25 @@ def check_stable_system(lts, qualities_Q, debug=False):
                 if debug:
                     print(f"failing state stability for quality {q}: {str(s)}")
                 success = False
-    if not success: 
-        return (False, failing_states)
-    return (True, {})
+
+                # Build counterexample trace: initial -> ... -> s (from s.traces if available)
+                init_trace = []
+                if hasattr(s, 'traces') and s.traces:
+                    try:
+                        init_trace = list(s.traces[0])
+                    except Exception:
+                        init_trace = list(s.traces)
+
+                # then s -> ... -> t where t satisfies not q
+                suffix = _find_action_path(s, S_not_q)
+
+                full_trace = tuple(init_trace + suffix)
+                counterexamples.add(full_trace)
+
+    if not success:
+        sorted_list = sorted(list(counterexamples), key=len)
+        return (False, failing_states, sorted_list)
+    return (True, set(), [])
 
 def check_weak_compliance(lts, qualities_Q, debug=False):
     """

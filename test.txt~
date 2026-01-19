@@ -1,0 +1,15 @@
+- [['Assess', 'Register', 'Approve']]
+[[- 'Assess', 'Approve', 'Register']]
+[[- 'Assess', 'Deny', 'Register', 'Approve', 'Assess']]
+[[- 'Assess', 'Deny', 'Register', 'Approve', 'Assess', 'Register', 'Assess']]
+[[- 'Register', 'Assess', 'Approve']]
+[[- 'Assess', 'Deny', 'Register', 'Approve']]
+[[- 'Assess', 'Deny', 'Register', 'Approve', 'Assess', 'Register']]
+[[- 'Assess', 'Approve']]
+[[- 'Assess', 'Approve', 'Register', 'Assess']]
+- ('Assess', 'Register', 'Approve', 'Assess', 'Register', 'Deny')
+- ('Assess', 'Approve', 'Register', 'Assess', 'Deny')
+- ('Register', 'Assess', 'Approve', 'Register', 'Deny')
+- ('Assess', 'Deny', 'Register', 'Approve', 'Assess', 'Register', 'Assess', 'Deny')
+- ('Assess', 'Deny', 'Register', 'Approve', 'Assess', 'Register', 'Deny')
+- ('Assess', 'Approve', 'Register', 'Deny')

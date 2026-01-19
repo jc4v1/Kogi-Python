@@ -68,8 +68,28 @@ def test_check_stable_system_fails(non_stable_lts):
     assert not check_stable_system(non_stable_lts, qualities_to_check)[0]
 
 def test_check_stable_system_multiple_qualities(simple_lts):
-    assert not check_stable_system(simple_lts, {'p'})[0]
-    assert not check_stable_system(simple_lts, {'q'})[0]
+    s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
+    result_p = check_stable_system(simple_lts, {'p'})
+    assert result_p[0] is False
+    assert result_p[1] == {s0,s2}
+    print(result_p[2])
+    assert result_p[2] == [('a',), ('a', 'b', 'c', 'a')]
+    result_q = check_stable_system(simple_lts, {'q'})
+    assert result_q[0] is False
+    assert result_q[1] == {s1,s2}
+    assert result_q[2] == [('a', 'b', 'c')]
+    result_pq = check_stable_system(simple_lts, {'p', 'q'})
+def test_check_stable_system_counterexamples(non_stable_lts):
+    # non_stable_lts has s0 with 'p' and s1 without 'p', s0 -a-> s1
+    res = check_stable_system(non_stable_lts, {'p'})
+    assert res[0] is False
+    failing_states = res[1]
+    counterexamples = res[2]
+    # failing state should include the initial state s0
+    assert any(s.name == 's0' for s in failing_states)
+    # counterexamples should be a sorted list of traces, shortest-first
+    assert isinstance(counterexamples, list)
+    assert counterexamples[0] == ('a',)
 
 def test_check_stable_system_deadlock_case():
     s0 = State('s0', qualities={'p'})
