@@ -463,7 +463,7 @@ class InterfaceBuilder:
                 self.failed_markings_dropdown.disabled = True
                 self._last_failed_markings = []
             else:
-                failed = sorted(result.counter_examples)
+                failed = sorted(result.failing_states)
                 self.update_status_info(f"Stability check: FALSE ({len(failed)} counterexamples)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))
@@ -495,7 +495,7 @@ class InterfaceBuilder:
                 self.failed_markings_dropdown.disabled = True
                 self._last_failed_markings = []
             else:
-                failed = sorted(result.counter_examples)
+                failed = sorted(result.failing_states)
                 self.update_status_info(f"Weak compliance: FALSE ({len(failed)} counterexamples)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))

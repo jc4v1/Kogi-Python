@@ -9,21 +9,35 @@ class CheckResult:
     an optional list of counter-example traces (each trace is a tuple
     of actions).
     """
-    def __init__(self, ok: bool, counter_examples: list[tuple[Any, ...]] | None = None):
+    def __init__(self, ok: bool, counter_examples: list[tuple[Any, ...]] | None = None,
+                 failing_states: list[Any] | None = None):
         self.ok = ok
         self.counter_examples = counter_examples or []
+        # failing_states holds the concrete system states that caused the failure
+        # keep as a list for stable iteration order; may be empty
+        self.failing_states = failing_states or []
 
     @classmethod
     def success(cls):
-        return cls(True, [])
+        return cls(True, [], [])
 
     @classmethod
-    def failure(cls, traces: list[tuple[Any, ...]] | set[tuple[Any, ...]]):
+    def failure(cls, traces: list[tuple[Any, ...]] | set[tuple[Any, ...]],
+                failing_states: set[Any] | list[Any] | None = None):
         # ensure a list of tuples (sorted shortest-first)
         traces_list = list(traces)
         traces_list = [tuple(t) for t in traces_list]
         traces_list.sort(key=len)
-        return cls(False, traces_list)
+        # normalize failing_states to a list (preserve iteration order where possible)
+        fs_list = None
+        if failing_states is None:
+            fs_list = []
+        else:
+            try:
+                fs_list = list(failing_states)
+            except Exception:
+                fs_list = [failing_states]
+        return cls(False, traces_list, fs_list)
 
     def is_ok(self) -> bool:
         return self.ok
@@ -37,13 +51,13 @@ class CheckResult:
         return self
 
     def __repr__(self) -> str:  # pragma: no cover - small helper
-        return f"CheckResult(ok={self.ok}, counter_examples={self.counter_examples})"
+        return f"CheckResult(ok={self.ok}, counter_examples={self.counter_examples}, failing_states={self.failing_states})"
     
     def __str__(self) -> str:  # pragma: no cover - small helper
         return self.print_counter_examples()
 
     def print_counter_examples(self) -> str:
-        """Return a human-readable string describing the result and any counter-examples."""
+        """Return a human-readable string describing the result, failing states, and any counter-examples."""
         lines: list[str] = []
         if self.ok:
             lines.append("True")
@@ -228,7 +242,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
                 counterexamples.add(full_trace)
 
     if not success:
-        return CheckResult.failure(counterexamples)
+        return CheckResult.failure(counterexamples, failing_states=failing_states)
     return CheckResult.success()
 
 def check_weak_compliance(lts, qualities_Q, debug=False):
@@ -294,10 +308,6 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
             except Exception:
                 counterexamples.add(tuple(list(s.trace)))
     if not success:
-        return CheckResult.failure(counterexamples)
+        return CheckResult.failure(counterexamples, failing_states)
     return CheckResult.success()
-    
-    # if S_reachable.issubset(S_disjunction):
-    #     return True
-    # else:
-    #     return False
+
