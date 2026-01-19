@@ -2,7 +2,7 @@ from collections import deque
 from typing import List, TypeVar, Generic, Mapping, Iterator, Any
 from pprint import pformat
 from Semantics.enums import ElementStatus, QualityStatus
-from Semantics.algorithms import check_stable_system, check_weak_compliance
+from Semantics.algorithms import check_stable_system, check_weak_compliance, CheckResult
 
 T_STATE = TypeVar('T_STATE')
 
@@ -338,11 +338,11 @@ class CombinedTransitionSystem:
     def check_strong_compliance(self,qualities, debug=False):
         stable = check_stable_system(self, qualities, debug)
         weakly_compliant = check_weak_compliance(self, qualities, debug)
-        return (
-            stable[0] and weakly_compliant[0],
-            stable[1],
-            weakly_compliant[1]
-        )
+        if stable.is_ok() and weakly_compliant.is_ok():
+            return CheckResult.success()
+        # combine counterexamples from both checks
+        cset = set(stable.counter_examples) | set(weakly_compliant.counter_examples)
+        return CheckResult.failure(cset)
     
     def actions(self) -> set[Any]:
         """Return the set of all actions in the combined transition system."""

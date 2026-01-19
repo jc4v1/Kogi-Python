@@ -42,8 +42,10 @@ def test_simple_real_gm_as_ts_combined():
     # print("Transitions:")
     # pretty_print(ts.transitions)
     # Check stable system and weak compliance
-    assert check_stable_system(ts, {'q'})[0]
-    assert check_weak_compliance(ts, {'q'})[0]
+    res = check_stable_system(ts, {'q'})
+    assert res.is_ok()
+    res2 = check_weak_compliance(ts, {'q'})
+    assert res2.is_ok()
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_real_gm_as_ts_original():
@@ -77,8 +79,10 @@ def test_simple_real_gm_as_ts_original():
     # print("Transitions:")
     # pretty_print(ts.transitions)
     # Check stable system and weak compliance
-    assert check_stable_system(ts, {'q'})[0]
-    assert check_weak_compliance(ts, {'q'})[0]
+    res = check_stable_system(ts, {'q'})
+    assert res.is_ok()
+    res2 = check_weak_compliance(ts, {'q'})
+    assert res2.is_ok()
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_more_complex_gm():
@@ -89,8 +93,10 @@ def test_more_complex_gm():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert check_stable_system(ts, {'q1', 'q2'})[0]
-    assert check_weak_compliance(ts, {'q1', 'q2'})[0]
+    res = check_stable_system(ts, {'q1', 'q2'})
+    assert res.is_ok()
+    res2 = check_weak_compliance(ts, {'q1', 'q2'})
+    assert res2.is_ok()
 
 def test_gm_with_break():
     gm = read_istar_model("tests/data/gm_with_break.txt")
@@ -100,8 +106,10 @@ def test_gm_with_break():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert not check_stable_system(ts, {'q1'})[0]
-    assert check_weak_compliance(ts, {'q1'})[0] 
+    res = check_stable_system(ts, {'q1'})
+    assert res.is_err()
+    res2 = check_weak_compliance(ts, {'q1'})
+    assert res2.is_ok()
 
 # @pytest.mark.skip(reason="temporarily disabled")
 def test_security_gm():
@@ -111,8 +119,10 @@ def test_security_gm():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert not check_stable_system(ts, {'DPA'})[0]
-    assert check_weak_compliance(ts, {'DPA'})[0]
+    res = check_stable_system(ts, {'DPA'})
+    assert res.is_err()
+    res2 = check_weak_compliance(ts, {'DPA'})
+    assert res2.is_ok()
     
 # @pytest.mark.skip(reason="temporarily disabled")
 def test_airline():
@@ -122,9 +132,12 @@ def test_airline():
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    assert check_stable_system(ts, {'nothing'})[0]
-    assert check_stable_system(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})[0]
-    assert check_weak_compliance(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})[0]
+    res = check_stable_system(ts, {'nothing'})
+    assert res.is_ok()
+    res2 = check_stable_system(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})
+    assert res2.is_ok()
+    res3 = check_weak_compliance(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})
+    assert res3.is_ok()
 
 def test_forward_bfs_traces():
     from Semantics.transition_system import TransitionSystem, State
@@ -172,8 +185,8 @@ def test_stability_counterexamples():
     ts = TransitionSystem({s0, s1, s2}, transitions, s0)
 
     res = check_stable_system(ts, {'q'})
-    assert res[0] is False
+    assert res.is_err()
     # counterexamples should be a sorted list of traces (shortest first)
-    counterexamples = res[1]
+    counterexamples = res.counter_examples
     assert isinstance(counterexamples, list)
     assert counterexamples == [('a', 'b')]

@@ -61,27 +61,28 @@ def test_backward_bfs(simple_lts):
 
 def test_check_stable_system_holds(stable_lts):
     qualities_to_check = {'p'}
-    assert check_stable_system(stable_lts, qualities_to_check)[0]
+    res = check_stable_system(stable_lts, qualities_to_check)
+    assert res.is_ok()
 
 def test_check_stable_system_fails(non_stable_lts):
     qualities_to_check = {'p'}
-    assert not check_stable_system(non_stable_lts, qualities_to_check)[0]
+    res = check_stable_system(non_stable_lts, qualities_to_check)
+    assert res.is_err()
 
 def test_check_stable_system_multiple_qualities(simple_lts):
     s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
     result_p = check_stable_system(simple_lts, {'p'})
-    assert result_p[0] is False
-    # assert result_p[1] == {s0,s2}
-    assert result_p[1] == [('a',), ('a', 'b', 'c', 'a')]
+    assert result_p.is_err()
+    assert result_p.counter_examples == [('a',), ('a', 'b', 'c', 'a')]
     result_q = check_stable_system(simple_lts, {'q'})
-    assert result_q[0] is False
-    assert result_q[1] == [('a', 'b', 'c')]
+    assert result_q.is_err()
+    assert result_q.counter_examples == [('a', 'b', 'c')]
     result_pq = check_stable_system(simple_lts, {'p', 'q'})
 def test_check_stable_system_counterexamples(non_stable_lts):
     # non_stable_lts has s0 with 'p' and s1 without 'p', s0 -a-> s1
     res = check_stable_system(non_stable_lts, {'p'})
-    assert res[0] is False
-    counterexamples = res[1]
+    assert res.is_err()
+    counterexamples = res.counter_examples
     # counterexamples should be a sorted list of traces, shortest-first
     assert isinstance(counterexamples, list)
     assert counterexamples[0] == ('a',)
@@ -95,8 +96,10 @@ def test_check_stable_system_deadlock_case():
         s1: {},  # s1 is a deadlock state
     }
     lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
-    assert check_stable_system(lts, {'q'})[0]
-    assert check_stable_system(lts, {'p'})[0]
+    res_q = check_stable_system(lts, {'q'})
+    assert res_q.is_ok()
+    res_p = check_stable_system(lts, {'p'})
+    assert res_p.is_ok()
 
 def test_weak_compliance_holds_with_cycle():
     s0 = State('s0', qualities={'p'})
@@ -108,7 +111,8 @@ def test_weak_compliance_holds_with_cycle():
         s2: {'c': {s1}}
     }
     lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
-    assert check_weak_compliance(lts, {'q'})[0]
+    res = check_weak_compliance(lts, {'q'})
+    assert res.is_ok()
 
 def test_weak_compliance_holds_with_deadlock():
     s0 = State('s0', qualities={'p'})
@@ -118,21 +122,24 @@ def test_weak_compliance_holds_with_deadlock():
         s1: {}
     }
     lts = TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
-    assert check_weak_compliance(lts, {'q'})[0]
+    res = check_weak_compliance(lts, {'q'})
+    assert res.is_ok()
 
 def test_weak_compliance_fails():
     s0 = State('s0', qualities={'p'})
     s1 = State('s1', qualities={'r'})
     transitions = {s0: {'a': {s1}}, s1: {}}
     lts = TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
-    assert not check_weak_compliance(lts, {'q'})[0]
+    res = check_weak_compliance(lts, {'q'})
+    assert res.is_err()
 
 def test_weak_compliance_with_no_qualities_in_lts():
     s0 = State('s0', qualities={'p'})
     s1 = State('s1', qualities={'r'})
     transitions = {s0: {'a': {s1}}, s1: {}}
     lts = TransitionSystem(states={s0, s1}, transitions=transitions, initial_state=s0)
-    assert not check_weak_compliance(lts, {'q1'})[0]
+    res = check_weak_compliance(lts, {'q1'})
+    assert res.is_err()
 
 def test_weak_compliance_with_multiple_qualities():
     s0 = State('s0', qualities={'p'})
@@ -144,7 +151,8 @@ def test_weak_compliance_with_multiple_qualities():
         s2: {'c': {s1}}
     }
     lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
-    assert check_weak_compliance(lts, {'q', 'r'})[0]
+    res = check_weak_compliance(lts, {'q', 'r'})
+    assert res.is_ok()
 
 def test_weak_compliance_with_multiple_qualities_fail():
     s0 = State('s0', qualities={'p'})
@@ -156,6 +164,9 @@ def test_weak_compliance_with_multiple_qualities_fail():
         s2: {'c': {s1}}
     }
     lts = TransitionSystem(states={s0, s1, s2}, transitions=transitions, initial_state=s0)
-    assert check_weak_compliance(lts, {'q', 'r'})[0]
-    assert not check_stable_system(lts, {'q', 'r'})[0]
-    assert not check_weak_compliance(lts, {'p', 't'})[0]
+    res = check_weak_compliance(lts, {'q', 'r'})
+    assert res.is_ok()
+    res2 = check_stable_system(lts, {'q', 'r'})
+    assert res2.is_err()
+    res3 = check_weak_compliance(lts, {'p', 't'})
+    assert res3.is_err()

@@ -457,13 +457,13 @@ class InterfaceBuilder:
             self.petri_tokens = {self.petri_net.initial_place(): 1}
             lts = combine_goal_model_and_petri_net(self.model, self.petri_net,self.model.event_mapping)
             result = lts.check_stability(list(self.model.qualities.keys()))
-            if result[0] is True:
+            if result.is_ok():
                 self.update_status_info("Stability check: TRUE")
                 self.failed_markings_dropdown.options = []
                 self.failed_markings_dropdown.disabled = True
                 self._last_failed_markings = []
             else:
-                failed = sorted(result[1])
+                failed = sorted(result.counter_examples)
                 self.update_status_info(f"Stability check: FALSE ({len(failed)} counterexamples)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))
@@ -489,13 +489,13 @@ class InterfaceBuilder:
             self.petri_tokens = {self.petri_net.initial_place(): 1}
             lts = combine_goal_model_and_petri_net(self.model, self.petri_net,self.model.event_mapping)
             result = lts.check_weak_compliance(list(self.model.qualities.keys()))
-            if result[0] is True:
+            if result.is_ok():
                 self.update_status_info("Weak compliance: TRUE")
                 self.failed_markings_dropdown.options = []
                 self.failed_markings_dropdown.disabled = True
                 self._last_failed_markings = []
             else:
-                failed = sorted(result[1])
+                failed = sorted(result.counter_examples)
                 self.update_status_info(f"Weak compliance: FALSE ({len(failed)} counterexamples)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))

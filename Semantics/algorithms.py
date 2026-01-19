@@ -1,6 +1,59 @@
 from collections import deque
 from typing import Any
 
+
+class CheckResult:
+    """A simple result monad for checks.
+
+    Represents either success (ok=True) or failure (ok=False) with
+    an optional list of counter-example traces (each trace is a tuple
+    of actions).
+    """
+    def __init__(self, ok: bool, counter_examples: list[tuple[Any, ...]] | None = None):
+        self.ok = ok
+        self.counter_examples = counter_examples or []
+
+    @classmethod
+    def success(cls):
+        return cls(True, [])
+
+    @classmethod
+    def failure(cls, traces: list[tuple[Any, ...]] | set[tuple[Any, ...]]):
+        # ensure a list of tuples (sorted shortest-first)
+        traces_list = list(traces)
+        traces_list = [tuple(t) for t in traces_list]
+        traces_list.sort(key=len)
+        return cls(False, traces_list)
+
+    def is_ok(self) -> bool:
+        return self.ok
+
+    def is_err(self) -> bool:
+        return not self.ok
+
+    def map(self, fn):
+        if self.ok:
+            return CheckResult.success()
+        return self
+
+    def __repr__(self) -> str:  # pragma: no cover - small helper
+        return f"CheckResult(ok={self.ok}, counter_examples={self.counter_examples})"
+    
+    def __str__(self) -> str:  # pragma: no cover - small helper
+        return self.print_counter_examples()
+
+    def print_counter_examples(self) -> str:
+        """Return a human-readable string describing the result and any counter-examples."""
+        lines: list[str] = []
+        if self.ok:
+            lines.append("True")
+        else:
+            lines.append("False")
+            lines.append(f"Counter-examples ({len(self.counter_examples)}):")
+            for trace in self.counter_examples:
+                lines.append(f"  {trace}")
+        return "\n".join(lines)
+
 def pretty_format(states: set[Any]) -> str:
     return "-------------------\n" + f"[\n" + ",\n".join(f"  {str(s)}" for s in states) + "\n]" + "\n-------------------"
  
@@ -77,8 +130,7 @@ def backward_bfs(lts, target_states):
     
     Args:
         lts (Lts): The labeled transition system.
-        target_states (set): The set of states to start the search from.
-
+                    return CheckResult.failure(counterexamples)
     Returns:
         set: A set of all states that can reach any of the target states.
     """
@@ -176,9 +228,8 @@ def check_stable_system(lts, qualities_Q, debug=False):
                 counterexamples.add(full_trace)
 
     if not success:
-        sorted_list = sorted(list(counterexamples), key=len)
-        return (False, sorted_list)
-    return (True, set(), [])
+        return CheckResult.failure(counterexamples)
+    return CheckResult.success()
 
 def check_weak_compliance(lts, qualities_Q, debug=False):
     """
@@ -234,8 +285,17 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
             if debug:
                 print(f"failing state weak comliance {str(s)}")
             success = False
-    counterExamples = sorted([s.trace for s in failing_states], key=len)
-    return (success, counterExamples)
+    # produce set of traces (tuples) as counterexamples
+    counterexamples = set()
+    for s in failing_states:
+        if hasattr(s, 'trace') and s.trace is not None:
+            try:
+                counterexamples.add(tuple(s.trace))
+            except Exception:
+                counterexamples.add(tuple(list(s.trace)))
+    if not success:
+        return CheckResult.failure(counterexamples)
+    return CheckResult.success()
     
     # if S_reachable.issubset(S_disjunction):
     #     return True
