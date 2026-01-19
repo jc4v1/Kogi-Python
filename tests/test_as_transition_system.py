@@ -135,30 +135,6 @@ def test_forward_bfs_traces():
     s1 = State('s1')
     s2 = State('s2')
 
-    def test_stability_counterexamples():
-        from Semantics.transition_system import TransitionSystem, State
-        from Semantics.algorithms import check_stable_system
-
-        # Build a tiny transition system: s0 -a-> s1 -b-> s2
-        # where s0 and s1 satisfy quality 'q' but s2 does not.
-        s0 = State('s0', qualities={'q'})
-        s1 = State('s1', qualities={'q'})
-        s2 = State('s2', qualities=set())
-
-        transitions = {
-            s0: {'a': {s1}},
-            s1: {'b': {s2}},
-            s2: {}
-        }
-
-        ts = TransitionSystem({s0, s1, s2}, transitions, s0)
-
-        res = check_stable_system(ts, {'q'})
-        assert res[0] is False
-        # counterexamples should be a sorted list of traces (shortest first)
-        counterexamples = res[2]
-        assert isinstance(counterexamples, list)
-        assert counterexamples == [('a', 'b')]
     transitions = {
         s0: {'a': {s1}},
         s1: {'b': {s2}},
@@ -171,7 +147,33 @@ def test_forward_bfs_traces():
 
     assert reachable == {s0, s1, s2}
 
-    # Each state should have a `traces` attribute with one shortest trace
-    assert s0.traces == [[]]
-    assert s1.traces == [['a']]
-    assert s2.traces == [['a', 'b']]
+    # Each state should have a `trace` attribute with one shortest trace
+    assert s0.trace == []
+    assert s1.trace == ['a']
+    assert s2.trace == ['a', 'b']
+
+
+def test_stability_counterexamples():
+    from Semantics.transition_system import TransitionSystem, State
+    from Semantics.algorithms import check_stable_system
+
+    # Build a tiny transition system: s0 -a-> s1 -b-> s2
+    # where s0 and s1 satisfy quality 'q' but s2 does not.
+    s0 = State('s0', qualities={'q'})
+    s1 = State('s1', qualities={'q'})
+    s2 = State('s2', qualities=set())
+
+    transitions = {
+        s0: {'a': {s1}},
+        s1: {'b': {s2}},
+        s2: {}
+    }
+
+    ts = TransitionSystem({s0, s1, s2}, transitions, s0)
+
+    res = check_stable_system(ts, {'q'})
+    assert res[0] is False
+    # counterexamples should be a sorted list of traces (shortest first)
+    counterexamples = res[1]
+    assert isinstance(counterexamples, list)
+    assert counterexamples == [('a', 'b')]

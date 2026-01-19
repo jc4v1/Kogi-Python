@@ -6,6 +6,26 @@ def pretty_format(states: set[Any]) -> str:
  
 # pformat = pretty_format # Use our custom formatter by default
 
+
+def reconstruct_trace_from_parent_map(parent_map: dict[Any, tuple[Any, Any]], state: Any) -> list[Any]:
+    """Reconstruct an action trace from a parent map mapping node -> (prev_node, action).
+
+    Returns list of actions from the initial node to `state`.
+    """
+    actions_rev: list[Any] = []
+    cur = state
+    while True:
+        prev = parent_map.get(cur)
+        if not prev:
+            break
+        pstate, pact = prev
+        if pstate is None:
+            break
+        actions_rev.append(pact)
+        cur = pstate
+    actions_rev.reverse()
+    return actions_rev
+
 def forward_bfs(lts, start_state):
     """
     Performs a forward BFS from a single start state.
@@ -39,28 +59,12 @@ def forward_bfs(lts, start_state):
                     queue.append(next_s)
 
     # Reconstruct a single shortest trace for each reachable state and
-    # attach it as a list-of-actions under the attribute `traces` (a
-    # list containing one trace) where possible.
-    def _reconstruct_trace(state: Any) -> list[Any]:
-        actions_rev: list[Any] = []
-        cur = state
-        while True:
-            prev = parent_map.get(cur)
-            if not prev:
-                break
-            pstate, pact = prev
-            if pstate is None:
-                break
-            actions_rev.append(pact)
-            cur = pstate
-        actions_rev.reverse()
-        return actions_rev
-
+    # attach it as a list-of-actions under the attribute `trace` where possible.
     for s in reachable:
-        trace = _reconstruct_trace(s)
+        trace = reconstruct_trace_from_parent_map(parent_map, s)
         try:
-            s.traces = [trace]
-            # setattr(s, 'traces', [trace])
+            # attach a single shortest trace as `trace` (list of actions)
+            s.trace = trace
         except Exception:
             # Skip states that cannot have attributes set
             pass
@@ -124,25 +128,13 @@ def check_stable_system(lts, qualities_Q, debug=False):
                         continue
                     parent[nxt] = (cur, action)
                     if nxt in targets:
-                        # reconstruct
-                        acts = []
-                        node = nxt
-                        while True:
-                            p = parent.get(node)
-                            if not p:
-                                break
-                            pst, pact = p
-                            if pst is None:
-                                break
-                            acts.append(pact)
-                            node = pst
-                        acts.reverse()
-                        return acts
+                        # reconstruct using shared helper
+                        return reconstruct_trace_from_parent_map(parent, nxt)
                     visited.add(nxt)
                     q.append(nxt)
         return []
 
-    # Compute reachable states once (also populates `traces` on states via forward_bfs)
+    # Compute reachable states once (also populates `trace` on states via forward_bfs)
     S_reachable = forward_bfs(lts, lts.initial_state())
 
     for q in qualities_Q:
@@ -169,13 +161,13 @@ def check_stable_system(lts, qualities_Q, debug=False):
                     print(f"failing state stability for quality {q}: {str(s)}")
                 success = False
 
-                # Build counterexample trace: initial -> ... -> s (from s.traces if available)
+                # Build counterexample trace: initial -> ... -> s (from s.trace if available)
                 init_trace = []
-                if hasattr(s, 'traces') and s.traces:
+                if hasattr(s, 'trace') and s.trace:
                     try:
-                        init_trace = list(s.traces[0])
+                        init_trace = list(s.trace)
                     except Exception:
-                        init_trace = list(s.traces)
+                        init_trace = list(s.trace)
 
                 # then s -> ... -> t where t satisfies not q
                 suffix = _find_action_path(s, S_not_q)
@@ -185,7 +177,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
 
     if not success:
         sorted_list = sorted(list(counterexamples), key=len)
-        return (False, failing_states, sorted_list)
+        return (False, sorted_list)
     return (True, set(), [])
 
 def check_weak_compliance(lts, qualities_Q, debug=False):
@@ -242,7 +234,8 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
             if debug:
                 print(f"failing state weak comliance {str(s)}")
             success = False
-    return (success, failing_states)
+    counterExamples = sorted([s.trace for s in failing_states], key=len)
+    return (success, counterExamples)
     
     # if S_reachable.issubset(S_disjunction):
     #     return True
