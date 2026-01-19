@@ -19,13 +19,52 @@ def forward_bfs(lts, start_state):
     """
     queue = deque([start_state])
     reachable = {start_state}
-    
+
+    # parent_map: state -> (previous_state, action) to reconstruct a
+    # single (shortest) trace per state. We record only the first
+    # discovered predecessor which yields BFS shortest-path traces and
+    # avoids combinatorial explosion of all possible traces.
+    parent_map: dict[Any, tuple[Any, Any]] = {start_state: (None, None)}
+
     while queue:
         current_s = queue.popleft()
-        for next_s in lts.get_successors(current_s):
-            if next_s not in reachable:
-                reachable.add(next_s)
-                queue.append(next_s)
+        actions = lts.actions()
+        
+        for action in actions:
+            successors = lts.get_successors(current_s, action)
+            for next_s in successors:
+                if next_s not in reachable:
+                    parent_map[next_s] = (current_s, action)
+                    reachable.add(next_s)
+                    queue.append(next_s)
+
+    # Reconstruct a single shortest trace for each reachable state and
+    # attach it as a list-of-actions under the attribute `traces` (a
+    # list containing one trace) where possible.
+    def _reconstruct_trace(state: Any) -> list[Any]:
+        actions_rev: list[Any] = []
+        cur = state
+        while True:
+            prev = parent_map.get(cur)
+            if not prev:
+                break
+            pstate, pact = prev
+            if pstate is None:
+                break
+            actions_rev.append(pact)
+            cur = pstate
+        actions_rev.reverse()
+        return actions_rev
+
+    for s in reachable:
+        trace = _reconstruct_trace(s)
+        try:
+            s.traces = [trace]
+            # setattr(s, 'traces', [trace])
+        except Exception:
+            # Skip states that cannot have attributes set
+            pass
+
     return reachable
 
 def backward_bfs(lts, target_states):

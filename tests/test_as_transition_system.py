@@ -125,3 +125,29 @@ def test_airline():
     assert check_stable_system(ts, {'nothing'})[0]
     assert check_stable_system(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})[0]
     assert check_weak_compliance(ts, {'Delay at arrival measured appropriately', 'Extraordinary circumstances documented appropriately'})[0]
+
+def test_forward_bfs_traces():
+    from Semantics.transition_system import TransitionSystem, State
+    from Semantics.algorithms import forward_bfs
+
+    # Build a tiny transition system: s0 -a-> s1 -b-> s2
+    s0 = State('s0')
+    s1 = State('s1')
+    s2 = State('s2')
+
+    transitions = {
+        s0: {'a': {s1}},
+        s1: {'b': {s2}},
+        s2: {}
+    }
+
+    ts = TransitionSystem({s0, s1, s2}, transitions, s0)
+
+    reachable = forward_bfs(ts, ts.initial_state())
+
+    assert reachable == {s0, s1, s2}
+
+    # Each state should have a `traces` attribute with one shortest trace
+    assert s0.traces == [[]]
+    assert s1.traces == [['a']]
+    assert s2.traces == [['a', 'b']]
