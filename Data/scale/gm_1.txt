@@ -1,0 +1,107 @@
+{
+  "actors": [
+    {
+      "id": "830a7f16-f5a8-4e38-bb1a-27e6009e53c4",
+      "text": "Role",
+      "type": "istar.Role",
+      "x": 123,
+      "y": 76,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "cf1bdecc-ef48-4f71-9425-0d43c83658fc",
+          "text": "Quality",
+          "type": "istar.Quality",
+          "x": 203,
+          "y": 85,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c53a1cf3-c2d2-46f2-84f6-4460536e1168",
+          "text": "Task1",
+          "type": "istar.Task",
+          "x": 133,
+          "y": 258,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "59546d02-5f92-4e41-b9cc-a032aa074332",
+          "text": "Task2",
+          "type": "istar.Task",
+          "x": 281,
+          "y": 263,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8444083e-2ab9-4890-90f0-380e57fe1458",
+          "text": "Goal1",
+          "type": "istar.Goal",
+          "x": 137,
+          "y": 185,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "573790a9-05e7-412f-8cfb-d60507dd25ea",
+          "text": "Goal2",
+          "type": "istar.Goal",
+          "x": 280,
+          "y": 183,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "0c6fbb98-8184-44d2-af5b-5c05388b6067",
+      "type": "istar.AndRefinementLink",
+      "source": "c53a1cf3-c2d2-46f2-84f6-4460536e1168",
+      "target": "8444083e-2ab9-4890-90f0-380e57fe1458"
+    },
+    {
+      "id": "22667d98-5742-4290-87b7-34d89c8c44de",
+      "type": "istar.OrRefinementLink",
+      "source": "59546d02-5f92-4e41-b9cc-a032aa074332",
+      "target": "573790a9-05e7-412f-8cfb-d60507dd25ea"
+    },
+    {
+      "id": "a7cc3f1e-6395-4e79-bf3a-4f0fdbca00ed",
+      "type": "istar.ContributionLink",
+      "source": "8444083e-2ab9-4890-90f0-380e57fe1458",
+      "target": "cf1bdecc-ef48-4f71-9425-0d43c83658fc",
+      "label": "make"
+    },
+    {
+      "id": "5d700b24-8e60-4478-95a0-d263df815965",
+      "type": "istar.ContributionLink",
+      "source": "573790a9-05e7-412f-8cfb-d60507dd25ea",
+      "target": "cf1bdecc-ef48-4f71-9425-0d43c83658fc",
+      "label": "break"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Sat, 17 Jan 2026 13:11:50 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}
