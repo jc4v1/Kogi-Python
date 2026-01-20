@@ -113,7 +113,7 @@ def test_gm_with_break():
 
 # @pytest.mark.skip(reason="temporarily disabled")
 def test_security_gm():
-    gm = read_istar_model("Data/security/goal_model.txt")
+    gm = read_istar_model("tests/data/security/goal_model.txt")
     ts = gm.as_transition_system()
     # pretty_print(ts.transitions)
     print(f"Initial state: {ts.initial_state()}")
