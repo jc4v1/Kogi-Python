@@ -396,6 +396,9 @@ class GoalModel:
         print("-" * 50)
         
     def all_events(self) -> list[str]:
+        return goals_and_tasks(self)
+    
+    def goals_and_tasks(self) -> list[str]:
         return list(self.goals.keys()) + list(self.tasks.keys())
     
     def get_events(self) -> list[str]:

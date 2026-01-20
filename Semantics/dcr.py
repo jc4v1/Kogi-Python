@@ -166,10 +166,17 @@ def parse_runtime_marking(root, labels: Dict[str, str] | None = None) -> DcrMark
     return DcrMarking(executed, included, pending, labels=labels)
 
 
-def load_dcr_as_ts(path: str) -> TransitionSystem[DcrMarking]:
+# def load_dcr_as_ts(path: str) -> TransitionSystem[DcrMarking]:
+#     tree = ET.parse(path)
+#     root = tree.getroot()
+#     graph = DcrGraph.from_xml(path)
+#     initial = parse_runtime_marking(root, labels=graph.event_label)
+#     dcr_ts = DcrTransitionSystem(graph, initial)
+#     return dcr_ts.as_transition_system()
+
+def read_dcr(path: str) -> DcrTransitionSystem:
     tree = ET.parse(path)
     root = tree.getroot()
     graph = DcrGraph.from_xml(path)
     initial = parse_runtime_marking(root, labels=graph.event_label)
-    dcr_ts = DcrTransitionSystem(graph, initial)
-    return dcr_ts.as_transition_system()
+    return DcrTransitionSystem(graph, initial)

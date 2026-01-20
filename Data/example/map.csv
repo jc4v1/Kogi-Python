@@ -1,9 +1,9 @@
 Event, Intentional Element
 t1,
-t2,Receive application 
-t3,Assess application
+t2,t2: Assess application
+t3,t3: Approve
 t4,
-t5,
-t6,Approve
-t7,Deny
-t8
+t5,t4: Deny
+t6,
+t7,
+t8,t1: Register application

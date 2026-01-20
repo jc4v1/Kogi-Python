@@ -39,8 +39,8 @@ class PetriNet():
     def transition_names(self): 
         return sorted([t.name for t in self.net.transitions])
     
-    def set_event_mapping(self, model):
-        model.event_mapping = self.get_default_event_mapping()
+    # def set_event_mapping(self, model):
+    #     model.event_mapping = self.get_default_event_mapping()
     
     def get_default_event_mapping(self):
         event_mapping = {}

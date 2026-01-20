@@ -7,6 +7,7 @@ from datetime import datetime
 from Ui.Layout import Layout
 from Semantics.enums import LinkType
 from Semantics.transition_system import combine_goal_model_and_petri_net
+from Semantics.transition_system import CombinedTransitionSystem
 from Semantics.petri_net import PetriNet
 from typing import Any
 import re
@@ -464,7 +465,7 @@ class InterfaceBuilder:
                 self._last_failed_markings = []
             else:
                 failed = sorted(result.failing_states)
-                self.update_status_info(f"Stability check: FALSE ({len(failed)} counterexamples)")
+                self.update_status_info(f"Stability check: FALSE ({len(failed)} failed states)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))
                 ]
@@ -496,7 +497,7 @@ class InterfaceBuilder:
                 self._last_failed_markings = []
             else:
                 failed = sorted(result.failing_states)
-                self.update_status_info(f"Weak compliance: FALSE ({len(failed)} counterexamples)")
+                self.update_status_info(f"Weak compliance: FALSE ({len(failed)} failed states)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))
                 ]
@@ -536,3 +537,28 @@ class InterfaceBuilder:
 class WhatIfInterfaceBuilder(InterfaceBuilder):
     def __init__(self, model, debug=False):
         super().__init__(model, None, event_mapping=None,whatif=True, debug=debug)
+
+# For non-interactive analysis
+def analyse_models(goal_model, process_model, event_mapping):
+    lts_gm = goal_model.as_transition_system()
+    print(f"Goal Model LTS reachable states and transitions: {lts_gm.size()}")
+
+    lts_pn = process_model.as_transition_system()
+    print(f"Petri Net LTS reachable states and transitions: {lts_pn.size()}")   
+    lts_combined = CombinedTransitionSystem(lts_gm, lts_pn, event_mapping)  
+    print(f"Combined LTS reachable states and transitions: {lts_combined.size()}")
+    print()
+    
+    print(f"Goal Model Goals and Tasks: {goal_model.goals_and_tasks()}")
+    print(f"Goal Model Qualities: {set(goal_model.qualities.keys())}")
+    print()
+    print(f"Combined LTS Actions: {lts_combined.actions()}")
+    print()
+    print(f"Event Mapping {event_mapping}")
+    print()
+    
+    stability = lts_combined.check_stability(goal_model.qualities)
+    print(f"Stability: {stability}")
+
+    weak_compliance = lts_combined.check_weak_compliance(goal_model.qualities)
+    print(f"Weak Compliance: {weak_compliance}")
