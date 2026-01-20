@@ -113,15 +113,15 @@ def test_gm_with_break():
 
 # @pytest.mark.skip(reason="temporarily disabled")
 def test_security_gm():
-    gm = read_istar_model("Data/example_from_paper.txt")
+    gm = read_istar_model("Data/security/goal_model.txt")
     ts = gm.as_transition_system()
     # pretty_print(ts.transitions)
     print(f"Initial state: {ts.initial_state()}")
     print(f"Number of states: {len(ts.states())}")
     print(f"Number of transitions: {sum(len(v) for v in ts.transitions.values())}") 
-    res = check_stable_system(ts, {'DPA'})
+    res = check_stable_system(ts, {'Data Protected Appropriately'})
     assert res.is_err()
-    res2 = check_weak_compliance(ts, {'DPA'})
+    res2 = check_weak_compliance(ts, {'Data Protected Appropriately'})
     assert res2.is_ok()
     
 # @pytest.mark.skip(reason="temporarily disabled")

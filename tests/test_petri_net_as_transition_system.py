@@ -33,7 +33,7 @@ def test_simple_real_pm_as_ts():
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_demo_pm_as_ts():
-    pn = read_petri_net("Data/demo.pnml")
+    pn = read_petri_net("Data/security/petri_net.pnml")
     ts = pn.as_transition_system()
     pretty_print_states(ts.states())
     pretty_print(ts.transitions)

@@ -9,7 +9,7 @@ from Semantics.enums import ElementStatus, QualityStatus
 def test_simple_combined_system():
     gm = read_istar_model("tests/data/simple_gm.txt")
     pn = read_petri_net("tests/data/simple_pm.pnml")
-    lts = combine_goal_model_and_petri_net(gm, pn, event_mapping=None)
+    lts = combine_goal_model_and_petri_net(gm, pn, event_mapping=pn.get_default_event_mapping())
     print(lts.initial_state())
     pretty_print_states(lts.states())
     pretty_print(lts.transitions)
@@ -43,9 +43,9 @@ def test_simple_combined_system():
         assert lts.transitions.get(state, {}) == action_dict
         
 def test_demo_combined_system():
-    gm = read_istar_model("Data/example_from_paper.txt")
-    pn = read_petri_net("Data/demo.pnml")
-    lts = combine_goal_model_and_petri_net(gm, pn, event_mapping=None)
+    gm = read_istar_model("Data/security/goal_model.txt")
+    pn = read_petri_net("Data/security/petri_net.pnml")
+    lts = combine_goal_model_and_petri_net(gm, pn, event_mapping=pn.get_default_event_mapping())
     print(lts.initial_state())
     pretty_print(lts.transitions)
     pretty_print_states(lts.states())
@@ -60,9 +60,9 @@ def test_demo_combined_system_fail():
     # We make weak compliance fail by removing the mapping for t_6
     # Thus not all paths in the Petri net ensure that all
     # qualities are fulfilled
-    gm = read_istar_model("Data/example_from_paper.txt")
-    pn = read_petri_net("Data/demo.pnml")
-    pn.set_event_mapping(gm)
+    gm = read_istar_model("Data/security/goal_model.txt")
+    pn = read_petri_net("Data/security/petri_net.pnml")
+    gm.event_mapping = pn.get_default_event_mapping()
     gm.add_event_mapping('t_6', [])
     em = gm.event_mapping
     print(f"event mapping: {em}")

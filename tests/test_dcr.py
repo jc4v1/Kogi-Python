@@ -1,11 +1,11 @@
 import os
-from Semantics.dcr import load_dcr_as_ts
+from Semantics.dcr import read_dcr
 from Semantics.dcr import DcrGraph, DcrMarking, DcrTransitionSystem
 
 def test_load_dcr_ts():
     path = os.path.join(os.path.dirname(__file__), 'data', 'dcr_test.xml')
     path = os.path.normpath(path)
-    ts = load_dcr_as_ts(path)
+    ts = read_dcr(path).as_transition_system()
     # initial state should be part of states
     assert ts.initial_state() in ts.states()
     nstates, ntrans = ts.size()
