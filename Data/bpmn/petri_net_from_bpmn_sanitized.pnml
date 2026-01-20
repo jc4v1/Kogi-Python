@@ -9,14 +9,14 @@
         <name>
           <text>p0</text>
         </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
       </place>
       <place id="p1">
         <name>
           <text>p1</text>
         </name>
-        <initialMarking>
-          <text>1</text>
-        </initialMarking>
       </place>
       <place id="p2">
         <name>
@@ -55,7 +55,7 @@
       </place>
       <transition id="t1">
         <name>
-          <text>e1</text>
+          <text>e2</text>
         </name>
       </transition>
       <transition id="t2">
@@ -70,47 +70,47 @@
       </transition>
       <transition id="t4">
         <name>
-          <text>e8</text>
+          <text>e3</text>
         </name>
       </transition>
       <transition id="t5">
         <name>
-          <text>e6</text>
+          <text>e4</text>
         </name>
       </transition>
       <transition id="t6">
         <name>
-          <text>e3</text>
+          <text>e6</text>
         </name>
       </transition>
       <transition id="t7">
         <name>
-          <text>e2</text>
+          <text>e1</text>
         </name>
       </transition>
       <transition id="t8">
         <name>
-          <text>e4</text>
+          <text>e8</text>
         </name>
       </transition>
-      <arc id="5128318480" source="p1" target="t5"><inscription>1</inscription></arc>
-      <arc id="5128322576" source="t8" target="p8"><inscription>1</inscription></arc>
-      <arc id="5128188496" source="p3" target="t3"><inscription>1</inscription></arc>
-      <arc id="5128320592" source="p6" target="t8"><inscription>1</inscription></arc>
-      <arc id="5116644496" source="p5" target="t7"><inscription>1</inscription></arc>
-      <arc id="5128322704" source="t1" target="p2"><inscription>1</inscription></arc>
-      <arc id="5128322192" source="t7" target="p0"><inscription>1</inscription></arc>
-      <arc id="5128320656" source="t4" target="p2"><inscription>1</inscription></arc>
-      <arc id="5128228048" source="p8" target="t2"><inscription>1</inscription></arc>
-      <arc id="5128320784" source="t6" target="p6"><inscription>1</inscription></arc>
-      <arc id="5128321296" source="p4" target="t1"><inscription>1</inscription></arc>
-      <arc id="5128321360" source="t5" target="p5"><inscription>1</inscription></arc>
-      <arc id="5128236240" source="p7" target="t6"><inscription>1</inscription></arc>
-      <arc id="5128322960" source="p4" target="t4"><inscription>1</inscription></arc>
-      <arc id="5128321424" source="p0" target="t8"><inscription>1</inscription></arc>
-      <arc id="5128322000" source="t3" target="p4"><inscription>1</inscription></arc>
-      <arc id="5128320976" source="t2" target="p3"><inscription>1</inscription></arc>
-      <arc id="5128321488" source="t5" target="p7"><inscription>1</inscription></arc>
+      <arc id="5126870032" source="p8" target="t7"><inscription>1</inscription></arc>
+      <arc id="5126597136" source="t6" target="p7"><inscription>1</inscription></arc>
+      <arc id="5126668880" source="p7" target="t4"><inscription>1</inscription></arc>
+      <arc id="5126596176" source="t6" target="p3"><inscription>1</inscription></arc>
+      <arc id="5126596240" source="p6" target="t5"><inscription>1</inscription></arc>
+      <arc id="5126594192" source="t3" target="p8"><inscription>1</inscription></arc>
+      <arc id="5129595600" source="p1" target="t2"><inscription>1</inscription></arc>
+      <arc id="5128380176" source="p3" target="t1"><inscription>1</inscription></arc>
+      <arc id="5126597904" source="t1" target="p5"><inscription>1</inscription></arc>
+      <arc id="5126591760" source="t2" target="p2"><inscription>1</inscription></arc>
+      <arc id="5126587152" source="p5" target="t5"><inscription>1</inscription></arc>
+      <arc id="5126753104" source="p0" target="t6"><inscription>1</inscription></arc>
+      <arc id="5126766416" source="p8" target="t8"><inscription>1</inscription></arc>
+      <arc id="5126596816" source="t8" target="p4"><inscription>1</inscription></arc>
+      <arc id="5126590800" source="t5" target="p1"><inscription>1</inscription></arc>
+      <arc id="5126594512" source="t7" target="p4"><inscription>1</inscription></arc>
+      <arc id="5127193552" source="p2" target="t3"><inscription>1</inscription></arc>
+      <arc id="5126586768" source="t4" target="p6"><inscription>1</inscription></arc>
     </page>
   </net>
 </pnml>
