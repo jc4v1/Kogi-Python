@@ -6,7 +6,7 @@ Regulatory compliance often prioritizes adherence to explicit rules, overlooking
 
 # Initial Implementation
 
-A Prototype was developed in Python3, taking as input a Petri Net model (PNML File) and the goal model (JSON File). The event mapping is either derived directly from the Petri Net model, or provided as a CSV fie. 
+A prototype was developed in Python, taking as input a Petri Net model (PNML File) and the goal model (JSON File). The event mapping is either derived directly from the Petri Net model, or provided as a CSV fie. 
 
 The provides three options:
 - a non-interactive option. checking for stability and weak-compliance and returning either true or fals with counter examples
@@ -16,19 +16,20 @@ in the process model and see the effect on the goal model. It also allows to run
 
 
 ## Installation
+1. Required Python version 3.11
+2. Clone the repository: ``git clone https://github.com/jc4v1/Kogi-Python.git``
+3. Install the required packages: ``pip install -r requirements.txt``
+4. You can then start Jupyter notebook with ``jupyter notebook`` and open the file README.ipynb to see this document as a Jupyter notebook and run the demo code.
 
-1. Clone the repository: ``git clone https://github.com/jc4v1/Kogi-Python.git``
-2. Install the required packages: ``pip install -r requirements.txt``
 
 
 ## Required imports
 
-```bash
+```python
 from Semantics.istar_processor import read_istar_model
 from Semantics.petri_net_processor import read_petri_net
 from Semantics.event_mapping_from_csv import read_event_mapping_csv
-from Ui.interface import InterfaceBuilder
-from Semantics.transition_system import combine_goal_model_and_petri_net
+from Ui.interface import InterfaceBuilder, WhatIfInterfaceBuilder, analyse_models
 from Semantics.transition_system import CombinedTransitionSystem
 ```
 
@@ -44,23 +45,25 @@ from Semantics.transition_system import CombinedTransitionSystem
 
 The empty cell of the intentional element indicates that that specific transition is not mapped to an intentional element.
 4. Alternatively, extract the event mapping from the Petri Net file. In the case for "I love Petri Nets", the transitions will be mapped to the actions defined in the editor and interpreted as intentional elements. The following Petri Net would correspond to the event mapping from before
-![petri net](Data/pn-event-mapping.png)
+![petri net](images/pn-event-mapping.png)
 
 
 
-The following steps follows the method outlined in the paper. Based on the provided process model, goal model and event mapping
-1. in the first step, the models are translated to their respective labelled transition systems
-2. then the combined transition system is constructed from the process model, the goal model, and the event mapping
-3. then the combined system is checked for stability
-4. and weak compliance. 
+In the following, we define a method ``analyse_models(goal_model, process_model, event_mapping)`` that takes a goal model, a process model (either Petri Net or DCR Graph) and an event mapping.
+The method then follows the steps outlined in the paper.
+1. In the first step, the models are translated to their respective labelled transition systems
+2. Then the combined transition system is constructed from the process model, the goal model, and the event mapping
+3. Then the combined system is checked for stability
+4. And weak compliance. 
 
-The results are true or false, depending on the result of the checks and if the property does not hold, a list of states are returned in which the property does not hold.
+The results are either true or false, depending on the result of the checks and if the property does not hold, a list of traces as counter examples is returned in which the property does not hold.
 
+The method is also available through ``from UI.interface import analyse_models``.
 
 
 The following example is based on the security example from the paper, which is not stable, because we can always break the quality, but it is weak compliant, as we can always reach a state where the quality is true.
 
-```bash
+```python
 goal_model = read_istar_model("Data/security/goal_model.txt")
 petri_net = read_petri_net("Data/security/petri_net.pnml")
 # Map generated from the Petri Net.
@@ -68,22 +71,31 @@ event_mapping = petri_net.get_default_event_mapping()
 # Alternatively the event mapping can be read from a CSV file.
 # event_mapping = read_event_mapping_csv("Data/security/map.csv")
 
-lts_gm = goal_model.as_transition_system()
-print(f"Goal Model LTS reachable states and transitions: {lts_gm.size()}")
+def analyse_models(goal_model, process_model, event_mapping):
+    lts_gm = goal_model.as_transition_system()
+    print(f"Goal Model LTS reachable states and transitions: {lts_gm.size()}")
 
-lts_pn = petri_net.as_transition_system()
-print(f"Petri Net LTS reachable states and transitions: {lts_pn.size()}")
+    lts_pn = process_model.as_transition_system()
+    print(f"Petri Net LTS reachable states and transitions: {lts_pn.size()}")   
+    lts_combined = CombinedTransitionSystem(lts_gm, lts_pn, event_mapping)  
+    print(f"Combined LTS reachable states and transitions: {lts_combined.size()}")
+    print()
+    
+    print(f"Goal Model Goals and Tasks: {goal_model.goals_and_tasks()}")
+    print(f"Goal Model Qualities: {set(goal_model.qualities.keys())}")
+    print()
+    print(f"Combined LTS Actions: {lts_combined.actions()}")
+    print()
+    print(f"Event Mapping {event_mapping}")
+    print()
+    
+    stability = lts_combined.check_stability(goal_model.qualities)
+    print(f"Stability: {stability}")
 
-lts_combined = CombinedTransitionSystem(lts_gm, lts_pn, event_mapping)
-print(f"Combined LTS reachable states and transitions: {lts_combined.size()}")
-
-results = lts_combined.check_stability(goal_model.qualities)
-print(f"Stability: {results[0]}")
-print(f"Counterexamples: {len(results[1])}")
-
-result = lts_combined.check_weak_compliance(goal_model.qualities)
-print(f"Weak Compliance: {result[0]}")
-print(f"Counterexamples: {len(result[1])}")
+    weak_compliance = lts_combined.check_weak_compliance(goal_model.qualities)
+    print(f"Weak Compliance: {weak_compliance}")
+    
+analyse_models(goal_model, petri_net, event_mapping)
 
 ```
 
@@ -100,12 +112,12 @@ The following options are available in the interactive version
 - Run the weak compliance check and again check through animation, why weak compliance fails.
 
 The following is the screenshot of the interactive version. In the Jupyter notebook, you can try the interactive version for yourself.
-![screenshot](Data/kogi_interactive.jpg)
+![screenshot](images/kogi_interactive.jpg)
 
 
 For comparision, we choose again the security example from the paper.
 
-```bash
+```python
 goal_model = read_istar_model("Data/security/goal_model.txt")
 petri_net = read_petri_net("Data/security/petri_net.pnml")
 # Map generated from the Petri Net.
@@ -117,9 +129,73 @@ interface = InterfaceBuilder(goal_model,petri_net=petri_net,event_mapping=event_
 display(interface)
 ```
 
+## What if scenario
+
+
+The what-if scenario only looks at the behaviour of the goal model, and how the goal model reacts to 
+when tasks or goals are activated. In this animation, goals and tasks that don't have a
+refinement, can be selected in any order. 
+
+This allows to experiment with possible scenarios on how to achieve the goals of the 
+goal model or to make or break its qualities.
+
+
+The first step is to create a goal model with [PiStar](https://www.cin.ufpe.br/~jhcp/pistar/tool/#), move the file goal_model.txt in the Download folder to the right place and the right
+name, and then read the file.
+
+And then create the interface with the InterfaceBuilder class, and diplay the created interface.
+
+```python
+goal_model = read_istar_model("Data/what_if_gm.txt")
+
+interface = WhatIfInterfaceBuilder(goal_model).create_interface()
+display(interface)
+```
+
+What happens is, that in the background a Petri net is created. That Petri net 
+has one place and a transition from and to that place for each task and goal that
+does not have a refinement. This allows to select and execute those tasks and goals in any order.
+
+Here is an example of the Petri net for two events e1 and e2.
+
+![petri net](images/all-events-pn.png)
+
+
+
+## Your own example
+
+
+
+
+Choose your goal model and process model. You can use the following tools
+- For Goal models https://www.cin.ufpe.br/~jhcp/pistar/tool/#
+- For Petri Nets https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html
+- For DCR Graphs https://hugoalopez-dtu.github.io/dcr-js/ (download as DCR Solutions XML)
+  - Note that only the basic notation for DCR's is supported by Kogi
+- The event mapping can be provided as CSV file with columns "Action" and "Intentional Element"
+  - For Petri Nets, an alternative is to add intentional elements as to transitions in the Petri Net editor. The corresponding transitions will then be automatically mapped the intentional elements. 
+  - ``event_mapping = petri_net.get_default_event_mapping()``
+
+For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs only the non-interactive mode is supported.
+
+```python
+
+goal_model = read_istar_model("Data/security/goal_model.txt")
+process_model = read_petri_net("Data/security/petri_net.pnml")
+
+event_mapping = read_event_mapping_csv("Data/security/map.csv")
+# event_mapping = process_model.get_default_event_mapping() # Alternatively, create a default mapping from a Petri Net.
+
+analyse_models(goal_model, process_model, event_mapping)
+
+interface = InterfaceBuilder(goal_model, process_model, event_mapping=event_mapping).create_interface()
+display(interface)
+
+```
 ## References
 
 
 
 - Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking
 - High-Level Requirements-Driven Business Process Compliance
+
