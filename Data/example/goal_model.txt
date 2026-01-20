@@ -12,7 +12,7 @@
       "nodes": [
         {
           "id": "71c7aeb6-fb99-40a1-bcd1-5a29e5b45252",
-          "text": "g:4 Application closed",
+          "text": "g4: Application closed",
           "type": "istar.Goal",
           "x": 230,
           "y": 46,
@@ -52,7 +52,7 @@
         },
         {
           "id": "2bec6717-8d24-44c7-8663-4b103f29cb65",
-          "text": "g:2 Application assessed",
+          "text": "g2: Application assessed",
           "type": "istar.Goal",
           "x": 230,
           "y": 129,
@@ -62,7 +62,7 @@
         },
         {
           "id": "72f4cd8f-18f4-44f6-baf5-b63857c7da13",
-          "text": "g:3 Decision-making completed",
+          "text": "g3: Decision-making completed",
           "type": "istar.Goal",
           "x": 359,
           "y": 130,
