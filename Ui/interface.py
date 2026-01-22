@@ -544,7 +544,7 @@ def analyse_models(goal_model, process_model, event_mapping):
     print(f"Goal Model LTS reachable states and transitions: {lts_gm.size()}")
 
     lts_pn = process_model.as_transition_system()
-    print(f"Petri Net LTS reachable states and transitions: {lts_pn.size()}")   
+    print(f"Process Model LTS reachable states and transitions: {lts_pn.size()}")   
     lts_combined = CombinedTransitionSystem(lts_gm, lts_pn, event_mapping)  
     print(f"Combined LTS reachable states and transitions: {lts_combined.size()}")
     print()

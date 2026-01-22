@@ -61,8 +61,9 @@
         <condition sourceId="Event_19l9sss" targetId="Event_0nzjf99">
           <custom>
             <waypoints>
-              <waypoint x="780" y="350"/>
-              <waypoint x="900" y="350"/>
+              <waypoint x="750" y="340"/>
+              <waypoint x="750" y="320"/>
+              <waypoint x="900" y="320"/>
             </waypoints>
             <id id="Relation_1mh44uy"/>
           </custom>
@@ -70,8 +71,9 @@
         <condition sourceId="Event_19l9sss" targetId="Event_0kzq7c6">
           <custom>
             <waypoints>
-              <waypoint x="780" y="480"/>
-              <waypoint x="900" y="480"/>
+              <waypoint x="750" y="490"/>
+              <waypoint x="750" y="520"/>
+              <waypoint x="900" y="520"/>
             </waypoints>
             <id id="Relation_0cnx6pf"/>
           </custom>
@@ -93,10 +95,11 @@
         <exclude sourceId="Event_0u85g36" targetId="Event_0u85g36">
           <custom>
             <waypoints>
-              <waypoint x="370" y="460"/>
-              <waypoint x="350" y="460"/>
-              <waypoint x="350" y="415"/>
-              <waypoint x="370" y="415"/>
+              <waypoint x="400" y="340"/>
+              <waypoint x="400" y="310"/>
+              <waypoint x="330" y="310"/>
+              <waypoint x="330" y="360"/>
+              <waypoint x="370" y="360"/>
             </waypoints>
             <id id="Relation_0e09bfz"/>
           </custom>
@@ -106,9 +109,9 @@
             <waypoints>
               <waypoint x="715" y="340"/>
               <waypoint x="715" y="310"/>
-              <waypoint x="630" y="310"/>
-              <waypoint x="630" y="350"/>
-              <waypoint x="650" y="350"/>
+              <waypoint x="610" y="310"/>
+              <waypoint x="610" y="360"/>
+              <waypoint x="650" y="360"/>
             </waypoints>
             <id id="Relation_18eh700"/>
           </custom>
@@ -118,8 +121,8 @@
             <waypoints>
               <waypoint x="965" y="260"/>
               <waypoint x="965" y="230"/>
-              <waypoint x="1050" y="230"/>
-              <waypoint x="1050" y="310"/>
+              <waypoint x="1070" y="230"/>
+              <waypoint x="1070" y="310"/>
               <waypoint x="1030" y="310"/>
             </waypoints>
             <id id="Relation_0h8k2sb"/>
@@ -128,10 +131,10 @@
         <exclude sourceId="Event_0kzq7c6" targetId="Event_0kzq7c6">
           <custom>
             <waypoints>
-              <waypoint x="965" y="605"/>
-              <waypoint x="965" y="625"/>
-              <waypoint x="1050" y="625"/>
-              <waypoint x="1050" y="530"/>
+              <waypoint x="1000" y="605"/>
+              <waypoint x="1000" y="640"/>
+              <waypoint x="1070" y="640"/>
+              <waypoint x="1070" y="530"/>
               <waypoint x="1030" y="530"/>
             </waypoints>
             <id id="Relation_0kglxz1"/>
@@ -140,8 +143,8 @@
         <exclude sourceId="Event_0nzjf99" targetId="Event_0kzq7c6">
           <custom>
             <waypoints>
-              <waypoint x="990" y="410"/>
-              <waypoint x="992" y="455"/>
+              <waypoint x="939" y="410"/>
+              <waypoint x="941" y="455"/>
             </waypoints>
             <id id="Relation_0v5ucrd"/>
           </custom>
@@ -149,8 +152,8 @@
         <exclude sourceId="Event_0kzq7c6" targetId="Event_0nzjf99">
           <custom>
             <waypoints>
-              <waypoint x="965" y="455"/>
-              <waypoint x="965" y="410"/>
+              <waypoint x="990" y="455"/>
+              <waypoint x="990" y="410"/>
             </waypoints>
             <id id="Relation_1pueup4"/>
           </custom>
@@ -207,9 +210,6 @@
       <executed/>
       <included>
         <event id="Event_0u85g36"/>
-        <event id="Event_19l9sss"/>
-        <event id="Event_0nzjf99"/>
-        <event id="Event_0kzq7c6"/>
       </included>
       <pendingResponses/>
     </marking>
