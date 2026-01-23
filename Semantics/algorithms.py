@@ -66,10 +66,11 @@ class CheckResult:
             total = len(self.counter_examples)
             lines.append(f"Counter-examples ({total}):")
             # Print only the first three counter-examples, then summarize the rest
-            for trace in self.counter_examples[:3]:
+            amount_to_show = 3
+            for trace in self.counter_examples[:amount_to_show]:
                 lines.append(f"  {trace}")
-            if total > 3:
-                remaining = total - 3
+            if total > amount_to_show:
+                remaining = total - amount_to_show
                 lines.append(f"  ... and {remaining} more counter-examples")
         return "\n".join(lines)
 
