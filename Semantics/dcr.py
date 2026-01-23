@@ -179,5 +179,4 @@ def read_dcr(path: str) -> DcrTransitionSystem:
     root = tree.getroot()
     graph = DcrGraph.from_xml(path)
     initial = parse_runtime_marking(root, labels=graph.event_label)
-    print(repr(initial))
     return DcrTransitionSystem(graph, initial)

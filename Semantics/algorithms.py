@@ -63,9 +63,14 @@ class CheckResult:
             lines.append("True")
         else:
             lines.append("False")
-            lines.append(f"Counter-examples ({len(self.counter_examples)}):")
-            for trace in self.counter_examples:
+            total = len(self.counter_examples)
+            lines.append(f"Counter-examples ({total}):")
+            # Print only the first three counter-examples, then summarize the rest
+            for trace in self.counter_examples[:3]:
                 lines.append(f"  {trace}")
+            if total > 3:
+                remaining = total - 3
+                lines.append(f"  ... and {remaining} more counter-examples")
         return "\n".join(lines)
 
 def pretty_format(states: set[Any]) -> str:

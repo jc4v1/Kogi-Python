@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dcrgraph>
+  <specification>
+    <resources>
+      <events>
+        <event id="Event_17d27r0">
+          <custom>
+            <visualization>
+              <location xLoc="300" yLoc="180"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_1fd40o0">
+          <custom>
+            <visualization>
+              <location xLoc="600" yLoc="180"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_1sbqtbz">
+          <custom>
+            <visualization>
+              <location xLoc="860" yLoc="180"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_112qrvv">
+          <custom>
+            <visualization>
+              <location xLoc="300" yLoc="430"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_0l4fxo2">
+          <custom>
+            <visualization>
+              <location xLoc="610" yLoc="430"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_0prg4j2">
+          <custom>
+            <visualization>
+              <location xLoc="860" yLoc="430"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_0ts1qlj">
+          <custom>
+            <visualization>
+              <location xLoc="1120" yLoc="300"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+      </events>
+      <subProcesses/>
+      <labels>
+        <label id="Update Encryption Standards"/>
+        <label id="Deploy Data Grail"/>
+        <label id="Conducts Penetration Tests"/>
+        <label id="Revise Access Controls"/>
+        <label id="Deploy One Trust"/>
+        <label id="Flag Suspicious Activity"/>
+        <label id="Apply Vulnerability Patches"/>
+      </labels>
+      <labelMappings>
+        <labelMapping eventId="Event_17d27r0" labelId="Update Encryption Standards"/>
+        <labelMapping eventId="Event_1fd40o0" labelId="Deploy Data Grail"/>
+        <labelMapping eventId="Event_1sbqtbz" labelId="Conducts Penetration Tests"/>
+        <labelMapping eventId="Event_112qrvv" labelId="Revise Access Controls"/>
+        <labelMapping eventId="Event_0l4fxo2" labelId="Deploy One Trust"/>
+        <labelMapping eventId="Event_0prg4j2" labelId="Flag Suspicious Activity"/>
+        <labelMapping eventId="Event_0ts1qlj" labelId="Apply Vulnerability Patches"/>
+      </labelMappings>
+      <variables/>
+      <expressions/>
+      <variableAccesses>
+        <readAccessess/>
+        <writeAccessess/>
+      </variableAccesses>
+    </resources>
+    <constraints>
+      <conditions>
+        <condition sourceId="Event_17d27r0" targetId="Event_1fd40o0">
+          <custom>
+            <waypoints>
+              <waypoint x="430" y="200"/>
+              <waypoint x="600" y="200"/>
+            </waypoints>
+            <id id="Relation_149ow2e"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_17d27r0" targetId="Event_0l4fxo2">
+          <custom>
+            <waypoints>
+              <waypoint x="365" y="330"/>
+              <waypoint x="365" y="350"/>
+              <waypoint x="675" y="350"/>
+              <waypoint x="675" y="430"/>
+            </waypoints>
+            <id id="Relation_1rbdcbg"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_112qrvv" targetId="Event_1fd40o0">
+          <custom>
+            <waypoints>
+              <waypoint x="430" y="505"/>
+              <waypoint x="500" y="505"/>
+              <waypoint x="500" y="270"/>
+              <waypoint x="600" y="270"/>
+            </waypoints>
+            <id id="Relation_1bq16wq"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_112qrvv" targetId="Event_0l4fxo2">
+          <custom>
+            <waypoints>
+              <waypoint x="430" y="540"/>
+              <waypoint x="610" y="540"/>
+            </waypoints>
+            <id id="Relation_0m92nk4"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_1fd40o0" targetId="Event_1sbqtbz">
+          <custom>
+            <waypoints>
+              <waypoint x="730" y="255"/>
+              <waypoint x="860" y="255"/>
+            </waypoints>
+            <id id="Relation_0f6ybk7"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_0l4fxo2" targetId="Event_1sbqtbz">
+          <custom>
+            <waypoints>
+              <waypoint x="740" y="505"/>
+              <waypoint x="800" y="505"/>
+              <waypoint x="800" y="300"/>
+              <waypoint x="860" y="300"/>
+            </waypoints>
+            <id id="Relation_03zpp5s"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_1sbqtbz" targetId="Event_0prg4j2">
+          <custom>
+            <waypoints>
+              <waypoint x="925" y="330"/>
+              <waypoint x="925" y="430"/>
+            </waypoints>
+            <id id="Relation_1ba3aqo"/>
+          </custom>
+        </condition>
+        <condition sourceId="Event_0prg4j2" targetId="Event_0ts1qlj">
+          <custom>
+            <waypoints>
+              <waypoint x="990" y="505"/>
+              <waypoint x="1185" y="505"/>
+              <waypoint x="1185" y="450"/>
+            </waypoints>
+            <id id="Relation_04d815a"/>
+          </custom>
+        </condition>
+      </conditions>
+      <responses>
+        <response sourceId="Event_0ts1qlj" targetId="Event_1sbqtbz">
+          <custom>
+            <waypoints>
+              <waypoint x="1185" y="300"/>
+              <waypoint x="1185" y="255"/>
+              <waypoint x="990" y="255"/>
+            </waypoints>
+            <id id="Relation_1lquoby"/>
+          </custom>
+        </response>
+      </responses>
+      <coresponces/>
+      <excludes/>
+      <includes/>
+      <milestones/>
+      <updates/>
+      <spawns/>
+    </constraints>
+  </specification>
+  <runtime>
+    <marking>
+      <globalStore/>
+      <executed/>
+      <included>
+        <event id="Event_17d27r0"/>
+        <event id="Event_1fd40o0"/>
+        <event id="Event_1sbqtbz"/>
+        <event id="Event_112qrvv"/>
+        <event id="Event_0l4fxo2"/>
+        <event id="Event_0prg4j2"/>
+        <event id="Event_0ts1qlj"/>
+      </included>
+      <pendingResponses/>
+    </marking>
+  </runtime>
+</dcrgraph>
