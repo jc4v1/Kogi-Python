@@ -28,6 +28,7 @@ in the process model and see the effect on the goal model. It also allows to run
 ```python
 from Semantics.istar_processor import read_istar_model
 from Semantics.petri_net_processor import read_petri_net
+from Semantics.dcr import read_dcr
 from Semantics.event_mapping_from_csv import read_event_mapping_csv
 from Ui.interface import InterfaceBuilder, WhatIfInterfaceBuilder, analyse_models
 from Semantics.transition_system import CombinedTransitionSystem
@@ -61,7 +62,16 @@ The results are either true or false, depending on the result of the checks and 
 The method is also available through ``from UI.interface import analyse_models``.
 
 
-The following example is based on the security example from the paper, which is not stable, because we can always break the quality, but it is weak compliant, as we can always reach a state where the quality is true.
+The following example is based on the security example, which is not stable, because we can always break the quality, but it is weak compliant, as we can always reach a state where the quality is true.
+
+Goal Model
+![goal model](Data/security/goal_model.jpg)
+
+
+
+
+And Petri Net
+![petri net](Data/security/petri_net.jpg)
 
 ```python
 goal_model = read_istar_model("Data/security/goal_model.txt")
@@ -101,6 +111,21 @@ analyse_models(goal_model, petri_net, event_mapping)
 
 Note that the number of states for the goal model, the process model, and the combined labeled transition system are shown. Note that there is no state explosion happening for the combined labeled transition system. The reason is the strong synchronization of the process model and the goal model. Each action in the process model will lead either to an intentional event in the goal model or nothing. But it is not possible for the goal model to make independent transitions from that of the process model.
 
+
+### DCR Graph Non-Interactive Use
+
+
+Here is an example of a running the alogrithms for the security goal model, where the process model is given as a DCR graph. Kogi works together with DCR graphs exported by https://hugoalopez-dtu.github.io/dcr-js/ as DCR Solutions XML. Note that only the basic DCR graphs are supported by the Kogi tool.
+
+![dcr graph](Data/security/dcr.jpg)
+
+```python
+goal_model = read_istar_model("Data/security/goal_model.txt")
+dcr_graph = read_dcr("Data/security/dcr-graph.xml")
+event_mapping = read_event_mapping_csv("Data/security/map_dcr.csv")
+analyse_models(goal_model, dcr_graph, event_mapping)
+
+```
 
 ## Interactive Usage
 
@@ -173,7 +198,7 @@ Choose your goal model and process model. You can use the following tools
 - For DCR Graphs https://hugoalopez-dtu.github.io/dcr-js/ (download as DCR Solutions XML)
   - Note that only the basic notation for DCR's is supported by Kogi
 - The event mapping can be provided as CSV file with columns "Action" and "Intentional Element"
-  - For Petri Nets, an alternative is to add intentional elements as to transitions in the Petri Net editor. The corresponding transitions will then be automatically mapped the intentional elements. 
+  - For Petri Nets, an alternative is to add intentional elements as actions to transitions in the Petri Net editor. The corresponding transitions will then be automatically mapped the intentional elements. 
   - ``event_mapping = petri_net.get_default_event_mapping()``
 
 For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs only the non-interactive mode is supported.
@@ -182,12 +207,14 @@ For Petri Nets, both, non-interactive mode and interactive mode are supported. F
 
 goal_model = read_istar_model("Data/security/goal_model.txt")
 process_model = read_petri_net("Data/security/petri_net.pnml")
+# process_model = read_dcr("Data/security/dcr-graph.xml")
 
 event_mapping = read_event_mapping_csv("Data/security/map.csv")
 # event_mapping = process_model.get_default_event_mapping() # Alternatively, create a default mapping from a Petri Net.
 
 analyse_models(goal_model, process_model, event_mapping)
 
+# Only if the process model is a Petri Net:
 interface = InterfaceBuilder(goal_model, process_model, event_mapping=event_mapping).create_interface()
 display(interface)
 
