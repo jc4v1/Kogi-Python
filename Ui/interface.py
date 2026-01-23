@@ -425,9 +425,9 @@ class InterfaceBuilder:
         selected_event = self.process_dropdown.value
         try:
             self.update_status_info(f"Executing event: {selected_event}...")
-            self.executed_events.append(selected_event)
-            self.model.process_event(selected_event)
             self.update_petri_tokens(selected_event)
+            self.model.process_event(selected_event)
+            self.executed_events.append(selected_event)
             self.update_trace()
             self.update_token_status()
             self.safe_update_visualization()
