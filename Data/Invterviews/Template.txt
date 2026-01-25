@@ -1,0 +1,150 @@
+Semi-Structured Interview Template for Legal Practitioner Validation
+Interview Metadata
+Participant ID: P[X]
+Date: [DD/MM/YYYY]
+Duration: [Estimated 45-60 minutes]
+Format: [In-person/Virtual]
+Interviewer(s): [Name(s)]
+
+Participant Background (5-10 minutes)
+Opening:
+"Thank you for participating in this validation interview. We're evaluating a compliance framework from a legal practitioner's perspective. Before we begin discussing the framework, I'd like to understand your professional background."
+
+Professional Experience
+
+1. Can you describe your current role and areas of legal practice?
+2. How many years of experience do you have in compliance, regulatory, or technology law?
+3. What types of compliance challenges do you typically encounter in your work?
+
+Technical Familiarity
+
+1. How would you describe your familiarity with computational or automated compliance tools?
+2. Have you worked with process modeling, formal methods, or compliance engineering approaches before?
+
+Framework Introduction (5 minutes)
+Transition:
+1. "Now I'll provide a brief overview of the framework we're evaluating. [Provide demonstration/walkthrough of the framework, showing key components, workflow, and sample outputs]."
+
+Core Validation Questions (25-35 minutes)
+Theme 1: Alignment with Legal Practice
+Question 1: To what extent does the framework align with your current compliance analysis practices?
+
+Follow-up probes:
+
+1. How does this compare to your typical workflow for analyzing legal requirements?
+2. What aspects feel familiar or intuitive from a legal perspective?
+3. Are there gaps between what the framework offers and what you need in practice?
+4. Does the framework support the way you naturally think about compliance problems?
+
+Theme 2: Understandability and Actionability of Outputs
+Question 2: Does the framework provide outputs that are understandable and actionable from a legal perspective?
+
+Follow-up probes:
+
+1. Can you interpret what the framework is telling you about compliance status?
+2. Would the outputs help you advise clients or make compliance decisions?
+3. What additional information or context would make the outputs more useful?
+4. How do the visual representations (e.g., goal models) support or hinder your understanding?
+5. If the framework identified non-compliance, would you know what action to take?
+
+Theme 3: Workflow Clarity and Practicality
+Question 3: Is the workflow for linking process models and high-level legal requirements clear and practical?
+
+Follow-up probes:
+
+1. Does the translation process from legal text to operational artifacts make sense?
+2. Where in the workflow do you see the need for legal expertise or judgment?
+3. Are there steps that seem ambiguous or require clarification?
+4. How does the framework handle legal terms that require interpretation?
+5. Would you be able to use this framework without extensive technical training?
+6. What challenges do you foresee in applying this in real-world scenarios?
+
+Theme 4: Explainability and Transparency
+Question 4: Do you see potential for the framework to improve the explainability of compliance outcomes?
+
+Follow-up probes:
+
+1. If this framework identified non-compliance, could you explain why to a client or regulator?
+2. What would you need to justify a compliance decision made using this framework?
+3. Does the framework make explicit where expert judgment enters the analysis?
+4. How important is traceability back to the original legal source?
+5. In cases of adverse outcomes (e.g., denial of a claim), would the framework provide sufficient evidentiary basis?
+6. Does the framework help identify where in a process non-compliance occurs?
+
+Theme 5: Practical Value and Limitations
+Question 5: What practical value do you see this framework providing in your work?
+
+Follow-up probes:
+
+1. In what types of cases or scenarios would this framework be most useful?
+2. Could this help with high-volume compliance assessments?
+3. Would this framework help you identify cases requiring closer legal review?
+4. What are the main limitations you see from a legal standpoint?
+
+Question 6: What additional legal sources or context does the framework need to incorporate?
+
+Follow-up probes:
+
+1. Is the legal text alone sufficient, or do you need case law, regulatory guidance, or administrative decisions?
+2. How important are interpretive sources (e.g., regulatory commentary, enforcement actions)?
+3. Does the framework need to account for jurisdictional variations?
+
+Additional Insights (5-10 minutes)
+Accountability and Authority
+
+1. Who should be responsible for decisions made using this framework?
+2. How does this framework affect questions of interpretive authority in legal practice?
+
+Ambiguity Handling
+
+1. How well does the framework handle ambiguous legal terms or requirements?
+2. Should the framework flag ambiguities for human review?
+3. Improvement Suggestions
+
+1. What would make this framework more valuable for legal practitioners?
+2. Are there features or capabilities you would add?
+
+Overall Assessment
+
+1. Would you use this framework in your practice?
+2. Would you recommend it to other legal professionals?
+3. What is your overall impression of the framework's potential?
+
+Closing (2-3 minutes)
+1. Is there anything else you'd like to share about the framework that we haven't covered?
+2. Do you have any questions for us?
+3. May we contact you for follow-up clarification if needed?
+
+Thank you for your time and valuable insights.
+
+Post-Interview Notes
+Interviewer observations:
+
+Key themes identified:
+Notable quotes:
+Non-verbal cues or emphasis:
+Areas requiring follow-up:
+Appendix: Interview Guide Principles
+Structure:
+
+Begin with open-ended questions, then use probes for depth
+1. Allow participant to guide discussion within themes
+2. Maintain flexibility to explore unexpected insights
+
+Interviewer Approach:
+Remain neutral; avoid leading questions:
+1. Use active listening and reflective responses
+2. Allow pauses for participant reflection
+3. Take detailed notes or record (with consent)
+
+Ethical Considerations:
+Obtain informed consent:
+1. Ensure anonymity/confidentiality
+2. Allow participant to skip questions or withdraw
+3. Provide framework documentation for reference
+
+Data Management:
+Transcribe interview verbatim:
+1. Anonymize transcript (use participant codes)
+2. Store securely in project repository
+3. Code responses by theme for analysis
