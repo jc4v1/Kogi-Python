@@ -1,5 +1,6 @@
 - to run tests make sure ``pytest`` is installed (``pip install pytest``)
-- running tests ``python -m pytest -s`` (-s option to see the result of print statements during tests)
+- running tests ``pytest -s`` (-s option to see the result of print statements during tests)
 - to run tests with coverage make sure the ``pytest-cov`` plugin is installed (``pip install pytest-cov``)
-- to run tests with coverage for module ``NewSemantics`` (use ``--cov=.`` for all modules) 
-    - ``python -m pytest --cov=NewSemantics --cov-report=html``
+- to run tests with coverage for module ``Semantics`` (use ``--cov=.`` for all modules) 
+    - ``pytest --cov=Semantics --cov-report=html``
+    - There result can be viewed by opening a browser on  ``htmlcov/index.html`` 
