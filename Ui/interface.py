@@ -570,13 +570,14 @@ class FileUploadInterfaceBuilder:
         import tempfile
         import os
 
-        upload_goal, upload_interactive_checkbox, upload_pn, upload_dcr, upload_map, load_button, status, uploader_box = _create_upload_widgets()
+        upload_goal, upload_interactive_checkbox, upload_pn, upload_dcr, upload_bpmn, upload_map, load_button, status, uploader_box = _create_upload_widgets()
         self.debug = debug
         self.widgets_state = {
             'upload_goal': upload_goal,
             'interactive_checkbox': upload_interactive_checkbox,
             'upload_pn': upload_pn,
             'upload_dcr': upload_dcr,
+            'upload_bpmn': upload_bpmn,
             'upload_map': upload_map,
             'load_button': load_button,
             'status': status,
@@ -618,30 +619,53 @@ class FileUploadInterfaceBuilder:
             goal_path = self._save_upload_to_temp(self.widgets_state['upload_goal'], required=True)
             pn_path = self._save_upload_to_temp(self.widgets_state['upload_pn'], required=False)
             dcr_path = self._save_upload_to_temp(self.widgets_state['upload_dcr'], required=False)
+            bpmn_path = self._save_upload_to_temp(self.widgets_state['upload_bpmn'], required=False)
             map_path = self._save_upload_to_temp(self.widgets_state['upload_map'], required=False)
             cb = self.widgets_state.get('interactive_checkbox')
             interactive_mode = True if cb is None else bool(cb.value)
 
             from Semantics.istar_processor import read_istar_model
             from Semantics.petri_net_processor import read_petri_net
-            from Semantics.event_mapping_from_csv import read_event_mapping_csv
+            from Semantics.event_mapping_from_csv import read_event_mapping_csv, event_mapping_for_petri_net
 
             goal_model = read_istar_model(goal_path)
             petri_net = None
             dcr_ts = None
+            mapping_org = None
             if pn_path:
                 petri_net = read_petri_net(pn_path)
             if dcr_path:
                 from Semantics.dcr import read_dcr
                 dcr_ts = read_dcr(dcr_path)
 
+            # If a mapping CSV was uploaded, read it now (used for BPMN conversion)
             if map_path:
-                mapping = read_event_mapping_csv(map_path)
+                mapping_org = read_event_mapping_csv(map_path)
+
+            # If BPMN uploaded, convert it to a Petri net using pm4py and apply mapping if available
+            if bpmn_path:
+                try:
+                    import pm4py
+                    bpmn_model = pm4py.read_bpmn(bpmn_path)
+                    net, initial_marking, final_marking = pm4py.convert_to_petri_net(bpmn_model)
+                    petri_net = PetriNet(net, initial_marking, final_marking, {})
+                    if mapping_org:
+                        petri_net.convert_bpmn_net(mapping_org)
+                        mapping = mapping_org
+                    else:
+                        raise Exception("BPMN file uploaded but no mapping CSV provided for conversion")
+                except Exception as e_bpmn:
+                    # If conversion fails, surface error to user
+                    raise Exception(f"BPMN conversion failed: {e_bpmn}")
             else:
-                if petri_net:
-                    mapping = petri_net.get_default_event_mapping()
+                # No BPMN; resolve mapping normally
+                if mapping_org:
+                    mapping = event_mapping_for_petri_net(mapping_org, petri_net) if petri_net else mapping_org
                 else:
-                    mapping = goal_model.event_mapping
+                    if petri_net:
+                        mapping = petri_net.get_default_event_mapping()
+                    else:
+                        mapping = goal_model.event_mapping
 
             # Debug output: show map file path and resolved mapping (only when debug enabled)
             if self.debug and self.debug_area is not None:
@@ -658,9 +682,9 @@ class FileUploadInterfaceBuilder:
                     except Exception as de:
                         print(f"Error displaying mapping debug info: {de}")
 
-            # If a DCR file was uploaded, show textual analysis instead of the normal interactive UI
-            # determine non-interactive mode: DCR upload forces non-interactive, or checkbox unchecked
-            if dcr_path or (not interactive_mode):
+            # If a DCR or BPMN file was uploaded, show textual analysis instead of the normal interactive UI
+            # determine non-interactive mode: DCR/BPMN upload forces non-interactive, or checkbox unchecked
+            if dcr_path or bpmn_path or (not interactive_mode):
                 try:
                     import io, sys, html
                     buf = io.StringIO()
@@ -700,7 +724,7 @@ class FileUploadInterfaceBuilder:
                     display(builder.complete_interface)
 
             # Recreate upload widgets so subsequent uses don't reuse previous files/mappings
-            new_ug, new_checkbox, new_up, new_ud, new_um, new_lb, new_st, new_box = _create_upload_widgets()
+            new_ug, new_checkbox, new_up, new_ud, new_ubpmn, new_um, new_lb, new_st, new_box = _create_upload_widgets()
             # update the existing visible box children and the widgets_state
             self.widgets_state['uploader_box'].children = new_box.children
             self.widgets_state.update({
@@ -708,6 +732,7 @@ class FileUploadInterfaceBuilder:
                 'interactive_checkbox': new_checkbox,
                 'upload_pn': new_up,
                 'upload_dcr': new_ud,
+                'upload_bpmn': new_ubpmn,
                 'upload_map': new_um,
                 'load_button': new_lb,
                 'status': new_st,
@@ -749,7 +774,10 @@ def _create_upload_widgets():
     # Center the button and status within the inner box
     centered_button = widgets.HBox([lb], layout=widgets.Layout(justify_content='center', width='100%'))
     centered_status = widgets.HBox([st], layout=widgets.Layout(justify_content='center', width='100%'))
-    pn_dcr_row = widgets.HBox([interactive_checkbox, up, ud], layout=widgets.Layout(width='100%', justify_content='space-between', align_items='center'))
+    # BPMN upload added to the right of DCR
+    ubpmn = widgets.FileUpload(accept='.bpmn,.xml', multiple=False, description='BPMN (optional)',
+                              layout=widgets.Layout(width='24%'))
+    pn_dcr_row = widgets.HBox([interactive_checkbox, up, ud, ubpmn], layout=widgets.Layout(width='100%', justify_content='space-between', align_items='center'))
 
     inner_box = widgets.VBox([
         widgets.HTML('Load models from files'),
@@ -761,4 +789,4 @@ def _create_upload_widgets():
     ], layout=widgets.Layout(width='70%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
     # Center the upload box horizontally
     box = widgets.HBox([inner_box], layout=widgets.Layout(justify_content='center', width='100%'))
-    return ug, interactive_checkbox, up, ud, um, lb, st, box
+    return ug, interactive_checkbox, up, ud, ubpmn, um, lb, st, box
