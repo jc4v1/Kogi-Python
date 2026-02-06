@@ -185,6 +185,62 @@ class PetriNet():
                     new_transitions.append(entry)
             self.positions['transitions'] = new_transitions
 
+        # Normalize place names to p1, p2, ... but keep source/sink place names unchanged
+        # Determine incoming/outgoing arcs for places
+        place_incoming = {p.name: 0 for p in self.net.places}
+        place_outgoing = {p.name: 0 for p in self.net.places}
+        # Keep a reference map of original place name -> place object so we can restore preserved names
+        original_place_map = {p.name: p for p in self.net.places}
+        for arc in getattr(self.net, 'arcs', []):
+            src = getattr(arc, 'source', None)
+            tgt = getattr(arc, 'target', None)
+            if src is not None and hasattr(src, 'name'):
+                # if source is a place
+                if src.name in place_outgoing:
+                    place_outgoing[src.name] += 1
+            if tgt is not None and hasattr(tgt, 'name'):
+                if tgt.name in place_incoming:
+                    place_incoming[tgt.name] += 1
+
+        # Identify places to preserve (no incoming or no outgoing)
+        preserve = set()
+        for pname in place_incoming:
+            if place_incoming.get(pname, 0) == 0 or place_outgoing.get(pname, 0) == 0:
+                preserve.add(pname)
+
+        # Build rename mapping for places
+        place_rename_map = {}
+        counter = 1
+        for p in self.net.places:
+            old = p.name
+            if old in preserve:
+                place_rename_map[old] = old
+                continue
+            new_name = f"p{counter}"
+            counter += 1
+            place_rename_map[old] = new_name
+            try:
+                p.name = new_name
+            except Exception:
+                setattr(p, 'name', new_name)
+
+        # Update positions for places
+        if 'places' in self.positions:
+            new_places = []
+            for x, y, label in self.positions['places']:
+                new_label = place_rename_map.get(label, label)
+                new_places.append((x, y, new_label))
+            self.positions['places'] = new_places
+
+        # Ensure preserved places keep their original names on the actual place objects
+        for preserved_name in preserve:
+            place_obj = original_place_map.get(preserved_name)
+            if place_obj is not None:
+                try:
+                    place_obj.name = preserved_name
+                except Exception:
+                    setattr(place_obj, 'name', preserved_name)
+
         return rename_map
     
     def _add_event_mapping(self, ev_map, event: str, target):
