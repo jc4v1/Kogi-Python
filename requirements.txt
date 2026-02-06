@@ -8,4 +8,5 @@ pytest-cov # for running tests with coverage
 approvaltests
 jupyter
 jupytext
+voila
 

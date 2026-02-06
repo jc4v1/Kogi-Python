@@ -171,7 +171,7 @@ name, and then read the file.
 And then create the interface with the InterfaceBuilder class, and diplay the created interface.
 
 ```python
-goal_model = read_istar_model("Data/what_if_gm.txt")
+goal_model = read_istar_model("Data/security/goal_model.txt")
 
 interface = WhatIfInterfaceBuilder(goal_model).create_interface()
 display(interface)
@@ -219,6 +219,27 @@ interface = InterfaceBuilder(goal_model, process_model, event_mapping=event_mapp
 display(interface)
 
 ```
+### Kogi App
+
+
+Instead of editing the paths to the models in the cells above, we have also provided a file selection box for convenient selection of files and analyses.
+
+Depending on wether a Petri net is uploaded or a DCR graph, the view switches into interactive mode (Petri net) or non-interactive mode (DCR graph) plus What-If presentation of the goal model.
+
+The mapping for Petr nets is optional, if the mapping can be derived from the Petri net by, e.g., adding actions the correspond to the intensional elements in the goal model for a transition in, e.g., the [I love Petri net](https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html) editor. For DCR graphs, the mapping has to be provided.
+
+A standalone notebook for this is [KogiApp.ipynb](KogiApp.ipynb).
+
+```python
+from Ui.interface import FileUploadInterfaceBuilder
+
+display(FileUploadInterfaceBuilder().create_interface())
+```
+
+## More Examples
+More examples, including the running example and the EU air passenger rights example, can be found in the [Examples.ipynb](Examples.ipynb) Jupyter notebook and the [Data](./Data) subdirectory.
+
+
 ## References
 
 
