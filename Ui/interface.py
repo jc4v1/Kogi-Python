@@ -581,7 +581,7 @@ class FileUploadInterfaceBuilder:
             'uploader_box': uploader_box
         }
         self.placeholder = widgets.Output()
-        self.debug_area = widgets.Output()
+        self.debug_area = widgets.Output() if debug else None
 
     def _save_upload_to_temp(self, uploader: widgets.FileUpload, required: bool = False):
         import tempfile
@@ -629,19 +629,20 @@ class FileUploadInterfaceBuilder:
             else:
                 mapping = petri_net.get_default_event_mapping()
 
-            # Debug output: show map file path and resolved mapping
-            with self.debug_area:
-                clear_output(wait=True)
-                try:
-                    from pprint import pformat
-                    map_file_display = map_path if map_path else '(inferred from PN)'
-                    print(f"Mapping file: {map_file_display}")
-                    print("upload_map.value:")
-                    print(pformat(self.widgets_state['upload_map'].value))
-                    print("Resolved mapping (transition -> intentional elements):")
-                    print(pformat(mapping))
-                except Exception as de:
-                    print(f"Error displaying mapping debug info: {de}")
+            # Debug output: show map file path and resolved mapping (only when debug enabled)
+            if self.debug and self.debug_area is not None:
+                with self.debug_area:
+                    clear_output(wait=True)
+                    try:
+                        from pprint import pformat
+                        map_file_display = map_path if map_path else '(inferred from PN)'
+                        print(f"Mapping file: {map_file_display}")
+                        print("upload_map.value:")
+                        print(pformat(self.widgets_state['upload_map'].value))
+                        print("Resolved mapping (transition -> intentional elements):")
+                        print(pformat(mapping))
+                    except Exception as de:
+                        print(f"Error displaying mapping debug info: {de}")
 
             builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=self.debug)
 
@@ -671,31 +672,35 @@ class FileUploadInterfaceBuilder:
     def create_interface(self):
         # bind initial handler
         self.widgets_state['load_button'].on_click(self._on_load)
-        right_column = widgets.VBox([self.placeholder, self.debug_area], layout=widgets.Layout(width='70%'))
-        return widgets.HBox([self.widgets_state['uploader_box'], right_column], layout=widgets.Layout(width='100%'))
+        right_children = [self.placeholder]
+        if self.debug and self.debug_area is not None:
+            right_children.append(self.debug_area)
+        right_column = widgets.VBox(right_children, layout=widgets.Layout(width='100%'))
+        # Place the upload widgets above the content area
+        return widgets.VBox([self.widgets_state['uploader_box'], right_column], layout=widgets.Layout(width='100%'))
 
 
 def _create_upload_widgets():
-    ug = widgets.FileUpload(accept='.json,.istar,.txt', multiple=False, description='Goal Model')
-    up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net')
-    um = widgets.FileUpload(accept='.csv', multiple=False, description='Event Mapping (optional)')
-    lb = widgets.Button(description='Load Models', button_style='primary')
+    ug = widgets.FileUpload(accept='.json,.istar,.txt', multiple=False, description='Goal Model',
+                            layout=widgets.Layout(width='100%'))
+    up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net',
+                            layout=widgets.Layout(width='100%'))
+    um = widgets.FileUpload(accept='.csv', multiple=False, description='Event Mapping (optional)',
+                            layout=widgets.Layout(width='100%'))
+    lb = widgets.Button(description='Load Models', button_style='primary',
+                        layout=widgets.Layout(width='220px'))
     st = widgets.HTML("<b>Awaiting files...</b>")
-    box = widgets.VBox([
+    # Center the button and status within the inner box
+    centered_button = widgets.HBox([lb], layout=widgets.Layout(justify_content='center', width='100%'))
+    centered_status = widgets.HBox([st], layout=widgets.Layout(justify_content='center', width='100%'))
+    inner_box = widgets.VBox([
         widgets.HTML('Load models from files'),
         ug,
         up,
         um,
-        lb,
-        st
-    ], layout=widgets.Layout(width='30%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
+        centered_button,
+        centered_status
+    ], layout=widgets.Layout(width='70%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
+    # Center the upload box horizontally
+    box = widgets.HBox([inner_box], layout=widgets.Layout(justify_content='center', width='100%'))
     return ug, up, um, lb, st, box
-
-
-def create_interface_with_file_upload(debug: bool = False):
-    """
-    Return a widget that asks the user to upload three files: goal model (JSON/iStar),
-    Petri net (.pnml) and optional mapping (.csv). After loading the files the
-    function will instantiate `InterfaceBuilder` and display the interactive UI.
-    """
-    return FileUploadInterfaceBuilder(debug).create_interface()
