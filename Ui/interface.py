@@ -570,10 +570,11 @@ class FileUploadInterfaceBuilder:
         import tempfile
         import os
 
-        upload_goal, upload_pn, upload_dcr, upload_map, load_button, status, uploader_box = _create_upload_widgets()
+        upload_goal, upload_interactive_checkbox, upload_pn, upload_dcr, upload_map, load_button, status, uploader_box = _create_upload_widgets()
         self.debug = debug
         self.widgets_state = {
             'upload_goal': upload_goal,
+            'interactive_checkbox': upload_interactive_checkbox,
             'upload_pn': upload_pn,
             'upload_dcr': upload_dcr,
             'upload_map': upload_map,
@@ -618,6 +619,8 @@ class FileUploadInterfaceBuilder:
             pn_path = self._save_upload_to_temp(self.widgets_state['upload_pn'], required=False)
             dcr_path = self._save_upload_to_temp(self.widgets_state['upload_dcr'], required=False)
             map_path = self._save_upload_to_temp(self.widgets_state['upload_map'], required=False)
+            cb = self.widgets_state.get('interactive_checkbox')
+            interactive_mode = True if cb is None else bool(cb.value)
 
             from Semantics.istar_processor import read_istar_model
             from Semantics.petri_net_processor import read_petri_net
@@ -656,14 +659,19 @@ class FileUploadInterfaceBuilder:
                         print(f"Error displaying mapping debug info: {de}")
 
             # If a DCR file was uploaded, show textual analysis instead of the normal interactive UI
-            if dcr_path:
+            # determine non-interactive mode: DCR upload forces non-interactive, or checkbox unchecked
+            if dcr_path or (not interactive_mode):
                 try:
                     import io, sys, html
                     buf = io.StringIO()
                     old_stdout = sys.stdout
                     sys.stdout = buf
                     try:
-                        analyse_models(goal_model, dcr_ts, mapping)
+                        # choose process model for analysis: prefer DCR, then Petri net
+                        process_model_for_analysis = dcr_ts if dcr_ts is not None else petri_net
+                        if process_model_for_analysis is None:
+                            raise Exception('No process model available for non-interactive analysis')
+                        analyse_models(goal_model, process_model_for_analysis, mapping)
                     finally:
                         sys.stdout = old_stdout
                     output_text = buf.getvalue()
@@ -680,18 +688,22 @@ class FileUploadInterfaceBuilder:
                     except Exception as ex_wif:
                         display(HTML(f"<pre style='white-space: pre-wrap;'>Error creating WhatIf interface: {html.escape(str(ex_wif))}</pre>"))
             else:
-                builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=self.debug)
+                if petri_net:
+                    builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=self.debug)
+                else:
+                    builder = WhatIfInterfaceBuilder(goal_model, debug=self.debug)
 
                 self.placeholder.clear_output()
                 with self.placeholder:
                     display(builder.complete_interface)
 
             # Recreate upload widgets so subsequent uses don't reuse previous files/mappings
-            new_ug, new_up, new_ud, new_um, new_lb, new_st, new_box = _create_upload_widgets()
+            new_ug, new_checkbox, new_up, new_ud, new_um, new_lb, new_st, new_box = _create_upload_widgets()
             # update the existing visible box children and the widgets_state
             self.widgets_state['uploader_box'].children = new_box.children
             self.widgets_state.update({
                 'upload_goal': new_ug,
+                'interactive_checkbox': new_checkbox,
                 'upload_pn': new_up,
                 'upload_dcr': new_ud,
                 'upload_map': new_um,
@@ -721,10 +733,12 @@ def _create_upload_widgets():
     ug = widgets.FileUpload(accept='.json,.istar,.txt', multiple=False, description='Goal Model',
                             layout=widgets.Layout(width='100%'))
     # Petri Net and DCR uploads will be placed side-by-side
+    interactive_checkbox = widgets.Checkbox(value=True, description='Interactive', indent=False,
+                                            layout=widgets.Layout(width='12%'))
     up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net (optional)',
-                            layout=widgets.Layout(width='48%'))
+                            layout=widgets.Layout(width='40%'))
     ud = widgets.FileUpload(accept='.xml', multiple=False, description='DCR (optional)',
-                            layout=widgets.Layout(width='48%'))
+                            layout=widgets.Layout(width='40%'))
     um = widgets.FileUpload(accept='.csv', multiple=False, description='Event Mapping (optional)',
                             layout=widgets.Layout(width='100%'))
     lb = widgets.Button(description='Load Models', button_style='primary',
@@ -733,7 +747,7 @@ def _create_upload_widgets():
     # Center the button and status within the inner box
     centered_button = widgets.HBox([lb], layout=widgets.Layout(justify_content='center', width='100%'))
     centered_status = widgets.HBox([st], layout=widgets.Layout(justify_content='center', width='100%'))
-    pn_dcr_row = widgets.HBox([up, ud], layout=widgets.Layout(width='100%', justify_content='space-between'))
+    pn_dcr_row = widgets.HBox([interactive_checkbox, up, ud], layout=widgets.Layout(width='100%', justify_content='space-between', align_items='center'))
 
     inner_box = widgets.VBox([
         widgets.HTML('Load models from files'),
@@ -745,4 +759,4 @@ def _create_upload_widgets():
     ], layout=widgets.Layout(width='70%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
     # Center the upload box horizontally
     box = widgets.HBox([inner_box], layout=widgets.Layout(justify_content='center', width='100%'))
-    return ug, up, ud, um, lb, st, box
+    return ug, interactive_checkbox, up, ud, um, lb, st, box
