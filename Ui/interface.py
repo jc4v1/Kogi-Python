@@ -669,14 +669,16 @@ class FileUploadInterfaceBuilder:
                     try:
                         # choose process model for analysis: prefer DCR, then Petri net
                         process_model_for_analysis = dcr_ts if dcr_ts is not None else petri_net
-                        if process_model_for_analysis is None:
-                            raise Exception('No process model available for non-interactive analysis')
-                        analyse_models(goal_model, process_model_for_analysis, mapping)
+                        if process_model_for_analysis is not None:
+                            analyse_models(goal_model, process_model_for_analysis, mapping)
+                        else:
+                            # No process model available — skip analysis and inform user
+                            print("No process model provided — skipping non-interactive analysis.")
                     finally:
                         sys.stdout = old_stdout
                     output_text = buf.getvalue()
                 except Exception as ex:
-                    output_text = f"Error running analyse_models on DCR: {ex}"
+                    output_text = f"Error running analysis: {ex}"
 
                 self.placeholder.clear_output()
                 with self.placeholder:
