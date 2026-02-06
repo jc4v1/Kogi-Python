@@ -570,11 +570,12 @@ class FileUploadInterfaceBuilder:
         import tempfile
         import os
 
-        upload_goal, upload_pn, upload_map, load_button, status, uploader_box = _create_upload_widgets()
+        upload_goal, upload_pn, upload_dcr, upload_map, load_button, status, uploader_box = _create_upload_widgets()
         self.debug = debug
         self.widgets_state = {
             'upload_goal': upload_goal,
             'upload_pn': upload_pn,
+            'upload_dcr': upload_dcr,
             'upload_map': upload_map,
             'load_button': load_button,
             'status': status,
@@ -614,7 +615,8 @@ class FileUploadInterfaceBuilder:
         self.widgets_state['status'].value = "<b>Loading...</b>"
         try:
             goal_path = self._save_upload_to_temp(self.widgets_state['upload_goal'], required=True)
-            pn_path = self._save_upload_to_temp(self.widgets_state['upload_pn'], required=True)
+            pn_path = self._save_upload_to_temp(self.widgets_state['upload_pn'], required=False)
+            dcr_path = self._save_upload_to_temp(self.widgets_state['upload_dcr'], required=False)
             map_path = self._save_upload_to_temp(self.widgets_state['upload_map'], required=False)
 
             from Semantics.istar_processor import read_istar_model
@@ -622,12 +624,21 @@ class FileUploadInterfaceBuilder:
             from Semantics.event_mapping_from_csv import read_event_mapping_csv
 
             goal_model = read_istar_model(goal_path)
-            petri_net = read_petri_net(pn_path)
+            petri_net = None
+            dcr_ts = None
+            if pn_path:
+                petri_net = read_petri_net(pn_path)
+            if dcr_path:
+                from Semantics.dcr import read_dcr
+                dcr_ts = read_dcr(dcr_path)
 
             if map_path:
                 mapping = read_event_mapping_csv(map_path)
             else:
-                mapping = petri_net.get_default_event_mapping()
+                if petri_net:
+                    mapping = petri_net.get_default_event_mapping()
+                else:
+                    mapping = goal_model.event_mapping
 
             # Debug output: show map file path and resolved mapping (only when debug enabled)
             if self.debug and self.debug_area is not None:
@@ -644,19 +655,45 @@ class FileUploadInterfaceBuilder:
                     except Exception as de:
                         print(f"Error displaying mapping debug info: {de}")
 
-            builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=self.debug)
+            # If a DCR file was uploaded, show textual analysis instead of the normal interactive UI
+            if dcr_path:
+                try:
+                    import io, sys, html
+                    buf = io.StringIO()
+                    old_stdout = sys.stdout
+                    sys.stdout = buf
+                    try:
+                        analyse_models(goal_model, dcr_ts, mapping)
+                    finally:
+                        sys.stdout = old_stdout
+                    output_text = buf.getvalue()
+                except Exception as ex:
+                    output_text = f"Error running analyse_models on DCR: {ex}"
 
-            self.placeholder.clear_output()
-            with self.placeholder:
-                display(builder.complete_interface)
+                self.placeholder.clear_output()
+                with self.placeholder:
+                    display(HTML(f"<pre style='white-space: pre-wrap;'>{html.escape(output_text)}</pre>"))
+                    # Also show a WhatIf interface for the supplied goal model
+                    try:
+                        wif = WhatIfInterfaceBuilder(goal_model, debug=self.debug)
+                        display(wif.create_interface())
+                    except Exception as ex_wif:
+                        display(HTML(f"<pre style='white-space: pre-wrap;'>Error creating WhatIf interface: {html.escape(str(ex_wif))}</pre>"))
+            else:
+                builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=self.debug)
+
+                self.placeholder.clear_output()
+                with self.placeholder:
+                    display(builder.complete_interface)
 
             # Recreate upload widgets so subsequent uses don't reuse previous files/mappings
-            new_ug, new_up, new_um, new_lb, new_st, new_box = _create_upload_widgets()
+            new_ug, new_up, new_ud, new_um, new_lb, new_st, new_box = _create_upload_widgets()
             # update the existing visible box children and the widgets_state
             self.widgets_state['uploader_box'].children = new_box.children
             self.widgets_state.update({
                 'upload_goal': new_ug,
                 'upload_pn': new_up,
+                'upload_dcr': new_ud,
                 'upload_map': new_um,
                 'load_button': new_lb,
                 'status': new_st,
@@ -683,8 +720,11 @@ class FileUploadInterfaceBuilder:
 def _create_upload_widgets():
     ug = widgets.FileUpload(accept='.json,.istar,.txt', multiple=False, description='Goal Model',
                             layout=widgets.Layout(width='100%'))
-    up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net',
-                            layout=widgets.Layout(width='100%'))
+    # Petri Net and DCR uploads will be placed side-by-side
+    up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net (optional)',
+                            layout=widgets.Layout(width='48%'))
+    ud = widgets.FileUpload(accept='.xml', multiple=False, description='DCR (optional)',
+                            layout=widgets.Layout(width='48%'))
     um = widgets.FileUpload(accept='.csv', multiple=False, description='Event Mapping (optional)',
                             layout=widgets.Layout(width='100%'))
     lb = widgets.Button(description='Load Models', button_style='primary',
@@ -693,14 +733,16 @@ def _create_upload_widgets():
     # Center the button and status within the inner box
     centered_button = widgets.HBox([lb], layout=widgets.Layout(justify_content='center', width='100%'))
     centered_status = widgets.HBox([st], layout=widgets.Layout(justify_content='center', width='100%'))
+    pn_dcr_row = widgets.HBox([up, ud], layout=widgets.Layout(width='100%', justify_content='space-between'))
+
     inner_box = widgets.VBox([
         widgets.HTML('Load models from files'),
         ug,
-        up,
+        pn_dcr_row,
         um,
         centered_button,
         centered_status
     ], layout=widgets.Layout(width='70%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
     # Center the upload box horizontally
     box = widgets.HBox([inner_box], layout=widgets.Layout(justify_content='center', width='100%'))
-    return ug, up, um, lb, st, box
+    return ug, up, ud, um, lb, st, box
