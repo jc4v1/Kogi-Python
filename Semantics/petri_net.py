@@ -47,6 +47,145 @@ class PetriNet():
         for t in self.net.transitions:
             self._add_event_mapping(event_mapping,t.name,t.label if t.label != t.name and t.label is not None else [])
         return event_mapping
+
+    def convert_bpmn_net(self, mapping: dict, separator: str = '|'):
+        """Convert BPMN-derived Petri net transition names using an event->intentional-element mapping.
+
+        For transitions whose label (or name) matches a mapping key, rename the transition
+        to a composite name combining the event and the mapped intentional element so that
+        downstream code can reference transitions consistently. The positions for
+        transitions are updated to use the new transition name as well.
+
+        Parameters:
+          mapping: dict mapping event -> list of [ [intentional_elem], ... ]
+                   e.g. {'e1': [['T1']]}.
+          separator: str used to join event and element into a single transition name.
+        """
+        # Build a map from original transition.name -> list of new names created
+        from types import SimpleNamespace
+        rename_map = {}
+
+        # Precompute a map from original transition id -> position and label text (if any)
+        pos_map = {}
+        for entry in self.positions.get('transitions', []):
+            if len(entry) >= 3:
+                x, y, node_id = entry[0], entry[1], entry[2]
+                label_text = entry[3] if len(entry) > 3 else None
+                pos_map[node_id] = (x, y, label_text)
+
+        # Iterate over a snapshot of transitions to avoid mutating while iterating
+        original_transitions = list(self.net.transitions)
+        for t in original_transitions:
+            original_name = t.name
+            label = getattr(t, 'label', None)
+            key = label if (label and label in mapping) else (original_name if original_name in mapping else None)
+            rows = mapping.get(key, []) if key is not None else []
+
+            # Flatten mapping rows into a list of elements
+            elems = []
+            for row in rows:
+                if isinstance(row, (list, tuple)):
+                    for e in row:
+                        if e:
+                            elems.append(e)
+                elif row:
+                    elems.append(row)
+
+            if not elems:
+                continue
+
+            new_names = []
+            # For the original transition use the event key as the name and the first mapped
+            # intentional element as the label so it appears as (event, 'T1').
+            first_elem = elems[0]
+            original_new_name = key
+            new_names.append(original_new_name)
+            try:
+                t.name = original_new_name
+            except Exception:
+                setattr(t, 'name', original_new_name)
+            try:
+                t.label = first_elem
+            except Exception:
+                setattr(t, 'label', first_elem)
+
+            # For remaining elements, create duplicate transition objects with same connectivity
+            for dup_elem in elems[1:]:
+                dup_name = f"{key}{separator}{dup_elem}"
+                new_names.append(dup_name)
+                # Create a lightweight transition-like object
+                dup_t = SimpleNamespace()
+                dup_t.name = dup_name
+                dup_t.label = dup_elem
+                dup_t.in_arcs = []
+                dup_t.out_arcs = []
+
+                # Duplicate incoming arcs (place -> transition)
+                for arc in getattr(t, 'in_arcs', []):
+                    src_place = arc.source
+                    # create surrogate arc object
+                    surc_arc = SimpleNamespace(source=src_place, target=dup_t)
+                    dup_t.in_arcs.append(surc_arc)
+                    # also add to net.arcs so rendering picks it up
+                    try:
+                        self.net.arcs.append(surc_arc)
+                    except Exception:
+                        # if net.arcs not list-like, skip
+                        pass
+
+                # Duplicate outgoing arcs (transition -> place)
+                for arc in getattr(t, 'out_arcs', []):
+                    tgt_place = arc.target
+                    surc_arc = SimpleNamespace(source=dup_t, target=tgt_place)
+                    dup_t.out_arcs.append(surc_arc)
+                    try:
+                        self.net.arcs.append(surc_arc)
+                    except Exception:
+                        pass
+
+                # Add the duplicated transition object to net.transitions
+                try:
+                    self.net.transitions.append(dup_t)
+                except Exception:
+                    # best-effort: if net.transitions isn't a list, try to setattr
+                    if hasattr(self.net, 'transitions'):
+                        try:
+                            getattr(self.net, 'transitions').append(dup_t)
+                        except Exception:
+                            pass
+
+                # Add position for duplicate transition if original had a position
+                if original_name in pos_map:
+                    x, y, label_text = pos_map[original_name]
+                    if label_text is not None:
+                        self.positions['transitions'].append((x, y, dup_name, label_text))
+                    else:
+                        self.positions['transitions'].append((x, y, dup_name))
+
+            # record mapping from original name to created names
+            rename_map[original_name] = new_names
+
+        # Update positions for the renamed original transitions
+        if 'transitions' in self.positions:
+            new_transitions = []
+            for entry in self.positions['transitions']:
+                if len(entry) >= 3:
+                    x, y, node_id = entry[0], entry[1], entry[2]
+                    rest = entry[3:] if len(entry) > 3 else []
+                    # If original transition was renamed, replace node_id with its first new name
+                    if node_id in rename_map:
+                        new_id = rename_map[node_id][0]
+                    else:
+                        new_id = node_id
+                    if rest:
+                        new_transitions.append((x, y, new_id, rest[0]))
+                    else:
+                        new_transitions.append((x, y, new_id))
+                else:
+                    new_transitions.append(entry)
+            self.positions['transitions'] = new_transitions
+
+        return rename_map
     
     def _add_event_mapping(self, ev_map, event: str, target):
         if isinstance(target, list):
