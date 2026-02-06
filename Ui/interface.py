@@ -564,45 +564,28 @@ def analyse_models(goal_model, process_model, event_mapping):
     print(f"Weak Compliance: {weak_compliance}")
 
 
-def _create_upload_widgets():
-    ug = widgets.FileUpload(accept='.json,.istar,.txt', multiple=False, description='Goal Model')
-    up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net')
-    um = widgets.FileUpload(accept='.csv', multiple=False, description='Event Mapping (optional)')
-    lb = widgets.Button(description='Load Models', button_style='primary')
-    st = widgets.HTML("<b>Awaiting files...</b>")
-    box = widgets.VBox([
-        widgets.HTML('Load models from files'),
-        ug,
-        up,
-        um,
-        lb,
-        st
-    ], layout=widgets.Layout(width='30%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
-    return ug, up, um, lb, st, box
+class FileUploadInterfaceBuilder:
+    """Encapsulate the file-upload UI and loading logic that builds an InterfaceBuilder."""
+    def __init__(self, debug: bool = False):
+        import tempfile
+        import os
 
+        upload_goal, upload_pn, upload_map, load_button, status, uploader_box = _create_upload_widgets()
+        self.debug = debug
+        self.widgets_state = {
+            'upload_goal': upload_goal,
+            'upload_pn': upload_pn,
+            'upload_map': upload_map,
+            'load_button': load_button,
+            'status': status,
+            'uploader_box': uploader_box
+        }
+        self.placeholder = widgets.Output()
+        self.debug_area = widgets.Output()
 
-def create_interface_with_file_upload(debug: bool = False):
-    """
-    Return a widget that asks the user to upload three files: goal model (JSON/iStar),
-    Petri net (.pnml) and optional mapping (.csv). After loading the files the
-    function will instantiate `InterfaceBuilder` and display the interactive UI.
-    """
-    import tempfile
-    import os
-
-    upload_goal, upload_pn, upload_map, load_button, status, uploader_box = _create_upload_widgets()
-    widgets_state = {
-        'upload_goal': upload_goal,
-        'upload_pn': upload_pn,
-        'upload_map': upload_map,
-        'load_button': load_button,
-        'status': status,
-        'uploader_box': uploader_box
-    }
-    placeholder = widgets.Output()
-    debug_area = widgets.Output()
-
-    def _save_upload_to_temp(uploader: widgets.FileUpload, required: bool = False):
+    def _save_upload_to_temp(self, uploader: widgets.FileUpload, required: bool = False):
+        import tempfile
+        import os
         if not uploader.value:
             if required:
                 raise Exception('Required file not uploaded')
@@ -627,12 +610,12 @@ def create_interface_with_file_upload(debug: bool = False):
         tf.close()
         return tf.name
 
-    def on_load(b):
-        widgets_state['status'].value = "<b>Loading...</b>"
+    def _on_load(self, b):
+        self.widgets_state['status'].value = "<b>Loading...</b>"
         try:
-            goal_path = _save_upload_to_temp(widgets_state['upload_goal'], required=True)
-            pn_path = _save_upload_to_temp(widgets_state['upload_pn'], required=True)
-            map_path = _save_upload_to_temp(widgets_state['upload_map'], required=False)
+            goal_path = self._save_upload_to_temp(self.widgets_state['upload_goal'], required=True)
+            pn_path = self._save_upload_to_temp(self.widgets_state['upload_pn'], required=True)
+            map_path = self._save_upload_to_temp(self.widgets_state['upload_map'], required=False)
 
             from Semantics.istar_processor import read_istar_model
             from Semantics.petri_net_processor import read_petri_net
@@ -647,46 +630,72 @@ def create_interface_with_file_upload(debug: bool = False):
                 mapping = petri_net.get_default_event_mapping()
 
             # Debug output: show map file path and resolved mapping
-            with debug_area:
+            with self.debug_area:
                 clear_output(wait=True)
                 try:
                     from pprint import pformat
                     map_file_display = map_path if map_path else '(inferred from PN)'
                     print(f"Mapping file: {map_file_display}")
                     print("upload_map.value:")
-                    print(pformat(widgets_state['upload_map'].value))
+                    print(pformat(self.widgets_state['upload_map'].value))
                     print("Resolved mapping (transition -> intentional elements):")
                     print(pformat(mapping))
                 except Exception as de:
                     print(f"Error displaying mapping debug info: {de}")
 
-            builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=debug)
+            builder = InterfaceBuilder(goal_model, petri_net=petri_net, event_mapping=mapping, debug=self.debug)
 
-            placeholder.clear_output()
-            with placeholder:
+            self.placeholder.clear_output()
+            with self.placeholder:
                 display(builder.complete_interface)
 
             # Recreate upload widgets so subsequent uses don't reuse previous files/mappings
             new_ug, new_up, new_um, new_lb, new_st, new_box = _create_upload_widgets()
             # update the existing visible box children and the widgets_state
-            widgets_state['uploader_box'].children = new_box.children
-            widgets_state.update({
+            self.widgets_state['uploader_box'].children = new_box.children
+            self.widgets_state.update({
                 'upload_goal': new_ug,
                 'upload_pn': new_up,
                 'upload_map': new_um,
                 'load_button': new_lb,
                 'status': new_st,
-                'uploader_box': widgets_state['uploader_box']
+                'uploader_box': self.widgets_state['uploader_box']
             })
             # bind handler to new button
-            widgets_state['load_button'].on_click(on_load)
+            self.widgets_state['load_button'].on_click(self._on_load)
 
-            widgets_state['status'].value = "<b style='color:green'>Loaded successfully.</b>"
+            self.widgets_state['status'].value = "<b style='color:green'>Loaded successfully.</b>"
         except Exception as e:
-            widgets_state['status'].value = f"<b style='color:red'>Error: {str(e)}</b>"
+            self.widgets_state['status'].value = f"<b style='color:red'>Error: {str(e)}</b>"
 
-    widgets_state['load_button'].on_click(on_load)
+    def create_interface(self):
+        # bind initial handler
+        self.widgets_state['load_button'].on_click(self._on_load)
+        right_column = widgets.VBox([self.placeholder, self.debug_area], layout=widgets.Layout(width='70%'))
+        return widgets.HBox([self.widgets_state['uploader_box'], right_column], layout=widgets.Layout(width='100%'))
 
-    # Return uploader + debug area + display placeholder
-    right_column = widgets.VBox([placeholder, debug_area], layout=widgets.Layout(width='70%'))
-    return widgets.HBox([uploader_box, right_column], layout=widgets.Layout(width='100%'))
+
+def _create_upload_widgets():
+    ug = widgets.FileUpload(accept='.json,.istar,.txt', multiple=False, description='Goal Model')
+    up = widgets.FileUpload(accept='.pnml', multiple=False, description='Petri Net')
+    um = widgets.FileUpload(accept='.csv', multiple=False, description='Event Mapping (optional)')
+    lb = widgets.Button(description='Load Models', button_style='primary')
+    st = widgets.HTML("<b>Awaiting files...</b>")
+    box = widgets.VBox([
+        widgets.HTML('Load models from files'),
+        ug,
+        up,
+        um,
+        lb,
+        st
+    ], layout=widgets.Layout(width='30%', padding='10px', border='1px solid #ddd', background_color='#fafafa'))
+    return ug, up, um, lb, st, box
+
+
+def create_interface_with_file_upload(debug: bool = False):
+    """
+    Return a widget that asks the user to upload three files: goal model (JSON/iStar),
+    Petri net (.pnml) and optional mapping (.csv). After loading the files the
+    function will instantiate `InterfaceBuilder` and display the interactive UI.
+    """
+    return FileUploadInterfaceBuilder(debug).create_interface()
