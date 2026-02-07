@@ -74,7 +74,9 @@ class PetriNet():
                 pos_map[node_id] = (x, y, label_text)
 
         # Iterate over a snapshot of transitions to avoid mutating while iterating
-        original_transitions = list(self.net.transitions)
+        # Sort transitions by name to ensure deterministic renaming when creating
+        # invented/normalized transition names.
+        original_transitions = sorted(list(self.net.transitions), key=lambda t: getattr(t, 'name', ''))
         for t in original_transitions:
             original_name = t.name
             label = getattr(t, 'label', None)
@@ -208,10 +210,11 @@ class PetriNet():
             if place_incoming.get(pname, 0) == 0 or place_outgoing.get(pname, 0) == 0:
                 preserve.add(pname)
 
-        # Build rename mapping for places
+        # Build rename mapping for places. Sort places by name so generated
+        # invented names (p1, p2, ...) are assigned deterministically.
         place_rename_map = {}
         counter = 1
-        for p in self.net.places:
+        for p in sorted(list(self.net.places), key=lambda p: getattr(p, 'name', '')):
             old = p.name
             if old in preserve:
                 place_rename_map[old] = old
