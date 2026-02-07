@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pnml>
+  <net id="" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text />
+    </name>
+    <page id="n0">
+      <place id="p1">
+        <name>
+          <text>p1</text>
+        </name>
+      </place>
+      <place id="source">
+        <name>
+          <text>source</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="sink">
+        <name>
+          <text>sink</text>
+        </name>
+      </place>
+      <place id="p2">
+        <name>
+          <text>p2</text>
+        </name>
+      </place>
+      <transition id="Ship Items">
+        <name>
+          <text>Ship Items</text>
+        </name>
+      </transition>
+      <transition id="Pick Items">
+        <name>
+          <text>Pick Items</text>
+        </name>
+      </transition>
+      <transition id="Pack Items">
+        <name>
+          <text>Pack Items</text>
+        </name>
+      </transition>
+      <arc id="6224507408" source="Pick Items" target="p1"><inscription>1</inscription></arc>
+      <arc id="6224503440" source="Pack Items" target="p2"><inscription>1</inscription></arc>
+      <arc id="6224061136" source="p1" target="Pack Items"><inscription>1</inscription></arc>
+      <arc id="6224499152" source="Ship Items" target="sink"><inscription>1</inscription></arc>
+      <arc id="6223958608" source="p2" target="Ship Items"><inscription>1</inscription></arc>
+      <arc id="6224503888" source="source" target="Pick Items"><inscription>1</inscription></arc>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="sink">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>

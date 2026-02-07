@@ -73,3 +73,48 @@ def test_convert_bpmn_to_petri_net():
     assert sorted(places_after) == sorted(expected_places_after)
     assert sorted(transitions_after) == sorted(expected_transitions_after)
     assert sorted(arcs_after) == sorted(expected_arcs_after)
+    
+    
+# def test_convert_bpmn_to_petri_net():
+#     bpmn_model = pm4py.read_bpmn("tests/data/bpmn/choice.bpmn")
+#     mapping = read_event_mapping_csv("tests/data/bpmn/choice_map.csv")
+#     net, initial_marking, final_marking = pm4py.convert_to_petri_net(bpmn_model)
+
+#     petri_net = PetriNet(net,initial_marking,final_marking,{})
+
+#     # Helper to format endpoints (places vs transitions)
+#     def endpoint_repr(obj, places_set, transitions_list):
+#         if obj in places_set:
+#             return obj.name
+#         label = getattr(obj, 'label', None)
+#         return f"({obj.name}, '{label}')"
+
+#     # Perform conversion
+#     petri_net.convert_bpmn_net(mapping)
+
+#     # Capture "after" state
+#     places_after = [p.name for p in petri_net.net.places]
+#     transitions_after = [(t.name, getattr(t, 'label', None)) for t in petri_net.net.transitions]
+#     arcs_after = []
+#     places_objs = list(petri_net.net.places)
+#     transitions_objs = list(petri_net.net.transitions)
+#     for arc in getattr(petri_net.net, 'arcs', []):
+#         src = getattr(arc, 'source', None)
+#         tgt = getattr(arc, 'target', None)
+#         arcs_after.append(f"{endpoint_repr(src, places_objs, transitions_objs)}->{endpoint_repr(tgt, places_objs, transitions_objs)}")
+        
+#     print(sorted(places_after));
+#     print(sorted(transitions_after));
+#     print(sorted(arcs_after));
+
+#     expected_places_after = ['p1', 'source', 'sink', 'p2']
+#     expected_transitions_after = [('Task 2', 'Task 2'), ('t1', None), ('Task 1', 'Task 1'), ('t2', None)]
+#     expected_arcs_after = ["p2->(Task 2, 'Task 2')", "(t1, 'None')->p2", "source->(t1, 'None')", "(Task 2, 'Task 2')->p1", "(Task 1, 'Task 1')->p1", "p2->(Task 1, 'Task 1')", "p1->(t2, 'None')", "(t2, 'None')->sink"]
+    
+#     print(sorted(expected_places_after));
+#     print(sorted(expected_transitions_after));
+#     print(sorted(expected_arcs_after));
+
+#     assert sorted(places_after) == sorted(expected_places_after)
+#     assert sorted(transitions_after) == sorted(expected_transitions_after)
+#     assert sorted(arcs_after) == sorted(expected_arcs_after)

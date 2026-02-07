@@ -300,3 +300,65 @@ class PetriNet():
             transitions=transitions,
             initial_state=initial_state
         )
+    
+    def write_pnml(self, path: str):
+        """
+        Write the current Petri net to a PNML file at `path`.
+
+        - Places, transitions and arcs are written deterministically (sorted by name)
+        - For transitions where label is None and name matches `t<number>` no <name> element is emitted
+        - Every arc gets an <inscription><text>1</text></inscription> element
+        """
+        import xml.etree.ElementTree as ET
+        import xml.dom.minidom as md
+        import re
+
+        def add_text_element(parent, tag, text):
+            elem = ET.SubElement(parent, tag)
+            txt = ET.SubElement(elem, "text")
+            txt.text = str(text)
+            return elem
+
+        pnml = ET.Element("pnml")
+        net = ET.SubElement(pnml, "net", id="net1", type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel")
+
+        # Places (deterministic order)
+        places = sorted(list(getattr(self.net, "places", [])), key=lambda p: getattr(p, "name", ""))
+        for p in places:
+            pid = str(getattr(p, "name", ""))
+            place_el = ET.SubElement(net, "place", id=pid)
+            add_text_element(place_el, "name", pid)
+
+        # Transitions (deterministic order)
+        transitions = sorted(list(getattr(self.net, "transitions", [])), key=lambda t: getattr(t, "name", ""))
+        t_name_re = re.compile(r"^t\d+$")
+        for t in transitions:
+            tid = str(getattr(t, "name", ""))
+            tr_el = ET.SubElement(net, "transition", id=tid)
+            label = getattr(t, "label", None)
+            # Omit <name> if label is None and auto-generated tN name
+            if not (label is None and t_name_re.match(tid)):
+                # prefer label text if present, otherwise use id
+                if label is not None and label != tid:
+                    add_text_element(tr_el, "name", f"{tid} ({label})")
+
+        # Arcs (deterministic ordering)
+        arcs = list(getattr(self.net, "arcs", []))
+        def arc_key(a):
+            s = getattr(getattr(a, "source", None), "name", str(id(getattr(a, "source", None))))
+            t = getattr(getattr(a, "target", None), "name", str(id(getattr(a, "target", None))))
+            return (s, t)
+        for i, a in enumerate(sorted(arcs, key=arc_key), start=1):
+            src = str(getattr(getattr(a, "source", None), "name", ""))
+            tgt = str(getattr(getattr(a, "target", None), "name", ""))
+            arc_el = ET.SubElement(net, "arc", id=f"a{i}", source=src, target=tgt)
+            # Add inscription with value 1
+            ins = ET.SubElement(arc_el, "inscription")
+            txt = ET.SubElement(ins, "text")
+            txt.text = "1"
+
+        # Pretty-print and write file
+        rough = ET.tostring(pnml, encoding="utf-8")
+        pretty = md.parseString(rough.decode("utf-8")).toprettyxml(indent="  ")
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(pretty)
