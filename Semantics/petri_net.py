@@ -63,7 +63,29 @@ class PetriNet():
         """
         # Build a map from original transition.name -> list of new names created
         from types import SimpleNamespace
+        import re
         rename_map = {}
+
+        # Pre-assign deterministic simple names (t1, t2, ...) to transitions
+        # whose label is None. This ensures runs are deterministic: sort by
+        # original name and assign increasing tN names skipping existing names.
+        t_name_re = re.compile(r"^t\d+$")
+        original_transitions_sorted = sorted(list(self.net.transitions), key=lambda t: getattr(t, 'name', ''))
+        existing_names = {getattr(t, 'name', '') for t in original_transitions_sorted}
+        counter = 1
+        while f"t{counter}" in existing_names:
+            counter += 1
+        auto_rename_map = {}
+        for t in original_transitions_sorted:
+            orig = getattr(t, 'name', '')
+            lbl = getattr(t, 'label', None)
+            if lbl is None and not t_name_re.match(orig):
+                new_name = f"t{counter}"
+                counter += 1
+                existing_names.add(new_name)
+                auto_rename_map[orig] = new_name
+                # record so positions for original names get updated
+                rename_map[orig] = [new_name]
 
         # Precompute a map from original transition id -> position and label text (if any)
         pos_map = {}
@@ -79,6 +101,15 @@ class PetriNet():
         original_transitions = sorted(list(self.net.transitions), key=lambda t: getattr(t, 'name', ''))
         for t in original_transitions:
             original_name = t.name
+            # If we pre-computed an auto-rename for unlabeled transitions,
+            # apply it to the transition object now but keep `original_name`
+            # for position lookups and rename_map keys.
+            if original_name in auto_rename_map:
+                new_auto = auto_rename_map[original_name]
+                try:
+                    t.name = new_auto
+                except Exception:
+                    setattr(t, 'name', new_auto)
             label = getattr(t, 'label', None)
             key = label if (label and label in mapping) else (original_name if original_name in mapping else None)
             rows = mapping.get(key, []) if key is not None else []
@@ -309,56 +340,27 @@ class PetriNet():
         - For transitions where label is None and name matches `t<number>` no <name> element is emitted
         - Every arc gets an <inscription><text>1</text></inscription> element
         """
-        import xml.etree.ElementTree as ET
-        import xml.dom.minidom as md
-        import re
+        import os
+        import tempfile
+        from pm4py.objects.petri_net.exporter import exporter as pnml_exporter
 
-        def add_text_element(parent, tag, text):
-            elem = ET.SubElement(parent, tag)
-            txt = ET.SubElement(elem, "text")
-            txt.text = str(text)
-            return elem
+        # helper to create a secure temporary filename in same dir as target
+        def make_tmp_path(target_path: str) -> str:
+            target_dir = os.path.dirname(target_path) or '.'
+            base = os.path.basename(target_path)
+            fd, tmp = tempfile.mkstemp(prefix=f"{base}.", suffix=".tmp", dir=target_dir)
+            os.close(fd)
+            return tmp
 
-        pnml = ET.Element("pnml")
-        net = ET.SubElement(pnml, "net", id="net1", type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel")
-
-        # Places (deterministic order)
-        places = sorted(list(getattr(self.net, "places", [])), key=lambda p: getattr(p, "name", ""))
-        for p in places:
-            pid = str(getattr(p, "name", ""))
-            place_el = ET.SubElement(net, "place", id=pid)
-            add_text_element(place_el, "name", pid)
-
-        # Transitions (deterministic order)
-        transitions = sorted(list(getattr(self.net, "transitions", [])), key=lambda t: getattr(t, "name", ""))
-        t_name_re = re.compile(r"^t\d+$")
-        for t in transitions:
-            tid = str(getattr(t, "name", ""))
-            tr_el = ET.SubElement(net, "transition", id=tid)
-            label = getattr(t, "label", None)
-            # Omit <name> if label is None and auto-generated tN name
-            if not (label is None and t_name_re.match(tid)):
-                # prefer label text if present, otherwise use id
-                if label is not None and label != tid:
-                    add_text_element(tr_el, "name", f"{tid} ({label})")
-
-        # Arcs (deterministic ordering)
-        arcs = list(getattr(self.net, "arcs", []))
-        def arc_key(a):
-            s = getattr(getattr(a, "source", None), "name", str(id(getattr(a, "source", None))))
-            t = getattr(getattr(a, "target", None), "name", str(id(getattr(a, "target", None))))
-            return (s, t)
-        for i, a in enumerate(sorted(arcs, key=arc_key), start=1):
-            src = str(getattr(getattr(a, "source", None), "name", ""))
-            tgt = str(getattr(getattr(a, "target", None), "name", ""))
-            arc_el = ET.SubElement(net, "arc", id=f"a{i}", source=src, target=tgt)
-            # Add inscription with value 1
-            ins = ET.SubElement(arc_el, "inscription")
-            txt = ET.SubElement(ins, "text")
-            txt.text = "1"
-
-        # Pretty-print and write file
-        rough = ET.tostring(pnml, encoding="utf-8")
-        pretty = md.parseString(rough.decode("utf-8")).toprettyxml(indent="  ")
-        with open(path, "w", encoding="utf-8") as fh:
-            fh.write(pretty)
+        tmp_path = make_tmp_path(path)
+        try:
+            pnml_exporter.apply(self.net, {}, tmp_path)
+            import scripts.to_petri_nets_i_love as pnml_fixer
+            pnml_fixer.add_inscription(tmp_path, path)
+        finally:
+            try:
+                if os.path.exists(tmp_path):
+                    os.remove(tmp_path)
+            except Exception:
+                pass
+        return
