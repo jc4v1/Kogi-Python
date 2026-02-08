@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dcrgraph>
+  <specification>
+    <resources>
+      <events>
+        <event id="Event_05cxjai">
+          <custom>
+            <visualization>
+              <location xLoc="240" yLoc="220"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_0jrndso">
+          <custom>
+            <visualization>
+              <location xLoc="440" yLoc="220"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+        <event id="Event_0zj7sc6">
+          <custom>
+            <visualization>
+              <location xLoc="640" yLoc="220"/>
+              <size width="130" height="150"/>
+            </visualization>
+          </custom>
+        </event>
+      </events>
+      <subProcesses/>
+      <labels>
+        <label id="Pick Items"/>
+        <label id="Pack Items"/>
+        <label id="Ship Items"/>
+      </labels>
+      <labelMappings>
+        <labelMapping eventId="Event_05cxjai" labelId="Pick Items"/>
+        <labelMapping eventId="Event_0jrndso" labelId="Pack Items"/>
+        <labelMapping eventId="Event_0zj7sc6" labelId="Ship Items"/>
+      </labelMappings>
+      <variables/>
+      <expressions/>
+      <variableAccesses>
+        <readAccessess/>
+        <writeAccessess/>
+      </variableAccesses>
+    </resources>
+    <constraints>
+      <conditions/>
+      <responses>
+        <response sourceId="Event_05cxjai" targetId="Event_0jrndso">
+          <custom>
+            <waypoints>
+              <waypoint x="370" y="330"/>
+              <waypoint x="440" y="330"/>
+            </waypoints>
+            <id id="Relation_0r0gnsf"/>
+          </custom>
+        </response>
+        <response sourceId="Event_0jrndso" targetId="Event_0zj7sc6">
+          <custom>
+            <waypoints>
+              <waypoint x="570" y="330"/>
+              <waypoint x="640" y="330"/>
+            </waypoints>
+            <id id="Relation_1d6wk5w"/>
+          </custom>
+        </response>
+      </responses>
+      <coresponces/>
+      <excludes>
+        <exclude sourceId="Event_05cxjai" targetId="Event_05cxjai">
+          <custom>
+            <waypoints>
+              <waypoint x="305" y="370"/>
+              <waypoint x="305" y="390"/>
+              <waypoint x="220" y="390"/>
+              <waypoint x="220" y="295"/>
+              <waypoint x="240" y="295"/>
+            </waypoints>
+            <id id="Relation_157h8ik"/>
+          </custom>
+        </exclude>
+        <exclude sourceId="Event_0jrndso" targetId="Event_0jrndso">
+          <custom>
+            <waypoints>
+              <waypoint x="505" y="220"/>
+              <waypoint x="505" y="190"/>
+              <waypoint x="400" y="190"/>
+              <waypoint x="400" y="250"/>
+              <waypoint x="440" y="250"/>
+            </waypoints>
+            <id id="Relation_1j3w54g"/>
+          </custom>
+        </exclude>
+        <exclude sourceId="Event_0zj7sc6" targetId="Event_0zj7sc6">
+          <custom>
+            <waypoints>
+              <waypoint x="705" y="220"/>
+              <waypoint x="705" y="190"/>
+              <waypoint x="620" y="190"/>
+              <waypoint x="620" y="250"/>
+              <waypoint x="640" y="250"/>
+            </waypoints>
+            <id id="Relation_1lt7ywb"/>
+          </custom>
+        </exclude>
+      </excludes>
+      <includes>
+        <include sourceId="Event_05cxjai" targetId="Event_0jrndso">
+          <custom>
+            <waypoints>
+              <waypoint x="370" y="280"/>
+              <waypoint x="440" y="280"/>
+            </waypoints>
+            <id id="Relation_0zd9tlo"/>
+          </custom>
+        </include>
+        <include sourceId="Event_0jrndso" targetId="Event_0zj7sc6">
+          <custom>
+            <waypoints>
+              <waypoint x="570" y="280"/>
+              <waypoint x="640" y="280"/>
+            </waypoints>
+            <id id="Relation_0piqb1n"/>
+          </custom>
+        </include>
+      </includes>
+      <milestones/>
+      <updates/>
+      <spawns/>
+    </constraints>
+  </specification>
+  <runtime>
+    <marking>
+      <globalStore/>
+      <executed/>
+      <included>
+        <event id="Event_05cxjai"/>
+      </included>
+      <pendingResponses/>
+    </marking>
+  </runtime>
+</dcrgraph>
