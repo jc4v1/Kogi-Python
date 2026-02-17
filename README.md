@@ -28,9 +28,9 @@ in the process model and see the effect on the goal model. It also allows to run
 
 Kogi-App is a simple to use interface to the Kogi tool. Here, one can select a goal model, then either a Petri Net model, a DCR graph or BPMN model, and finally the appropriate mapping of process model activities and events to intentional elements of the goal model. 
 
-You find examples of goal models, process models and event mappings in the [Data](Data) directory of this repository.
+Examples of goal models, process models, and event mappings are in the [Data](Data) directory of this repository.
 
-You can provide your own models or edit the models from the [Data](Data) directory using the following editors:
+The following editors can be used to create ones own models or edit the models from the [Data](Data) directory:
 - Goal Model: <a href="https://www.cin.ufpe.br/~jhcp/pistar/tool/#" target="_blank">piStar</a>
 - Petri Net: <a href="https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html" target="_blank">I love Petri Nets</a>
 - DCR Graph: <a href="https://hugoalopez-dtu.github.io/dcr-js/" target="_blank">DCR Graph-JS</a> (download and upload as DCR Solutions XML)
