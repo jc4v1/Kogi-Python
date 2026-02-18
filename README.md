@@ -196,7 +196,7 @@ This allows to experiment with possible scenarios on how to achieve the goals of
 goal model or to make or break its qualities.
 
 
-The first step is to create a goal model with [PiStar](https://www.cin.ufpe.br/~jhcp/pistar/tool/#), move the file goal_model.txt in the Download folder to the right place and the right
+The first step is to create a goal model with [PiStar]([https://www.istardust.ch/]), move the file goal_model.txt in the Download folder to the right place and the right
 name, and then read the file.
 
 And then create the interface with the InterfaceBuilder class, and diplay the created interface.
