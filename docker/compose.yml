@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  kogi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kogi-app
+    ports:
+      - "8866:8866"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
