@@ -68,9 +68,9 @@ from Semantics.transition_system import CombinedTransitionSystem
 ```
 
 ### Non-interactive usage
-1. Model the goal model using PiStar (https://www.cin.ufpe.br/~jhcp/pistar/tool/#) and download the goalModel.txt file
+1. Model the goal model using PiStar (https://www.istardust.ch/) and download the goalModel.txt file
 2. Model the process model as a Petri Net using, e.g., the "I love Petri Nets" editor (https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html)
-3. For the event mapping create a spreadsheet with a column for events and another for Intentional elements and save it as a CSV file.
+3. For the event mapping, create a spreadsheet with a column for events and another for Intentional elements and save it as a CSV file.
 
 | Event | Intentional Element |
 | --- | --- |
