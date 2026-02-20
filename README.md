@@ -6,7 +6,7 @@ Regulatory compliance often prioritizes adherence to explicit rules, overlooking
 
 ## Online version
 
-An online version is available at <a href="https://kogi.compute.dtu.dk" target="_blank" rel="noopener noreferrer">kogi.compute.dtu.dk</a>.
+An online version is available at <a href="https://kogi.compute.dtu.dk" target="_blank">kogi.compute.dtu.dk</a>.
 
 ## Implementation
 
