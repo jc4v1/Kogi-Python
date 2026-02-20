@@ -233,7 +233,7 @@ Choose your goal model and process model. You can use the following tools
   - For Petri Nets, an alternative is to add intentional elements as actions to transitions in the Petri Net editor. The corresponding transitions will then be automatically mapped the intentional elements. 
   - ``event_mapping = petri_net.get_default_event_mapping()``
 
-For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs only the non-interactive mode is supported.
+For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs, only the non-interactive mode is supported.
 
 ```python
 
@@ -255,10 +255,10 @@ display(interface)
 More examples, including the running example and the EU air passenger rights example, can be found in the [Examples.ipynb](Examples.ipynb) Jupyter notebook and the [Data](./Data) subdirectory.
 
 
-## References
+## Research Papers
 
 
 
-- Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking
-- High-Level Requirements-Driven Business Process Compliance
+- [Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6187219) Caballero-Villalobos, Juanita and Baumeister, Hubert and Paja, Elda and Kokoulina, Olga and López, Hugo A., Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking (Extended Version) (February 06, 2026). Available at SSRN: https://ssrn.com/abstract=6187219 or http://dx.doi.org/10.2139/ssrn.6187219 
+
 
