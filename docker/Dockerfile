@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir pip -r requirements.txt
 EXPOSE 8866
 
 # Start voila (bind to all interfaces inside container)
-CMD ["voila", "--no-browser", "--port=8866", "KogiApp.ipynb", "--Voila.ip=0.0.0.0"]
+CMD ["voila", "--MappingKernelManager.cull_idle_timeout=300", "--MappingKernelManager.cull_interval=60", "--no-browser", "--port=8866", "KogiApp.ipynb", "--Voila.ip=0.0.0.0"]
