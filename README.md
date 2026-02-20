@@ -10,10 +10,10 @@ Kogi-App is a simple-to-use interface to the Kogi tool. Here, one can select a g
 
 ## Implementation
 
-A prototype was developed in Python, taking as input a process model either as a Petri Net model (pnml file), a DCR Graph (xml file), or as BPMN model (bpmn file) together with the goal model (txt file). The event mapping is provided as a CSV fie. 
+A prototype was developed in Python, taking as input a process model either as a Petri Net model (pnml file), a DCR Graph (xml file), or as BPMN model (bpmn file) together with the goal model (txt file). The event mapping is provided as a CSV file. 
 
 The tool offers three options:
-- a non-interactive option. checking for stability and weak-compliance and returning either true or fals with counter examples
+- a non-interactive option. checking for stability and weak-compliance and returning either true or false with counter examples
 - an interactive option (only available for Petri nets), which allows for the animation of the combined model by executing transitions
 in the process model and see the effect on the goal model. It also allows to run the algorithms for checking stability and weak-compliance and if they are not stable or not compliant, then select those states, where the validation fails.
 - a second interactive option, where it is possible to animate how the goal model reacts to certain events.
@@ -225,7 +225,7 @@ Here is an example of the Petri net for two events e1 and e2.
 
 
 Choose your goal model and process model. You can use the following tools
-- For Goal models https://www.cin.ufpe.br/~jhcp/pistar/tool/#
+- For Goal models https://www.istardust.ch/
 - For Petri Nets https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html
 - For DCR Graphs https://hugoalopez-dtu.github.io/dcr-js/ (download as DCR Solutions XML)
   - Note that only the basic notation for DCR's is supported by Kogi
