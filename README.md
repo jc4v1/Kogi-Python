@@ -1,8 +1,12 @@
 # Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking
 
-## Abstract
 
-Regulatory compliance often prioritizes adherence to explicit rules, overlooking the qualitative aspects of rule implementation. Existing goal-driven compliance approaches often focus on mapping tasks and events to enable process discovery and model repair without evaluating the qualitative factors influencing compliance goals. This study introduces a goal-driven framework that integrates requirements engineering techniques to ensure compliance at design time. It merges process and goal dimensions to validate the fulfillment of high-level compliance requirements, such as reliability, efficiency, and appropriateness. The framework involves modeling legal and business requirements as a process model, capturing compliance requirements in a goal model, and synchronizing the models to determine if the intended high-level requirements are satisfied. The framework was validated through an initial implementation, demonstrating how organizations can systematically integrate and verify both procedural and high-level compliance.
+## Kogi-App
+
+
+Kogi-App is a simple-to-use interface to the Kogi tool. Here, one can select a goal model, then either a Petri Net model, a DCR graph or BPMN model, and finally the appropriate mapping of process model activities and events to intentional elements of the goal model. 
+
+**Try it live** [KogiWeb](https://kogi.compute.dtu.dk/)
 
 ## Implementation
 
@@ -23,10 +27,7 @@ in the process model and see the effect on the goal model. It also allows to run
 
 
 
-## Kogi-App
-
-
-Kogi-App is a simple to use interface to the Kogi tool. Here, one can select a goal model, then either a Petri Net model, a DCR graph or BPMN model, and finally the appropriate mapping of process model activities and events to intentional elements of the goal model. 
+## Kogi-Interaction
 
 Examples of goal models, process models, and event mappings are in the [Data](Data) directory of this repository.
 
