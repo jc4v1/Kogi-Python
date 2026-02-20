@@ -1,19 +1,19 @@
 # Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking
 
+## Abstract
 
-## Kogi-App
+Regulatory compliance often prioritizes adherence to explicit rules, overlooking the qualitative aspects of rule implementation. Existing goal-driven compliance approaches often focus on mapping tasks and events to enable process discovery and model repair without evaluating the qualitative factors influencing compliance goals. This study introduces a goal-driven framework that integrates requirements engineering techniques to ensure compliance at design time. It merges process and goal dimensions to validate the fulfillment of high-level compliance requirements, such as reliability, efficiency, and appropriateness. The framework involves modeling legal and business requirements as a process model, capturing compliance requirements in a goal model, and synchronizing the models to determine if the intended high-level requirements are satisfied. The framework was validated through an initial implementation, demonstrating how organizations can systematically integrate and verify both procedural and high-level compliance.
 
+## Online version
 
-Kogi-App is a simple-to-use interface to the Kogi tool. Here, one can select a goal model, then either a Petri Net model, a DCR graph or BPMN model, and finally the appropriate mapping of process model activities and events to intentional elements of the goal model. 
-
-**Try it live** [KogiWeb](https://kogi.compute.dtu.dk/)
+An online version is available at <a href="https://kogi.compute.dtu.dk" target="_blank">kogi.compute.dtu.dk</a>.
 
 ## Implementation
 
-A prototype was developed in Python, taking as input a process model either as a Petri Net model (pnml file), a DCR Graph (xml file), or as BPMN model (bpmn file) together with the goal model (txt file). The event mapping is provided as a CSV file. 
+A prototype was developed in Python, taking as input a process model either as a Petri Net model (pnml file), a DCR Graph (xml file), or as BPMN model (bpmn file) together with the goal model (txt file). The event mapping is provided as a CSV fie. 
 
 The tool offers three options:
-- a non-interactive option. checking for stability and weak-compliance and returning either true or false with counter examples
+- a non-interactive option. checking for stability and weak-compliance and returning either true or fals with counter examples
 - an interactive option (only available for Petri nets), which allows for the animation of the combined model by executing transitions
 in the process model and see the effect on the goal model. It also allows to run the algorithms for checking stability and weak-compliance and if they are not stable or not compliant, then select those states, where the validation fails.
 - a second interactive option, where it is possible to animate how the goal model reacts to certain events.
@@ -27,12 +27,15 @@ in the process model and see the effect on the goal model. It also allows to run
 
 
 
-## Kogi-Interaction
+## Kogi-App
+
+
+Kogi-App is a simple to use interface to the Kogi tool. Here, one can select a goal model, then either a Petri Net model, a DCR graph or BPMN model, and finally the appropriate mapping of process model activities and events to intentional elements of the goal model. 
 
 Examples of goal models, process models, and event mappings are in the [Data](Data) directory of this repository.
 
 The following editors can be used to create ones own models or edit the models from the [Data](Data) directory:
-- Goal Model: <a href="https://www.istardust.ch/" target="_blank">piStar</a>
+- Goal Model: <a href="https://www.cin.ufpe.br/~jhcp/pistar/tool/#" target="_blank">piStar</a>
 - Petri Net: <a href="https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html" target="_blank">I love Petri Nets</a>
 - DCR Graph: <a href="https://hugoalopez-dtu.github.io/dcr-js/" target="_blank">DCR Graph-JS</a> (download and upload as DCR Solutions XML)
 - BPMN: <a href="https://bpmn.io/" target="_blank">BPMN.io</a>
@@ -68,9 +71,9 @@ from Semantics.transition_system import CombinedTransitionSystem
 ```
 
 ### Non-interactive usage
-1. Model the goal model using PiStar (https://www.istardust.ch/) and download the goalModel.txt file
+1. Model the goal model using PiStar (https://www.cin.ufpe.br/~jhcp/pistar/tool/#) and download the goalModel.txt file
 2. Model the process model as a Petri Net using, e.g., the "I love Petri Nets" editor (https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html)
-3. For the event mapping, create a spreadsheet with a column for events and another for Intentional elements and save it as a CSV file.
+3. For the event mapping create a spreadsheet with a column for events and another for Intentional elements and save it as a CSV file.
 
 | Event | Intentional Element |
 | --- | --- |
@@ -197,7 +200,7 @@ This allows to experiment with possible scenarios on how to achieve the goals of
 goal model or to make or break its qualities.
 
 
-The first step is to create a goal model with [PiStar]([https://www.istardust.ch/]), move the file goal_model.txt in the Download folder to the right place and the right
+The first step is to create a goal model with [PiStar](https://www.cin.ufpe.br/~jhcp/pistar/tool/#), move the file goal_model.txt in the Download folder to the right place and the right
 name, and then read the file.
 
 And then create the interface with the InterfaceBuilder class, and diplay the created interface.
@@ -225,7 +228,7 @@ Here is an example of the Petri net for two events e1 and e2.
 
 
 Choose your goal model and process model. You can use the following tools
-- For Goal models https://www.istardust.ch/
+- For Goal models https://www.cin.ufpe.br/~jhcp/pistar/tool/#
 - For Petri Nets https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html
 - For DCR Graphs https://hugoalopez-dtu.github.io/dcr-js/ (download as DCR Solutions XML)
   - Note that only the basic notation for DCR's is supported by Kogi
@@ -233,7 +236,7 @@ Choose your goal model and process model. You can use the following tools
   - For Petri Nets, an alternative is to add intentional elements as actions to transitions in the Petri Net editor. The corresponding transitions will then be automatically mapped the intentional elements. 
   - ``event_mapping = petri_net.get_default_event_mapping()``
 
-For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs, only the non-interactive mode is supported.
+For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs only the non-interactive mode is supported.
 
 ```python
 
@@ -255,10 +258,10 @@ display(interface)
 More examples, including the running example and the EU air passenger rights example, can be found in the [Examples.ipynb](Examples.ipynb) Jupyter notebook and the [Data](./Data) subdirectory.
 
 
-## Research Papers
+## References
 
 
 
-- [Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6187219) Caballero-Villalobos, Juanita and Baumeister, Hubert and Paja, Elda and Kokoulina, Olga and López, Hugo A., Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking (Extended Version) (February 06, 2026). Available at SSRN: https://ssrn.com/abstract=6187219 or http://dx.doi.org/10.2139/ssrn.6187219 
-
+- Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking
+- High-Level Requirements-Driven Business Process Compliance
 
