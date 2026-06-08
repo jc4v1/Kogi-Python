@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="net1" type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb">
+        <place id="start">
+            <graphics>
+                <position x="72.5" y="359.5"/>
+            </graphics>
+            <initialMarking>
+                <text>1</text>
+            </initialMarking>
+        </place>
+        <place id="after_format">
+            <graphics>
+                <position x="1017.5" y="240.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="after_verify">
+            <graphics>
+                <position x="375.5" y="355.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="verified_branch">
+            <graphics>
+                <position x="682.5" y="255.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="end">
+            <graphics>
+                <position x="1526.5" y="364.5"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <transition id="t_verify">
+            <name>
+                <text>Verify identity</text>
+            </name>
+            <graphics>
+                <position x="224.5" y="355.5"/>
+            </graphics>
+        </transition>
+        <transition id="t_regular">
+            <name>
+                <text>Format Data Regular Needs</text>
+            </name>
+            <graphics>
+                <position x="832.5" y="324.5"/>
+            </graphics>
+        </transition>
+        <transition id="t_special">
+            <name>
+                <text>Format Data Special Needs</text>
+            </name>
+            <graphics>
+                <position x="834.5" y="167.5"/>
+            </graphics>
+        </transition>
+        <transition id="t_denied">
+            <name>
+                <text>Identity denied</text>
+            </name>
+            <graphics>
+                <position x="492.5" y="459.5"/>
+            </graphics>
+        </transition>
+        <transition id="t_verified">
+            <name>
+                <text>Identity verified</text>
+            </name>
+            <graphics>
+                <position x="493.5" y="253.5"/>
+            </graphics>
+        </transition>
+        <transition id="t_provide">
+            <name>
+                <text>Provide Records</text>
+            </name>
+            <graphics>
+                <position x="1207.5" y="241.5"/>
+            </graphics>
+        </transition>
+        <arc id="after_format,t_provide" source="after_format" target = "t_provide">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="start,t_verify" source="start" target = "t_verify">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_verify,after_verify" source="t_verify" target = "after_verify">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_denied,end" source="t_denied" target = "end">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics>
+                <position x="1264.9999961853027" y="451.4756774902344"/>
+            </graphics>
+        </arc>
+        <arc id="after_verify,t_denied" source="after_verify" target = "t_denied">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="after_verify,t_verified" source="after_verify" target = "t_verified">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_verified,verified_branch" source="t_verified" target = "verified_branch">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="verified_branch,t_regular" source="verified_branch" target = "t_regular">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="verified_branch,t_special" source="verified_branch" target = "t_special">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_regular,after_format" source="t_regular" target = "after_format">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_special,after_format" source="t_special" target = "after_format">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_provide,end" source="t_provide" target = "end">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+    </net>
+</pnml>

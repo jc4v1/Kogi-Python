@@ -1,0 +1,16 @@
+activity,mapped_leaf_tasks
+Declaration REJECTED by ADMINISTRATION,(Admin) Reject Declaration  (U)
+Declaration APPROVED by ADMINISTRATION,(Admin) Approve Declaration  (U)
+Declaration SUBMITTED by EMPLOYEE,(Employee) Submit Declaration  (U)
+Declaration APPROVED by BUDGET OWNER,(Budget Owner) Approve Declaration  (U)
+Declaration REJECTED by SUPERVISOR,(Supervisor) Reject Declaration  (U)
+Declaration FINAL_APPROVED by SUPERVISOR,(Supervisor) Approve Declaration  (U)
+Payment Handled,(Admin) Handle Payment  (U)
+Declaration SAVED by EMPLOYEE,(Employee) Save Declaration  (U)
+Declaration REJECTED by BUDGET OWNER,(Budget Owner) Reject Declaration  (U)
+Declaration REJECTED by EMPLOYEE,(Employee) Reject Declaration  (U)
+Request Payment,(Supervisor) Request Payment  (U)
+t_tau_rev,
+t1,
+t2,
+t3,

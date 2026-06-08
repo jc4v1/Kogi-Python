@@ -1,0 +1,220 @@
+{
+  "actors": [
+    {
+      "id": "a11591aa-724c-4383-970e-75857cbd4ec2",
+      "text": "Employee",
+      "type": "istar.Actor",
+      "x": 40,
+      "y": 78,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "f185d5e2-851b-4754-8281-9f1c31349ded",
+          "text": "Increase employee satisfaction",
+          "type": "istar.Quality",
+          "x": 243,
+          "y": 80,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b92764c4-cf45-4791-86f6-fedffa815ab0",
+          "text": "Money reimbursed",
+          "type": "istar.Goal",
+          "x": 327,
+          "y": 158,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "61cd91c4-62aa-454c-9d0c-d01b1a15a712",
+          "text": "Submit Declaration",
+          "type": "istar.Task",
+          "x": 319,
+          "y": 236,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b9fc75b0-26c6-43cb-b7db-4d63f5a2c958",
+          "text": "Break",
+          "type": "istar.Task",
+          "x": 95,
+          "y": 143,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "ad22c209-92fe-4fb1-ad52-b1746d54bd73",
+      "text": "Admin",
+      "type": "istar.Actor",
+      "x": 696,
+      "y": 261,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "9ab518f1-2ee3-4ab2-ad8f-1044eeb89c11",
+          "text": "adequate declaration handling",
+          "type": "istar.Quality",
+          "x": 870,
+          "y": 261,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "26643cc3-bc86-432a-864a-01ab8bd4faa0",
+          "text": "Money Reimbursed",
+          "type": "istar.Goal",
+          "x": 732,
+          "y": 382,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "f53b6e3a-7fa7-4d58-a24f-af6bd453e8c6",
+          "text": "Transaction Finished",
+          "type": "istar.Goal",
+          "x": 864,
+          "y": 356,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "fb3fe5e0-b9ba-43de-8629-df23bd06c8f8",
+          "text": "Break",
+          "type": "istar.Task",
+          "x": 984,
+          "y": 359,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "72706f38-65a7-45b8-98cd-61298f726225",
+      "text": "Money Reimbursed",
+      "type": "istar.Goal",
+      "x": 562,
+      "y": 251,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "26643cc3-bc86-432a-864a-01ab8bd4faa0",
+      "target": "b92764c4-cf45-4791-86f6-fedffa815ab0"
+    }
+  ],
+  "links": [
+    {
+      "id": "66b9b8b2-6d93-4c94-8353-41440e826593",
+      "type": "istar.DependencyLink",
+      "source": "72706f38-65a7-45b8-98cd-61298f726225",
+      "target": "b92764c4-cf45-4791-86f6-fedffa815ab0"
+    },
+    {
+      "id": "76546961-85f4-4669-8dd4-7256bf2e2212",
+      "type": "istar.DependencyLink",
+      "source": "26643cc3-bc86-432a-864a-01ab8bd4faa0",
+      "target": "72706f38-65a7-45b8-98cd-61298f726225"
+    },
+    {
+      "id": "dd16a3ee-b127-4c93-8225-8652b254b8ab",
+      "type": "istar.ContributionLink",
+      "source": "b92764c4-cf45-4791-86f6-fedffa815ab0",
+      "target": "f185d5e2-851b-4754-8281-9f1c31349ded",
+      "label": "make"
+    },
+    {
+      "id": "afcacb9d-72f7-48ed-9cb6-8d30a4ac140f",
+      "type": "istar.AndRefinementLink",
+      "source": "61cd91c4-62aa-454c-9d0c-d01b1a15a712",
+      "target": "b92764c4-cf45-4791-86f6-fedffa815ab0"
+    },
+    {
+      "id": "f0c1be26-be9a-49ef-af05-f0cbaa4f559f",
+      "type": "istar.AndRefinementLink",
+      "source": "26643cc3-bc86-432a-864a-01ab8bd4faa0",
+      "target": "f53b6e3a-7fa7-4d58-a24f-af6bd453e8c6"
+    },
+    {
+      "id": "0660f289-9f24-473c-936f-d8a2b8a63e24",
+      "type": "istar.ContributionLink",
+      "source": "f53b6e3a-7fa7-4d58-a24f-af6bd453e8c6",
+      "target": "9ab518f1-2ee3-4ab2-ad8f-1044eeb89c11",
+      "label": "make"
+    },
+    {
+      "id": "53b27afb-94cb-4ce3-a043-5cbec052cbc9",
+      "type": "istar.ContributionLink",
+      "source": "fb3fe5e0-b9ba-43de-8629-df23bd06c8f8",
+      "target": "9ab518f1-2ee3-4ab2-ad8f-1044eeb89c11",
+      "label": "break"
+    },
+    {
+      "id": "d9ed6f02-3208-488a-b425-dfc3159acd84",
+      "type": "istar.ContributionLink",
+      "source": "b9fc75b0-26c6-43cb-b7db-4d63f5a2c958",
+      "target": "f185d5e2-851b-4754-8281-9f1c31349ded",
+      "label": "break"
+    }
+  ],
+  "display": {
+    "a11591aa-724c-4383-970e-75857cbd4ec2": {
+      "backgroundColor": "#FFFFFF"
+    },
+    "f185d5e2-851b-4754-8281-9f1c31349ded": {
+      "backgroundColor": "#FF9C9C"
+    },
+    "61cd91c4-62aa-454c-9d0c-d01b1a15a712": {
+      "backgroundColor": "#AAAAAA"
+    },
+    "ad22c209-92fe-4fb1-ad52-b1746d54bd73": {
+      "backgroundColor": "#FFFFFF"
+    },
+    "9ab518f1-2ee3-4ab2-ad8f-1044eeb89c11": {
+      "backgroundColor": "#FF9C9C"
+    },
+    "66b9b8b2-6d93-4c94-8353-41440e826593": {
+      "vertices": [
+        {
+          "x": 607,
+          "y": 216
+        },
+        {
+          "x": 553,
+          "y": 175
+        },
+        {
+          "x": 470,
+          "y": 179
+        }
+      ]
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Thu, 21 May 2026 22:50:16 GMT",
+  "diagram": {
+    "width": 1522,
+    "height": 988,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

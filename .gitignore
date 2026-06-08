@@ -2,6 +2,7 @@
 .venv/Scripts/vba_extract.py
 .venv/
 .vscode/
+.vs/
 satisfaction_analysis.xlsx
 ~$satisfaction_analysis.xlsx
 __pycache__/
@@ -9,3 +10,5 @@ htmlcov/
 .coverage
 .pytest_cache/
 .ipynb_checkpoints/
+.github
+AGENTS.md

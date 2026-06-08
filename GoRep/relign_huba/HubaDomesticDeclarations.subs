@@ -1,0 +1,19 @@
+S
+v 1 skipped
+v 2 Declaration_APPROVED_by_BUDGET_OWNER
+d 1 2 skipped__Declaration_APPROVED_by_BUDGET_OWNER
+
+S
+v 1 skipped
+v 2 Declaration_APPROVED_by_ADMINISTRATION
+d 1 2 skipped__Declaration_APPROVED_by_ADMINISTRATION
+
+S
+v 1 repeated
+v 2 Declaration_APPROVED_by_PRE_APPROVER
+d 1 2 repeated__Declaration_APPROVED_by_PRE_APPROVER
+
+S
+v 1 inserted
+v 2 Declaration_APPROVED_by_PRE_APPROVER
+d 1 2 inserted__Declaration_APPROVED_by_PRE_APPROVER

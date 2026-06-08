@@ -1,9 +1,9 @@
 import pytest
-from Semantics.istar_processor import read_istar_model
-from Semantics.petri_net_processor import read_petri_net
-from Semantics.transition_system import combine_goal_model_and_petri_net, Marking, MarkingGm, MarkingPn, ElementStatus, QualityStatus
+from Semantics.parsers.istar_processor import read_istar_model
+from Semantics.parsers.petri_net_processor import read_petri_net
+from Semantics.transition_system import combine_goal_model_and_petri_net, Marking, MarkingGm, MarkingPn, ElementStatus
 from tests.utilities import pretty_print, pretty_print_states
-from Semantics.enums import ElementStatus, QualityStatus
+from Semantics.enums import ElementStatus
 
 # @pytest.mark.skip(reason="Temporarily disabled")
 def test_simple_combined_system():
@@ -15,17 +15,17 @@ def test_simple_combined_system():
     pretty_print(lts.transitions)
 
     # Construct expected initial state
-    expected_initial_gm = MarkingGm({"Task": ElementStatus.UNKNOWN, "q": QualityStatus.UNKNOWN})
+    expected_initial_gm = MarkingGm({"Task": ElementStatus.UNKNOWN, "q": ElementStatus.UNKNOWN})
     expected_initial_pn = MarkingPn({"p1": 1, "p2": 0})
     expected_initial_state = Marking(expected_initial_gm, expected_initial_pn)
     assert lts.initial_state() == expected_initial_state
 
     # Construct expected states
-    state1_gm = MarkingGm({"Task": ElementStatus.UNKNOWN, "q": QualityStatus.UNKNOWN})
+    state1_gm = MarkingGm({"Task": ElementStatus.UNKNOWN, "q": ElementStatus.UNKNOWN})
     state1_pn = MarkingPn({"p1": 1, "p2": 0})
     state1 = Marking(state1_gm, state1_pn)
 
-    state2_gm = MarkingGm({"Task": ElementStatus.TRUE_FALSE, "q": QualityStatus.FULFILLED})
+    state2_gm = MarkingGm({"Task": ElementStatus.SATISFIED, "q": ElementStatus.SATISFIED})
     state2_pn = MarkingPn({"p1": 0, "p2": 1})
     state2 = Marking(state2_gm, state2_pn)
 
@@ -59,7 +59,7 @@ def test_demo_combined_system():
 def test_demo_combined_system_fail():
     # We make weak compliance fail by removing the mapping for t_6
     # Thus not all paths in the Petri net ensure that all
-    # qualities are fulfilled
+    # qualities are satisfied
     gm = read_istar_model("tests/data/security/goal_model.txt")
     pn = read_petri_net("tests/data/security/petri_net.pnml")
     gm.event_mapping = pn.get_default_event_mapping()

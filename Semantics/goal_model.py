@@ -1,10 +1,22 @@
-from typing import Dict, List, Tuple, Set
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple, Set
 from typing_extensions import Self
-from Semantics.enums import ElementStatus, QualityStatus, LinkType, LinkStatus
-from Semantics.transition_system import TransitionSystem, MarkingGm
-import itertools
+from Semantics.enums import ElementStatus, LinkType
+from Semantics.transition_system import TransitionSystem
+from Semantics.markings import MarkingGm
+import copy
 import functools
 from Semantics.petri_net import PetriNet
+
+import os
+
+debug = False  # Toggle to True for debug tracing in fire_elements and try_any_rule.
+               # To enable from outside:  from Semantics.goal_model import debug; debug = True
+               # From CLI:  KOGI_DEBUG=1 pytest ...
+
+def printd(*args, **kwargs):
+    if debug or os.environ.get("KOGI_DEBUG"):
+        print(*args, **kwargs)
 
 # Decorator to print successful rule applications
 def log_rule(func):
@@ -17,21 +29,60 @@ def log_rule(func):
         return result
     return wrapper
 
+
+@dataclass(frozen=True)
+class Dependency:
+    source: str
+    target: str
+    dependum: str
+    dependum_type: str
+
+
+class _Place:
+    def __init__(self, name):
+        self.name = name
+
+
+class _Transition:
+    def __init__(self, name, label):
+        self.name = name
+        self.label = label
+        self.in_arcs = []
+        self.out_arcs = []
+
+
+class _Arc:
+    def __init__(self, source, target):
+        self.source = source
+        self.target = target
+
+
+class _Net:
+    def __init__(self, places, transitions, arcs):
+        self.places = places
+        self.transitions = transitions
+        self.arcs = arcs
+
+
 class GoalModel:
-    def __init__(self):
+    def __init__(self, kogi: bool = False):
         self.tasks: Dict[str, ElementStatus] = {}
         self.goals: Dict[str, ElementStatus] = {}
-        self.qualities: Dict[str, QualityStatus] = {}
-        self.links: List[Tuple[str, str, LinkType, LinkStatus]] = []
+        self.qualities: Dict[str, ElementStatus] = {}
+        self.links: List[Tuple[str, str, LinkType]] = []
+        self.dependencies: List[Dependency] = []
         self.requirements: Dict[str, List[List[str]]] = {}
-        self.event_mapping: Dict[str, List[List[str]]] = {}
+        self.event_mapping: Dict[str, Set[str]] = {}
         self.execution_count: Dict[str, int] = {}
-        self.last_activated_link: Tuple[str, str, LinkType, LinkStatus] = None
         self.changed_elements: Set[str] = set()
         self.positions: Dict[str,Tuple[float,float]] = {}
         self.istar_positions: Dict[str,Tuple[float,float]] = {}
         self.istar_width: float | None = None
         self.istar_height: float | None = None
+        self.kogi: bool = kogi
+
+    def elements(self) -> Set[str]:
+        return set(self.tasks.keys()) | set(self.goals.keys()) | set(self.qualities.keys())
 
     def reset(self):
         for e in self.tasks:
@@ -39,11 +90,9 @@ class GoalModel:
         for e in self.goals:
             self.goals[e] = ElementStatus.UNKNOWN
         for e in self.qualities:
-            self.qualities[e] = QualityStatus.UNKNOWN
-        self.links = [(l[0],l[1],l[2],LinkStatus.UNKNOWN) for l in self.links]
+            self.qualities[e] = ElementStatus.UNKNOWN
         for e in self.execution_count:
             self.execution_count[e] = 0
-        self.last_activated_link = None
         self.changed_elements = set()
 
     def add_task(self, task_id: str):
@@ -54,40 +103,43 @@ class GoalModel:
         self.goals[goal_id] = ElementStatus.UNKNOWN
 
     def add_quality(self, quality_id: str):
-        self.qualities[quality_id] = QualityStatus.UNKNOWN
+        self.qualities[quality_id] = ElementStatus.UNKNOWN
 
     def add_link(self, parent: str, child: str, link_type: LinkType):
-        self.links.append((parent, child, link_type, LinkStatus.UNKNOWN))
+        self.links.append((parent, child, link_type))
+
+    def add_dependency(self, source: str, target: str, dependum: str, dependum_type: str):
+        self.dependencies.append(
+            Dependency(
+                source=source,
+                target=target,
+                dependum=dependum,
+                dependum_type=dependum_type,
+            )
+        )
 
     def add_event_mapping(self, event: str, target):
-        if isinstance(target, list):
-            self.event_mapping[event] = target
+        if isinstance(target, (list, set, tuple)):
+            self.event_mapping[event] = set(target)
         else:
-            self.event_mapping[event] = [[target]]
+            self.event_mapping[event] = {target}
 
     def _format_status(self, status):
         if isinstance(status, ElementStatus):
             if status == ElementStatus.UNKNOWN:
-                return "(?, ?)"
-            elif status == ElementStatus.TRUE_FALSE:
-                return "(⊤, ⊥)"
-            elif status == ElementStatus.TRUE_TRUE:
-                return "(⊤, ⊤)"
-        elif isinstance(status, QualityStatus):
-            if status == QualityStatus.UNKNOWN:
-                return "(?)"
-            elif status == QualityStatus.FULFILLED:
-                return "(⊤)"
-            elif status == QualityStatus.DENIED:
-                return "(⊥)"
+                return "𝕌"
+            elif status == ElementStatus.SATISFIED:
+                return "𝕊"
+            elif status == ElementStatus.PENDING:
+                return "ℙ"
+            elif status == ElementStatus.DENIED:
+                return "𝔻"
         return str(status)
 
-    def _get_element_status(self, element: str) -> ElementStatus:
-        if element in self.tasks:
-            return self.tasks[element]
-        elif element in self.goals:
-            return self.goals[element]
-        return ElementStatus.UNKNOWN
+    def _get_node_status(self, element: str) -> ElementStatus:
+        if element in self.qualities:
+            return self.get_quality_status(element) or ElementStatus.UNKNOWN
+        return self.get_element_status(element) or ElementStatus.UNKNOWN
 
     def _get_element_type(self, element: str) -> str:
         if element in self.qualities:
@@ -98,14 +150,152 @@ class GoalModel:
             return 'Task'
         return 'Unknown'
 
+    def goals_alt(self) -> Set[str]:
+        return set(self.goals.keys())
+
+    def qualities_alt(self) -> Set[str]:
+        return set(self.qualities.keys())
+
+    def leaves(self) -> Set[str]:
+        return {eid for eid in self.tasks if self.is_leaf(eid)}
+
+    def initial_marking(self) -> Dict[str, ElementStatus]:
+        return {eid: ElementStatus.UNKNOWN for eid in list(self.tasks) + list(self.goals) + list(self.qualities)}
+
+    def compute_target_sets(self, target: str) -> Tuple[Set[str], Set[str], Set[str]]:
+        leafs = self.leaves()
+        make_set: Set[str] = set()
+        break_set: Set[str] = set()
+
+        if target in self.qualities:
+            for parent_id, child_id, link_type in self.links:
+                if parent_id != target or link_type not in {LinkType.MAKE, LinkType.BREAK}:
+                    continue
+
+                contributing_leafs = self._transitive_operational_leafs(child_id, leafs)
+                if link_type == LinkType.MAKE:
+                    make_set.update(contributing_leafs)
+                elif link_type == LinkType.BREAK:
+                    break_set.update(contributing_leafs)
+        else:
+            make_set = self._transitive_operational_leafs(target, leafs)
+            for element_id in leafs:
+                ancestors = self._transitive_parents(element_id) | {element_id}
+                for quality_id in self.qualities_alt():
+                    contribution_type = self._eventual_contribution_type(target, quality_id)
+                    if contribution_type == LinkType.MAKE and any(self._contribution_value(parent_id, quality_id) == LinkType.BREAK for parent_id in ancestors):
+                        break_set.add(element_id)
+                    if contribution_type == LinkType.BREAK and any(self._contribution_value(parent_id, quality_id) == LinkType.MAKE for parent_id in ancestors):
+                        break_set.add(element_id)
+
+        nr_set = leafs - (make_set | break_set)
+        return make_set, break_set, nr_set
+
+    def _transitive_operational_leafs(
+        self,
+        element: str,
+        leafs: Set[str],
+        seen: Optional[Set[str]] = None,
+    ) -> Set[str]:
+        """Return executable leaf tasks that can operationally satisfy element."""
+        seen = set() if seen is None else seen
+        if element in seen:
+            return set()
+        seen.add(element)
+
+        result = {element} if element in leafs else set()
+        for child_id in self._operational_children(element):
+            result |= self._transitive_operational_leafs(child_id, leafs, seen)
+        return result
+
+    def _operational_children(self, element: str) -> Set[str]:
+        """Return refinement/dependency children that can contribute to element satisfaction."""
+        result = {
+            link[1]
+            for link in self.links
+            if link[0] == element and link[2] in {LinkType.AND, LinkType.OR, LinkType.MAKE, LinkType.BREAK}
+        }
+
+        for dep in self.dependencies:
+            if dep.source == element or dep.dependum == element:
+                result.add(dep.target)
+        return result
+
+    def _contribution_value(self, src: str, tgt: str) -> Optional[LinkType]:
+        """Return MAKE or BREAK if there is a contribution link from src to quality tgt, else None."""
+        for link in self.links:
+            if link[0] == tgt and link[1] == src and link[2] in {LinkType.MAKE, LinkType.BREAK}:
+                return link[2]
+        return None
+
     def _parents(self, element: str) -> Set[str]:
-        return {link[0] for link in self.links if link[1] == element}
+        return {link[0] for link in self.links if link[1] == element and link[2] != LinkType.DEPENDENCY}
+
+    def _children(self, element: str) -> Set[str]:
+        """Return all direct children of element via refinement/contribution links and dependencies."""
+        result = set()
+        for link in self.links:
+            if link[0] == element and link[2] in {LinkType.AND, LinkType.OR, LinkType.MAKE, LinkType.BREAK}:
+                result.add(link[1])
+        for dep in self.dependencies:
+            if dep.dependum == element and dep.target is not None:
+                result.add(dep.target)
+        return result
+
+    def _transitive_children(self, element: str, seen: Optional[Set[str]] = None) -> Set[str]:
+        """Return all transitive children of element."""
+        seen = set() if seen is None else seen
+        result = set()
+        for child_id in self._children(element):
+            if child_id not in seen:
+                seen.add(child_id)
+                result.add(child_id)
+                result |= self._transitive_children(child_id, seen)
+        return result
+
+    def _transitive_parents(self, element: str, seen: Optional[Set[str]] = None) -> Set[str]:
+        """Return all transitive parents of element."""
+        seen = set() if seen is None else seen
+        result = set()
+        for parent_id in self._parents(element):
+            if parent_id not in seen:
+                seen.add(parent_id)
+                result.add(parent_id)
+                result |= self._transitive_parents(parent_id, seen)
+        return result
+
+    def _eventual_contribution_type(self, source_id: str, quality_id: str) -> Optional[LinkType]:
+        """Walk up from source_id to find the first contribution link to quality_id."""
+        for parent_id in self._transitive_parents(source_id) | {source_id}:
+            value = self._contribution_value(parent_id, quality_id)
+            if value is not None:
+                return value
+        return None
+
+    def _is_all_quality_dependency_link(self, parent: str, child: str) -> bool:
+        for dep in self.dependencies:
+            is_target_to_dependum = dep.target == parent and dep.dependum == child
+            is_dependum_to_source = dep.dependum == parent and dep.source == child
+            if not (is_target_to_dependum or is_dependum_to_source):
+                continue
+            if (
+                dep.target in self.qualities
+                and dep.dependum in self.qualities
+                and dep.source in self.qualities
+            ):
+                return True
+        return False
 
     def element_exists(self, element: str) -> bool:
         return element in self.tasks or element in self.goals
 
     def is_leaf(self, element):
-        return not any(link[0] == element for link in self.links)
+        in_dependency = any(dep.dependum == element 
+                          or dep.source == element 
+                          for dep in self.dependencies)
+        if in_dependency:
+            return False
+        return not any(link[0] == element and link[2] != LinkType.DEPENDENCY for link in self.links)
 
     def get_element_status(self, element: str) -> ElementStatus | None:
         if element in self.tasks:
@@ -116,132 +306,304 @@ class GoalModel:
 
     def set_element_status(self, element: str, status:ElementStatus) -> None:
         if element in self.tasks:
-            old_status = self.tasks[element]
             self.tasks[element] = status
         elif element in self.goals:
-            old_status = self.goals[element]
             self.goals[element] = status
         else:
             raise ValueError(f"Element {element} does not exist in tasks or goals.")
 
-    def get_quality_status(self, quality: str) -> QualityStatus | None:
+    def get_quality_status(self, quality: str) -> ElementStatus | None:
         return self.qualities.get(quality, None)
 
-    def set_quality_status(self, quality: str, status: QualityStatus) -> None:
-        old_status = self.qualities[quality]
+    def set_quality_status(self, quality: str, status: ElementStatus) -> None:
+        if quality not in self.qualities:
+            raise ValueError(f"Quality '{quality}' does not exist.")
         self.qualities[quality] = status
 
-    def true_false_refinements(self, element: str, visited: Set[str]) -> Set[str]:
-        result = {element}
-        if element in visited:
-            return result
-        visited.add(element)
-        refinements = [link[1] for link in self.links if link[0] == element]
-        result.update(refinements)
-        for e in refinements:
-            result.update(self.true_false_refinements(e,visited))
-        return result
-
     # --- Rule methods ---
-    def try_pie_rule(self, element : str) -> bool:
-        if self.element_exists(element) and self.is_leaf(element) and not self.get_element_status(element) == ElementStatus.TRUE_FALSE:
-            self.set_element_status(element,ElementStatus.TRUE_FALSE)
-            return True
-        return False
+    def try_pie_rule(self, element : str) -> Set[str]:
+        if self.element_exists(element) and self.is_leaf(element) and not self.get_element_status(element) == ElementStatus.SATISFIED:
+            self.set_element_status(element,ElementStatus.SATISFIED)
+            return {element}
+        return set()
 
-    def try_pand_rule(self, element: str) -> bool:
+    def try_pand_s_rule(self, element: str) -> Set[str]:
         and_links = [link for link in self.links if link[0] == element and link[2] == LinkType.AND]
-        if (any(and_links)
-            and all(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in and_links)):
-            self.set_element_status(element,ElementStatus.TRUE_FALSE)
-            return True
-        return False
+        if not and_links:
+            return set()
+        statuses = [self.get_element_status(link[1]) for link in and_links]
+        all_satisfied = all(s == ElementStatus.SATISFIED for s in statuses)
+        current = self.get_element_status(element)
 
-    def try_por_rule(self, element: str) -> bool:
+        if all_satisfied and current != ElementStatus.SATISFIED:
+            self.set_element_status(element, ElementStatus.SATISFIED)
+            return {element}
+        return set()
+
+    def try_pand_p_rule(self, element: str) -> Set[str]:
+        and_links = [link for link in self.links if link[0] == element and link[2] == LinkType.AND]
+        if not and_links:
+            return set()
+        statuses = [self.get_element_status(link[1]) for link in and_links]
+        all_satisfied = all(s == ElementStatus.SATISFIED for s in statuses)
+        has_pending = any(s == ElementStatus.PENDING for s in statuses)
+        current = self.get_element_status(element)
+
+        if all_satisfied or current == ElementStatus.PENDING:
+            return set()
+        if has_pending and current != ElementStatus.PENDING:
+            self.set_element_status(element, ElementStatus.PENDING)
+            return {element}
+        return set()
+
+    def try_por_s_rule(self, element: str) -> Set[str]:
         or_links = [link for link in self.links if link[0] == element and link[2] == LinkType.OR]
-        if any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in or_links):
-            self.set_element_status(element,ElementStatus.TRUE_FALSE)
-            return True
-        return False
+        if not or_links:
+            return set()
+        any_satisfied = any(self.get_element_status(link[1]) == ElementStatus.SATISFIED for link in or_links)
+        current = self.get_element_status(element)
 
-    def try_pmake_rule(self, quality: str) -> bool:
+        if any_satisfied and current != ElementStatus.SATISFIED:
+            self.set_element_status(element, ElementStatus.SATISFIED)
+            return {element}
+        return set()
+
+    def try_por_p_rule(self, element: str) -> Set[str]:
+        or_links = [link for link in self.links if link[0] == element and link[2] == LinkType.OR]
+        if not or_links:
+            return set()
+        any_satisfied = any(self.get_element_status(link[1]) == ElementStatus.SATISFIED for link in or_links)
+        any_pending = any(self.get_element_status(link[1]) == ElementStatus.PENDING for link in or_links)
+        current = self.get_element_status(element)
+
+        if any_satisfied and current != ElementStatus.SATISFIED:
+            return set()
+        if any_pending and current not in (ElementStatus.SATISFIED, ElementStatus.PENDING):
+            self.set_element_status(element, ElementStatus.PENDING)
+            return {element}
+        if current == ElementStatus.SATISFIED and not any_satisfied and any_pending:
+            self.set_element_status(element, ElementStatus.PENDING)
+            return {element}
+        return set()
+
+    def try_pdep_p_rule(self, element: str) -> Set[str]:
+        changed: Set[str] = set()
+        for dep in self.dependencies:
+            if dep.dependum != element:
+                continue
+            target_status = self._get_node_status(dep.target)
+            if target_status not in {ElementStatus.DENIED, ElementStatus.PENDING}:
+                continue
+            denied_or_unknown = ElementStatus.UNKNOWN if not self.kogi else ElementStatus.DENIED
+            dependum_status = denied_or_unknown if dep.dependum in self.qualities else ElementStatus.PENDING
+            if self._get_node_status(dep.dependum) != dependum_status:
+                if dep.dependum in self.qualities:
+                    self.set_quality_status(dep.dependum, dependum_status)
+                else:
+                    self.set_element_status(dep.dependum, dependum_status)
+            if dep.source in self.elements():
+                source_status = denied_or_unknown if dep.source in self.qualities else ElementStatus.PENDING
+                if self._get_node_status(dep.source) != source_status:
+                    if dep.source in self.qualities:
+                        self.set_quality_status(dep.source, source_status)
+                    else:
+                        self.set_element_status(dep.source, source_status)
+                    changed.add(dep.source)
+        return changed
+
+    def try_pdep_s_rule(self, element: str) -> Set[str]:
+        changed: Set[str] = set()
+        for dep in self.dependencies:
+            if dep.dependum != element:
+                continue
+            if self._get_node_status(dep.target) != ElementStatus.SATISFIED:
+                continue
+            if self._get_node_status(dep.dependum) != ElementStatus.SATISFIED:
+                if dep.dependum in self.qualities:
+                    self.set_quality_status(dep.dependum, ElementStatus.SATISFIED)
+                else:
+                    self.set_element_status(dep.dependum, ElementStatus.SATISFIED)
+            if dep.source in self.elements() and self._get_node_status(dep.source) != ElementStatus.SATISFIED:
+                if dep.source in self.qualities:
+                    self.set_quality_status(dep.source, ElementStatus.SATISFIED)
+                else:
+                    self.set_element_status(dep.source, ElementStatus.SATISFIED)
+                changed.add(dep.source)
+        return changed
+
+    def try_pmake_rule(self, quality: str) -> Set[str]:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
-        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links)
-            and self.get_quality_status(quality) == QualityStatus.UNKNOWN):
-            self.set_quality_status(quality,QualityStatus.FULFILLED)
-            return True
-        return False
+        if not make_links:
+            return set()
+        current = self.get_quality_status(quality)
+        if (current in (ElementStatus.SATISFIED, ElementStatus.DENIED)):
+            return set()
+        any_satisfied = any(self.get_element_status(link[1]) == ElementStatus.SATISFIED for link in make_links)
+        any_pending = any(self.get_element_status(link[1]) == ElementStatus.PENDING for link in make_links)
 
-    def try_pbreak_rule(self, quality: str) -> bool:
+        if any_satisfied and current != ElementStatus.SATISFIED:
+            self.set_quality_status(quality, ElementStatus.SATISFIED)
+            return {quality}
+        return set()
+
+    def try_pbreak_rule(self, quality: str) -> Set[str]:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
-        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
-            and self.get_quality_status(quality) == QualityStatus.UNKNOWN):
-            self.set_quality_status(quality,QualityStatus.DENIED)
-            return True
-        return False
+        if not break_links:
+            return set()
+        current = self.get_quality_status(quality)
+        if (current in (ElementStatus.SATISFIED, ElementStatus.DENIED)):
+            return set()
+        any_satisfied = any(self.get_element_status(link[1]) == ElementStatus.SATISFIED for link in break_links)
+        any_pending = any(self.get_element_status(link[1]) == ElementStatus.PENDING for link in break_links)
 
-    def try_bpfulfill_rule(self, quality: str) -> bool:
+        if any_satisfied and current != ElementStatus.DENIED:
+            self.set_quality_status(quality, ElementStatus.DENIED)
+            return {quality}
+        if current == ElementStatus.DENIED and not any_satisfied and any_pending:
+            self.set_quality_status(quality, ElementStatus.UNKNOWN)
+            return {quality}
+        if any_pending and current not in (ElementStatus.SATISFIED, ElementStatus.DENIED):
+            self.set_quality_status(quality, ElementStatus.UNKNOWN)
+            return {quality}
+        return set()
+
+    def try_pquality_p_rule(self, quality: str) -> Set[str]:
+        children = [link[1] for link in self.links if link[0] == quality and link[2] in (LinkType.MAKE, LinkType.BREAK)]
+        if not children:
+            return set()
+        if self.get_quality_status(quality) == ElementStatus.PENDING:
+            return set()
+        if (all(self.get_element_status(c) in (ElementStatus.PENDING, ElementStatus.UNKNOWN) for c in children) and
+           any(self.get_element_status(c) == ElementStatus.PENDING for c in children)): 
+            self.set_quality_status(quality, ElementStatus.UNKNOWN)
+            return {quality}
+        return set()
+
+    def try_bpfulfill_rule(self, quality: str) -> Set[str]:
         make_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.MAKE]
-        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in make_links)
-            and self.get_quality_status(quality) == QualityStatus.DENIED):
-            self.set_quality_status(quality,QualityStatus.FULFILLED)
+        if (any(self.get_element_status(link[1]) == ElementStatus.SATISFIED for link in make_links)
+            and self.get_quality_status(quality) == ElementStatus.DENIED):
+            self.set_quality_status(quality,ElementStatus.SATISFIED)
+            changed: Set[str] = {quality}
             break_elements = [link[1] for link in self.links if link[0] == quality
                               and link[2] == LinkType.BREAK
-                              and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
-            for elem in break_elements:
-                true_true_refinements = self.true_false_refinements(elem,set())
-                for e in true_true_refinements:
-                    if self.get_element_status(e) == ElementStatus.TRUE_FALSE:
-                        self.set_element_status(e, ElementStatus.TRUE_TRUE)
-            return True
-        return False
+                              and self.get_element_status(link[1]) == ElementStatus.SATISFIED]
+            back_changed = self._back_propagate(break_elements)
+            if not self.kogi:
+                changed |= back_changed
+            return changed
+        return set()
 
-    def try_bpdeny_rule(self, quality: str) -> bool:
+    def try_bpdeny_rule(self, quality: str) -> Set[str]:
         break_links = [link for link in self.links if link[0] == quality and link[2] == LinkType.BREAK]
-        if (any(self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE for link in break_links)
-            and self.get_quality_status(quality) == QualityStatus.FULFILLED):
-            self.set_quality_status(quality,QualityStatus.DENIED)
+        if (any(self.get_element_status(link[1]) == ElementStatus.SATISFIED for link in break_links)
+            and self.get_quality_status(quality) == ElementStatus.SATISFIED):
+            self.set_quality_status(quality,ElementStatus.DENIED)
+            changed: Set[str] = {quality}
             make_elements = [link[1] for link in self.links if link[0] == quality
                              and link[2] == LinkType.MAKE
-                             and self.get_element_status(link[1]) == ElementStatus.TRUE_FALSE]
-            for elem in make_elements:
-                true_false_refinements = self.true_false_refinements(elem,set())
-                for e in true_false_refinements:
-                    if self.get_element_status(e) == ElementStatus.TRUE_FALSE:
-                        self.set_element_status(e, ElementStatus.TRUE_TRUE)
-            return True
-        return False
+                             and self.get_element_status(link[1]) == ElementStatus.SATISFIED]
+            back_changed = self._back_propagate(make_elements)
+            if not self.kogi:
+                changed |= back_changed
+            return changed
+        return set()
 
-    def try_any_rule(self, element: str) -> bool:
-        return (self.try_pie_rule(element) or
-                self.try_por_rule(element) or
-                self.try_pand_rule(element) or
-                self.try_pmake_rule(element) or
-                self.try_pbreak_rule(element) or
-                self.try_bpfulfill_rule(element) or
-                self.try_bpdeny_rule(element))
+    def _back_propagate(self, elements: List[str]) -> Set[str]:
+        """Back-propagate denied status from satisfied elements through their refinements and dependencies."""
+        def true_false_refinements(element: str, visited: Set[str]) -> Set[str]:
+            result = {element}
+            if element in visited:
+                return result
+            visited.add(element)
+            refinements = [link[1] for link in self.links if link[0] == element and link[2] != LinkType.DEPENDENCY]
+            result.update(refinements)
+            for e in refinements:
+                result.update(true_false_refinements(e, visited))
+            for dep in self.dependencies:
+                if dep.source == element:
+                    result.add(dep.dependum)
+                    result.add(dep.target)
+                    result.update(true_false_refinements(dep.dependum, visited))
+                    result.update(true_false_refinements(dep.target, visited))
+            return result
+
+        changed: Set[str] = set()
+        for elem in elements:
+            affected = true_false_refinements(elem, set())
+            for e in affected:
+                if e in self.qualities:
+                    if self.get_quality_status(e) == ElementStatus.SATISFIED:
+                        self.set_quality_status(e, ElementStatus.UNKNOWN)
+                        changed.add(e)
+                else:
+                    if self.get_element_status(e) == ElementStatus.SATISFIED:
+                        self.set_element_status(e, ElementStatus.PENDING)
+                        changed.add(e)
+        return changed
+
+    def try_any_rule(self, element: str) -> Tuple[Set[str], Optional[str]]:
+        printd(f"  [try_any_rule] checking '{element}' status={self.get_element_status(element) if element in self.tasks or element in self.goals else self.get_quality_status(element)}")
+        rules = (self.try_pdep_p_rule, self.try_pdep_s_rule, self.try_pie_rule,
+                  self.try_por_p_rule, self.try_por_s_rule,
+                  self.try_pand_p_rule, self.try_pand_s_rule, self.try_pmake_rule, self.try_pbreak_rule,
+                  self.try_pquality_p_rule,
+                  self.try_bpfulfill_rule, self.try_bpdeny_rule)
+        if self.kogi:
+            rules = [r for r in rules if not r.__name__.endswith('_p_rule')]
+        for rule in rules:
+            result = rule(element)
+            if result:
+                rn = rule.__name__
+                printd(f"  [try_any_rule] -> '{element}' matched rule '{rn}', changed={result}")
+                return result, rn
+        printd(f"  [try_any_rule] -> '{element}' no rule matched")
+        return set(), None
 
     # --- Firing and event processing ---
-    def fire_element(self,element: str) -> None:
+    def fire_element(self, element: str) -> None:
         self.changed_elements.clear()
         self.fire_elements({element})
 
+    def _parents_of(self, elements: Set[str]) -> Set[str]:
+        parent_set: Set[str] = set()
+        for c in elements:
+            parent_set.update(self._parents(c))
+            for dep in self.dependencies:
+                if dep.target == c:
+                    parent_set.add(dep.dependum)
+        return parent_set
+
     def fire_elements(self, elements: Set[str]) -> None:
+        printd(f"\n[fire_elements] called with: {elements}")
         for e in elements:
-            if self.try_any_rule(e):
-                self.changed_elements.add(e)
-                self.fire_elements(self._parents(e))
+            changed, rule_name = self.try_any_rule(e)
+            if changed:
+                printd(f"[fire_elements] '{e}' changed -> {changed} (rule={rule_name})")
+                self.changed_elements.update(changed)
+                parent_set = self._parents_of(changed)
+                printd(f"[fire_elements] parent_set={parent_set}")
+                self.fire_elements(parent_set)
+            else:
+                printd(f"[fire_elements] '{e}' -> no rule applied")
 
     def process_event(self, event: str) -> None:
-        for target_set in self.event_mapping[event]:
-            for element in target_set:
-                self.fire_element(element)
+        for element in sorted(self.event_mapping.get(event, [])):
+            self.fire_element(element)
 
+    def process_only_one_element(self, element: str) -> Tuple[Set[str], Optional[str]]:
+        """Fire a single element without propagating changes to parents."""
+        self.changed_elements.clear()
+        changed, rule_name = self.try_any_rule(element)
+        if changed:
+            self.changed_elements.update(changed)
+        return changed, rule_name
+    
     # --- Marking and transition system methods ---
-    def get_markings(self) -> dict[str, ElementStatus | QualityStatus]:
+    def get_markings(self) -> dict[str, ElementStatus]:
         return {**self.tasks, **self.goals, **self.qualities}
 
-    def set_markings(self, markings: Dict[str, ElementStatus | QualityStatus]) -> None:
+    def set_markings(self, markings: Dict[str, ElementStatus]) -> None:
         for element, status in markings.items():
             if element in self.tasks:
                 self.tasks[element] = status
@@ -251,7 +613,6 @@ class GoalModel:
                 self.qualities[element] = status
 
     def copy(self) -> Self:
-        import copy
         return copy.deepcopy(self)
 
     def _get_elements(self, original:bool) -> set[str]:
@@ -278,13 +639,13 @@ class GoalModel:
                 next_model = self.copy()
                 next_model.set_markings(current_state._markings)
                 if original:
-                    rule_applied = next_model.try_any_rule(element)
+                    changed, _rule_name = next_model.try_any_rule(element)
                 else:
                     next_model.fire_element(element)
                 next_markings = next_model.get_markings()
                 next_state = MarkingGm(next_markings)
                 if original:
-                    if rule_applied:
+                    if changed:
                         transitions[current_state].setdefault(element, set()).add(next_state)
                         if next_state not in visited:
                             queue.append(next_state)
@@ -297,85 +658,6 @@ class GoalModel:
             transitions=transitions,
             initial_state=initial_state
         )
-
-    # --- Statistics and printing ---
-    def generate_statistics(self, traces: List[List[str]], results: List[Dict]):
-        print("\n" + "="*80)
-        print("GOAL MODEL EVALUATION STATISTICS")
-        print("="*80)
-        total_traces = len(traces)
-        all_elements = list(self.tasks.keys()) + list(self.goals.keys()) + list(self.qualities.keys())
-        element_stats = {}
-        for element in all_elements:
-            satisfied_count = 0
-            executed_pending_count = 0
-            satisfied_traces = []
-            executed_pending_traces = []
-            for i, trace_result in enumerate(results):
-                final_state = trace_result['states'][-1]
-                if element in final_state['qualities']:
-                    if final_state['qualities'][element] == 'fulfilled':
-                        satisfied_count += 1
-                        satisfied_traces.append(i + 1)
-                elif element in final_state['goals']:
-                    if final_state['goals'][element] == 'true_false':
-                        satisfied_count += 1
-                        satisfied_traces.append(i + 1)
-                    elif final_state['goals'][element] == 'true_true':
-                        executed_pending_count += 1
-                        executed_pending_traces.append(i + 1)
-                elif element in final_state['tasks']:
-                    if final_state['tasks'][element] == 'true_false':
-                        satisfied_count += 1
-                        satisfied_traces.append(i + 1)
-                    elif final_state['tasks'][element] == 'true_true':
-                        executed_pending_count += 1
-                        executed_pending_traces.append(i + 1)
-            element_stats[element] = {
-                'satisfied_count': satisfied_count,
-                'executed_pending_count': executed_pending_count,
-                'unsatisfied_count': total_traces - satisfied_count - executed_pending_count,
-                'satisfied_percentage': (satisfied_count / total_traces) * 100,
-                'executed_pending_percentage': (executed_pending_count / total_traces) * 100,
-                'satisfied_traces': satisfied_traces,
-                'executed_pending_traces': executed_pending_traces
-            }
-        print(f"\n{'Element':<12} {'Type':<8} {'Satisfied %':<12} {'Exec.Pend %':<12} {'Unsatisfied %':<14} {'Satisfied Traces'}")
-        print("-" * 90)
-        for element in sorted(element_stats.keys()):
-            stats = element_stats[element]
-            element_type = self._get_element_type(element)
-            unsatisfied_percentage = 100 - stats['satisfied_percentage'] - stats['executed_pending_percentage']
-            traces_str = ', '.join(map(str, stats['satisfied_traces'])) if stats['satisfied_traces'] else 'None'
-            print(f"{element:<12} {element_type:<8} {stats['satisfied_percentage']:>10.1f}% "
-                  f"{stats['executed_pending_percentage']:>10.1f}% {unsatisfied_percentage:>12.1f}% {traces_str}")
-        print(f"\n{'='*80}")
-        print("QUALITY ANALYSIS")
-        print("="*80)
-        for quality in self.qualities.keys():
-            quality_stats = element_stats[quality]
-            print(f"\nQuality {quality}:")
-            print(f"  Fulfilled in {quality_stats['satisfied_count']}/{total_traces} traces ({quality_stats['satisfied_percentage']:.1f}%)")
-            print(f"  Traces where fulfilled: {', '.join(map(str, quality_stats['satisfied_traces'])) if quality_stats['satisfied_traces'] else 'None'}")
-        print(f"\n{'='*80}")
-        print("TRACE PATTERN ANALYSIS")
-        print("="*80)
-        successful_traces = []
-        unsuccessful_traces = []
-        for i, trace_result in enumerate(results):
-            final_state = trace_result['states'][-1]
-            if 'Q1' in final_state['qualities'] and final_state['qualities']['Q1'] == 'fulfilled':
-                successful_traces.append({'index': i + 1, 'trace': traces[i]})
-            else:
-                unsuccessful_traces.append({'index': i + 1, 'trace': traces[i]})
-        print(f"Successful traces: {len(successful_traces)} ({len(successful_traces)/total_traces*100:.1f}%)")
-        for trace_info in successful_traces:
-            print(f"  Trace {trace_info['index']}: {' -> '.join(trace_info['trace'])}")
-        print(f"\nUnsuccessful traces: {len(unsuccessful_traces)} ({len(unsuccessful_traces)/total_traces*100:.1f}%)")
-        for trace_info in unsuccessful_traces:
-            print(f"  Trace {trace_info['index']}: {' -> '.join(trace_info['trace'])}")
-        print("="*80)
-        return element_stats
 
     def print_final_status(self):
         print("\n" + "="*50)
@@ -396,78 +678,72 @@ class GoalModel:
         print("-" * 50)
         
     def all_events(self) -> list[str]:
-        return goals_and_tasks(self)
+        return self.goals_and_tasks()
     
     def goals_and_tasks(self) -> list[str]:
         return list(self.goals.keys()) + list(self.tasks.keys())
     
     def get_events(self) -> list[str]:
-        leaves = [e for e in list(self.goals.keys()) + list(self.tasks.keys()) if e not in {link[0] for link in self.links}]
-        return leaves
+        return list(self.leaves())
+
+    @staticmethod
+    def _canonical_element_key(value: str) -> str:
+        import re
+        value = re.sub(r'\s+\([A-Z]\)\s*$', '', value.strip())
+        return re.sub(r'\s+', ' ', value).casefold()
+
+    def canonicalize_activity_mapping(
+        self,
+        activity_mapping: Dict[str, Set[str]],
+    ) -> Dict[str, Set[str]]:
+        elements = self.elements()
+        by_key: Dict[str, Set[str]] = {}
+        for element in elements:
+            by_key.setdefault(self._canonical_element_key(element), set()).add(element)
+
+        canonical_mapping: Dict[str, Set[str]] = {}
+        for activity, mapped_elements in activity_mapping.items():
+            resolved_elements: Set[str] = set()
+            for element in mapped_elements:
+                if element in elements:
+                    resolved_elements.add(element)
+                    continue
+                matches = by_key.get(self._canonical_element_key(element), set())
+                resolved_elements.add(next(iter(matches)) if len(matches) == 1 else element)
+            canonical_mapping[activity] = resolved_elements
+        return canonical_mapping
         
-    def generate_all_events_petri_net(self):
-        event_names = self.get_events()
-        # Minimal Petri net classes for construction
-        class Place:
-            def __init__(self, name):
-                self.name = name
-
-        class Transition:
-            def __init__(self, name, label):
-                self.name = name
-                self.label = label
-                self.in_arcs = []
-                self.out_arcs = []
-
-        class Arc:
-            def __init__(self, source, target):
-                self.source = source
-                self.target = target
-
-        class Net:
-            def __init__(self, places, transitions, arcs):
-                self.places = places
-                self.transitions = transitions
-                self.arcs = arcs
-
-        # Create one place
-        place = Place("p1")
+    def _build_petri_net(self, event_names):
+        place = _Place("p1")
         places = [place]
-
-        # Create transitions and arcs
         transitions = []
         arcs = []
-        counter = 1
         for event in event_names:
-            t = Transition(event,event)
-            counter += 1
-            # Arc from place to transition
-            arc_in = Arc(place, t)
+            t = _Transition(event, event)
+            arc_in = _Arc(place, t)
             t.in_arcs.append(arc_in)
             arcs.append(arc_in)
-            # Arc from transition to place
-            arc_out = Arc(t, place)
+            arc_out = _Arc(t, place)
             t.out_arcs.append(arc_out)
             arcs.append(arc_out)
             transitions.append(t)
-
-        net = Net(places, transitions, arcs)
-
-        # Positions for drawing (optional, simple layout)
+        net = _Net(places, transitions, arcs)
         positions = {
             'places': [(0.68, 0.75, "p1")],
             'transitions': [
                 (1.99 + i*0.4, 0.75 + (i%2)*0.60 - 0.3, t.name, t.label) for i, t in enumerate(transitions)
             ]
         }
-
-        # Initial marking: one token in p1
         init = {"p1": 1}
         final = {}
-
         petri_net = PetriNet(net, init, final, positions)
         self.event_mapping = {}
         for t in net.transitions:
             self.add_event_mapping(t.name, t.name)
-
         return petri_net
+
+    def generate_all_events_petri_net(self):
+        return self._build_petri_net(self.get_events())
+
+    def generate_all_events_petri_net_simple(self):
+        return self._build_petri_net(list(self.elements()))

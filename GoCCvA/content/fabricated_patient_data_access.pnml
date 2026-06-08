@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="imported_1777475547.037131" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text>imported_1777475547.037131</text>
+    </name>
+    <page id="n0">
+      <place id="start">
+        <name>
+          <text>start</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="after_format">
+        <name>
+          <text>after_format</text>
+        </name>
+      </place>
+      <place id="after_verify">
+        <name>
+          <text>after_verify</text>
+        </name>
+      </place>
+      <place id="end">
+        <name>
+          <text>end</text>
+        </name>
+      </place>
+      <place id="verified_branch">
+        <name>
+          <text>verified_branch</text>
+        </name>
+      </place>
+      <transition id="t_verify">
+        <name>
+          <text>Verify identity</text>
+        </name>
+      </transition>
+      <transition id="t_regular">
+        <name>
+          <text>Format Data Regular Needs</text>
+        </name>
+      </transition>
+      <transition id="t_denied">
+        <name>
+          <text>Identity denied</text>
+        </name>
+      </transition>
+      <transition id="t_special">
+        <name>
+          <text>Format Data Special Needs</text>
+        </name>
+      </transition>
+      <transition id="t_verified">
+        <name>
+          <text>Identity verified</text>
+        </name>
+      </transition>
+      <transition id="t_provide">
+        <name>
+          <text>Provide Records</text>
+        </name>
+      </transition>
+      <arc id="4969875152" source="t_provide" target="end"/>
+      <arc id="4969875216" source="t_special" target="after_format"/>
+      <arc id="4969879824" source="after_format" target="t_provide"/>
+      <arc id="4969881616" source="after_verify" target="t_denied"/>
+      <arc id="4969879888" source="start" target="t_verify"/>
+      <arc id="4969883344" source="t_denied" target="end"/>
+      <arc id="4969883600" source="t_verify" target="after_verify"/>
+      <arc id="4969877008" source="after_verify" target="t_verified"/>
+      <arc id="4969876112" source="t_verified" target="verified_branch"/>
+      <arc id="4969876880" source="verified_branch" target="t_regular"/>
+      <arc id="4969877200" source="verified_branch" target="t_special"/>
+      <arc id="4969877072" source="t_regular" target="after_format"/>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="end">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>

@@ -1,0 +1,1744 @@
+[
+  {
+    "trace_id": 1,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 2,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 3,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 4,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 5,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 6,
+    "trace": [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity verified",
+        "Identity verified"
+      ],
+      [
+        "Format Data Regular Needs",
+        "Format Data Regular Needs"
+      ],
+      [
+        "Provide Records",
+        "Provide Records"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity verified",
+          "Identity verified"
+        ],
+        "mapped_tasks": [
+          "(System) Identity verified"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Format Data Regular Needs",
+          "Format Data Regular Needs"
+        ],
+        "mapped_tasks": [
+          "Format Data Regular Needs"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Provide Records",
+          "Provide Records"
+        ],
+        "mapped_tasks": [
+          "Provide Records"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "satisfied",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "satisfied",
+      "Identity denied": "unknown",
+      "(System) Identity verified": "satisfied",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "satisfied",
+      "Identity verified": "satisfied",
+      "(Officer) data easily accesible": "denied",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "satisfied"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 7,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 8,
+    "trace": [
+      "Manual accessibility check",
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Manual accessibility check",
+        ">>"
+      ],
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Manual accessibility check",
+          ">>"
+        ],
+        "mapped_tasks": [],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "ND",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "ND",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 9,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 10,
+    "trace": [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity verified",
+        "Identity verified"
+      ],
+      [
+        "Format Data Special Needs",
+        "Format Data Special Needs"
+      ],
+      [
+        "Provide Records",
+        "Provide Records"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity verified",
+          "Identity verified"
+        ],
+        "mapped_tasks": [
+          "(System) Identity verified"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Format Data Special Needs",
+          "Format Data Special Needs"
+        ],
+        "mapped_tasks": [
+          "Format Data Special Needs"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Provide Records",
+          "Provide Records"
+        ],
+        "mapped_tasks": [
+          "Provide Records"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "satisfied"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "satisfied"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "satisfied",
+      "Provide Records": "satisfied",
+      "Identity denied": "unknown",
+      "(System) Identity verified": "satisfied",
+      "Verify identity": "satisfied",
+      "Data access provided": "satisfied",
+      "(Officer) Identity verified": "satisfied",
+      "Identity verified": "satisfied",
+      "(Officer) data easily accesible": "satisfied",
+      "confidentiality": "unknown",
+      "data easily accesible": "satisfied",
+      "appropriate measures": "satisfied"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 11,
+    "trace": [
+      "Verify identity",
+      "Manual accessibility check",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Manual accessibility check",
+        ">>"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Manual accessibility check",
+          ">>"
+        ],
+        "mapped_tasks": [],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "ND",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "ND",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 12,
+    "trace": [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity verified",
+        "Identity verified"
+      ],
+      [
+        "Format Data Special Needs",
+        "Format Data Special Needs"
+      ],
+      [
+        "Provide Records",
+        "Provide Records"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity verified",
+          "Identity verified"
+        ],
+        "mapped_tasks": [
+          "(System) Identity verified"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Format Data Special Needs",
+          "Format Data Special Needs"
+        ],
+        "mapped_tasks": [
+          "Format Data Special Needs"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Provide Records",
+          "Provide Records"
+        ],
+        "mapped_tasks": [
+          "Provide Records"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "satisfied"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "satisfied"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "satisfied",
+      "Provide Records": "satisfied",
+      "Identity denied": "unknown",
+      "(System) Identity verified": "satisfied",
+      "Verify identity": "satisfied",
+      "Data access provided": "satisfied",
+      "(Officer) Identity verified": "satisfied",
+      "Identity verified": "satisfied",
+      "(Officer) data easily accesible": "satisfied",
+      "confidentiality": "unknown",
+      "data easily accesible": "satisfied",
+      "appropriate measures": "satisfied"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 13,
+    "trace": [
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        ">>",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          ">>",
+          "Verify identity"
+        ],
+        "mapped_tasks": [],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "unknown",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 14,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 15,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 16,
+    "trace": [
+      "Verify identity",
+      "Identity denied"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity denied",
+        "Identity denied"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity denied",
+          "Identity denied"
+        ],
+        "mapped_tasks": [
+          "Identity denied"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "unknown",
+      "Identity denied": "satisfied",
+      "(System) Identity verified": "unknown",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "unknown",
+      "Identity verified": "unknown",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "unknown"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 17,
+    "trace": [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity verified",
+        "Identity verified"
+      ],
+      [
+        "Format Data Regular Needs",
+        "Format Data Regular Needs"
+      ],
+      [
+        "Provide Records",
+        "Provide Records"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity verified",
+          "Identity verified"
+        ],
+        "mapped_tasks": [
+          "(System) Identity verified"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Format Data Regular Needs",
+          "Format Data Regular Needs"
+        ],
+        "mapped_tasks": [
+          "Format Data Regular Needs"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Provide Records",
+          "Provide Records"
+        ],
+        "mapped_tasks": [
+          "Provide Records"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "satisfied",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "satisfied",
+      "Identity denied": "unknown",
+      "(System) Identity verified": "satisfied",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "satisfied",
+      "Identity verified": "satisfied",
+      "(Officer) data easily accesible": "denied",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "satisfied"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  },
+  {
+    "trace_id": 18,
+    "trace": [
+      "Verify identity",
+      "Identity verified",
+      "Provide Records"
+    ],
+    "pm4py_alignment": [
+      [
+        "Verify identity",
+        "Verify identity"
+      ],
+      [
+        "Identity verified",
+        "Identity verified"
+      ],
+      [
+        ">>",
+        "Format Data Special Needs"
+      ],
+      [
+        "Provide Records",
+        "Provide Records"
+      ]
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity",
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Identity verified",
+          "Identity verified"
+        ],
+        "mapped_tasks": [
+          "(System) Identity verified"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          ">>",
+          "Format Data Special Needs"
+        ],
+        "mapped_tasks": [],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Provide Records",
+          "Provide Records"
+        ],
+        "mapped_tasks": [
+          "Provide Records"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "unknown",
+      "Provide Records": "satisfied",
+      "Identity denied": "unknown",
+      "(System) Identity verified": "satisfied",
+      "Verify identity": "satisfied",
+      "Data access provided": "unknown",
+      "(Officer) Identity verified": "satisfied",
+      "Identity verified": "satisfied",
+      "(Officer) data easily accesible": "unknown",
+      "confidentiality": "unknown",
+      "data easily accesible": "unknown",
+      "appropriate measures": "satisfied"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  }
+]

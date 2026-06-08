@@ -1,0 +1,216 @@
+{
+  "actors": [
+    {
+      "id": "bda083fe-1fb4-41cf-aea9-449c0d4044b5",
+      "text": "",
+      "type": "istar.Role",
+      "x": 48,
+      "y": 41,
+      "customProperties": {
+        "Description": "Someone that needs to undestand the goals of an organizations"
+      },
+      "nodes": [
+        {
+          "id": "ab3313df-175f-4b2b-9486-c0915a3d1cd4",
+          "text": "Post invoice",
+          "type": "istar.Task",
+          "x": 488,
+          "y": 291,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8cc94931-99dd-441e-bf97-9b08c03ae576",
+          "text": "Check invoice for mismatches",
+          "type": "istar.Task",
+          "x": 368,
+          "y": 290,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "7d54a80c-38eb-4d6f-b7c9-baec6c9f2649",
+          "text": "Re-send invoice to customer",
+          "type": "istar.Task",
+          "x": 193,
+          "y": 404,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "a4fcf008-3cad-45f9-b3d6-6bd449e8ae74",
+          "text": "Block invoice",
+          "type": "istar.Task",
+          "x": 308,
+          "y": 403,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "0ccdc6d0-ce2f-488b-81d2-0ca029a60dea",
+          "text": "Park invoice",
+          "type": "istar.Task",
+          "x": 210,
+          "y": 125,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "0d852d4d-2c0f-4906-a53e-ba731c2a6f63",
+          "text": "Invoice Handled",
+          "type": "istar.Goal",
+          "x": 277,
+          "y": 41,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c88b5a48-94eb-4f91-8cbc-f4342cbc9b2f",
+          "text": "Mismatches detected",
+          "type": "istar.Goal",
+          "x": 235,
+          "y": 285,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "4a3dc115-cc90-4b95-85c3-8e1a1bcd8a07",
+          "text": "zero mistmatches",
+          "type": "istar.Quality",
+          "x": 424,
+          "y": 389,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "edcf4691-3a50-4e33-9f8b-a4eff6332ac2",
+          "text": "Mismatches handled",
+          "type": "istar.Goal",
+          "x": 288,
+          "y": 188.5,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b889b93c-3802-45a3-b61e-748f0e41ded3",
+          "text": "Invoice posted",
+          "type": "istar.Goal",
+          "x": 424,
+          "y": 190,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3a8bebf0-0573-4329-ba97-0c32760d5db3",
+          "text": "Decision made",
+          "type": "istar.Goal",
+          "x": 349,
+          "y": 124,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "79f52238-c0ce-497d-826e-ed458420c629",
+      "type": "istar.OrRefinementLink",
+      "source": "7d54a80c-38eb-4d6f-b7c9-baec6c9f2649",
+      "target": "c88b5a48-94eb-4f91-8cbc-f4342cbc9b2f"
+    },
+    {
+      "id": "4e3a3975-7cb0-49d7-9889-807f11ff7370",
+      "type": "istar.OrRefinementLink",
+      "source": "a4fcf008-3cad-45f9-b3d6-6bd449e8ae74",
+      "target": "c88b5a48-94eb-4f91-8cbc-f4342cbc9b2f"
+    },
+    {
+      "id": "e4877f38-afe1-4157-b3a9-11b5741cfe78",
+      "type": "istar.AndRefinementLink",
+      "source": "c88b5a48-94eb-4f91-8cbc-f4342cbc9b2f",
+      "target": "edcf4691-3a50-4e33-9f8b-a4eff6332ac2"
+    },
+    {
+      "id": "62330e0d-3070-499d-a301-08f05119a7ad",
+      "type": "istar.AndRefinementLink",
+      "source": "8cc94931-99dd-441e-bf97-9b08c03ae576",
+      "target": "edcf4691-3a50-4e33-9f8b-a4eff6332ac2"
+    },
+    {
+      "id": "e6a48860-7ad7-4989-b564-32db5c04a9ec",
+      "type": "istar.ContributionLink",
+      "source": "c88b5a48-94eb-4f91-8cbc-f4342cbc9b2f",
+      "target": "4a3dc115-cc90-4b95-85c3-8e1a1bcd8a07",
+      "label": "break"
+    },
+    {
+      "id": "57c0e64f-80f7-4091-9ea1-9d7ed212e206",
+      "type": "istar.ContributionLink",
+      "source": "ab3313df-175f-4b2b-9486-c0915a3d1cd4",
+      "target": "4a3dc115-cc90-4b95-85c3-8e1a1bcd8a07",
+      "label": "make"
+    },
+    {
+      "id": "964051f3-b684-4b84-a52a-6886b639fb05",
+      "type": "istar.AndRefinementLink",
+      "source": "ab3313df-175f-4b2b-9486-c0915a3d1cd4",
+      "target": "b889b93c-3802-45a3-b61e-748f0e41ded3"
+    },
+    {
+      "id": "f0b93c53-7a37-49fe-9036-c0b8b69b3eb6",
+      "type": "istar.AndRefinementLink",
+      "source": "8cc94931-99dd-441e-bf97-9b08c03ae576",
+      "target": "b889b93c-3802-45a3-b61e-748f0e41ded3"
+    },
+    {
+      "id": "1ab616fe-53c2-4e46-b441-5dc9b4e4e0be",
+      "type": "istar.AndRefinementLink",
+      "source": "3a8bebf0-0573-4329-ba97-0c32760d5db3",
+      "target": "0d852d4d-2c0f-4906-a53e-ba731c2a6f63"
+    },
+    {
+      "id": "388a5ea7-ada1-4722-a655-41bded0ba459",
+      "type": "istar.AndRefinementLink",
+      "source": "0ccdc6d0-ce2f-488b-81d2-0ca029a60dea",
+      "target": "0d852d4d-2c0f-4906-a53e-ba731c2a6f63"
+    },
+    {
+      "id": "a1579197-222e-4d5a-a19d-8503f11e223a",
+      "type": "istar.OrRefinementLink",
+      "source": "b889b93c-3802-45a3-b61e-748f0e41ded3",
+      "target": "3a8bebf0-0573-4329-ba97-0c32760d5db3"
+    },
+    {
+      "id": "c987da95-a813-461a-aa9c-3287c4fde480",
+      "type": "istar.OrRefinementLink",
+      "source": "edcf4691-3a50-4e33-9f8b-a4eff6332ac2",
+      "target": "3a8bebf0-0573-4329-ba97-0c32760d5db3"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 17 Mar 2026 20:17:26 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "name": "Welcome Model",
+    "customProperties": {
+      "Description": "Welcome to the piStar tool version 2.1.0, released on November, 2021! This model describes some of the recent improvements in the tool. Click on the purple elements for further info.\n\nFor help using this tool, please check the Help menu above"
+    }
+  }
+}

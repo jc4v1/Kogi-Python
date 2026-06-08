@@ -1,0 +1,105 @@
+{
+  "actors": [
+    {
+      "id": "1a9241fe-1394-4251-8e53-41748335c264",
+      "text": "Actor 1",
+      "type": "istar.Actor",
+      "x": 75,
+      "y": 89,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "f27c942b-0252-412e-8561-507b4e9d8ceb",
+          "text": "Q1",
+          "type": "istar.Quality",
+          "x": 233,
+          "y": 130,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "6bb15d60-c21d-4987-85e1-252bb63d9e62",
+          "text": "T1",
+          "type": "istar.Task",
+          "x": 75,
+          "y": 155,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "865185d8-1ed3-4371-b073-83b5421b3597",
+      "text": "Actor 2",
+      "type": "istar.Actor",
+      "x": 677,
+      "y": 84,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "0d2c2fc5-7423-4459-86a6-1a9f27e6b422",
+          "text": "Q3",
+          "type": "istar.Quality",
+          "x": 742,
+          "y": 130,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "8d5fa7bd-7736-4c90-9439-cba9fd87fe5a",
+      "text": "Q2",
+      "type": "istar.Quality",
+      "x": 489,
+      "y": 145.75,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "0d2c2fc5-7423-4459-86a6-1a9f27e6b422",
+      "target": "f27c942b-0252-412e-8561-507b4e9d8ceb"
+    }
+  ],
+  "links": [
+    {
+      "id": "b778f4aa-b3d1-4404-9cd1-c7c1f74ec5f2",
+      "type": "istar.DependencyLink",
+      "source": "8d5fa7bd-7736-4c90-9439-cba9fd87fe5a",
+      "target": "f27c942b-0252-412e-8561-507b4e9d8ceb"
+    },
+    {
+      "id": "aea93a1f-8e96-4283-bc7a-912fc11fac09",
+      "type": "istar.DependencyLink",
+      "source": "0d2c2fc5-7423-4459-86a6-1a9f27e6b422",
+      "target": "8d5fa7bd-7736-4c90-9439-cba9fd87fe5a"
+    },
+    {
+      "id": "88425bdc-b866-4bab-bad3-f4cf35ee40ca",
+      "type": "istar.ContributionLink",
+      "source": "6bb15d60-c21d-4987-85e1-252bb63d9e62",
+      "target": "f27c942b-0252-412e-8561-507b4e9d8ceb",
+      "label": "make"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Sat, 25 Apr 2026 21:43:46 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

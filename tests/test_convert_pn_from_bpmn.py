@@ -1,6 +1,6 @@
-from Semantics.istar_processor import read_istar_model
-from Semantics.event_mapping_from_csv import read_event_mapping_csv
-from Semantics.petri_net_processor import PetriNet
+from Semantics.parsers.istar_processor import read_istar_model
+from Semantics.parsers.event_mapping_from_csv import read_event_mapping_csv
+from Semantics.parsers.petri_net_processor import PetriNet
 import pm4py
 
 def test_convert_bpmn_to_petri_net():

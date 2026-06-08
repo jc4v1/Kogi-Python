@@ -1,0 +1,74 @@
+{
+  "clean_log": [
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records",
+      "Manual accessibility check"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Format Data Regular Needs",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ]
+  ],
+  "noisy_log": [
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records",
+      "Manual accessibility check"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Format Data Regular Needs",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ]
+  ]
+}

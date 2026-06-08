@@ -1,0 +1,237 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3873681961="" id="drawingArea" class="canvas"><style>.import-hint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.import-hint p {
+    max-width: 800px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.canvas {
+    width: 100%;
+    height: 70vh;
+    border-style: dotted;
+    border-color: lightgrey;
+    transition: background-color 1s;
+    user-select: none;
+    box-sizing: border-box; /* make border be part of the 100% width */
+}
+
+.place {
+    fill: white;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.transition {
+    fill: white;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.transition.silent {
+    fill: black;
+}
+
+.arc {
+    fill: none;
+    stroke: black;
+    stroke-width: 2;
+}
+
+.background-arc {
+    fill: none;
+    stroke: transparent;
+    opacity: 0;
+    stroke-width: 10 !important;
+}
+
+.place-id {
+    fill: black;
+}
+
+.token-label {
+    fill: black;
+}
+
+.tansition-id {
+    fill: grey;
+}
+
+.arc-weight {
+    fill: black;
+}
+
+.arc-weight-background {
+    fill: white;
+    transition: fill 1s;
+}
+
+/**** PLAY MODE  ****/
+/*
+ * Adjusted styles for play mode
+ * these take effect once the drawing area svg
+ * has the play-mode class
+ */
+.canvas.play-mode {
+    background-color: #c0bfbc;
+}
+
+.play-mode .arc-weight-background {
+    fill: #c0bfbc;
+}
+.play-mode .transition.active {
+    cursor: pointer;
+    fill: green;
+}
+
+.play-mode .transition.active:hover {
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 1));
+}
+
+.play-mode .transition.active:active {
+    fill: lightgreen;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 1));
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 1));
+}
+
+/*
+ * Text nodes that follow transitions (here: rects within svg) should not have
+ * different cursors in play mode.
+ * All interaction events should be caught in the wrapper group element.
+ */
+.play-mode .transition.active ~ text {
+    cursor: pointer;
+}
+
+/* Styles for 'move' and 'anchor' mode */
+.canvas.move-mode:hover {
+    cursor: pointer;
+}
+
+.canvas.move-mode.dragging {
+    cursor: grabbing;
+}
+
+.anchor {
+    fill: black;
+    stroke: black;
+    stroke-width: 0px;
+}
+
+.line-segment {
+    stroke: transparent;
+    stroke-width: 10;
+}
+
+.editable {
+    filter: drop-shadow(0 0 3px rgba(255, 0, 0, 1));
+}
+
+.editable:active,
+.anchor.active,
+.canvas.move-mode.dragging .place,
+.canvas.move-mode.dragging .transition,
+.canvas.move-mode.dragging .arc,
+.canvas.move-mode.dragging .anchor {
+    stroke: red;
+    stroke-width: 2;
+}
+
+.move-mode .editable:active {
+    cursor: grabbing;
+}
+
+.no-pointer-events {
+    pointer-events: none;
+}
+
+.background-arc.editable:hover,
+.analyze-mode .pointer {
+    cursor: pointer;
+}
+
+/*
+ * Add hover effect
+ * In general elements should show the "hover"-Style only when they are
+ * currently being editable and the user is doing a mouseover/hover on
+ * the element:
+ * - Elements with class ".editable" oder ".line-segment" that are currently
+ *   being hovered
+ * - Elements with class ".anchor" that also have the ".active" class set
+ * - Elements with class ".arc" AND ".editable", that are direct children of
+ *   the ".arc-group"-Element currently being hovered. This is needed to be
+ *   able to highlight the main arcs when line-segments are hovered, as those
+ *   cannot get a drop shadow since they have no stroke color.
+ */
+.editable:hover,
+.line-segment:hover,
+.anchor.active,
+.arc-group:hover &gt; .arc.editable {
+    cursor: pointer;
+    /* stronger drop shadow to visible highlight the hovered element */
+    filter: drop-shadow(0 0 2px rgba(255, 0, 0, 1))
+        drop-shadow(0 0 3px rgba(255, 0, 0, 1));
+}
+
+.tab-transitioning .transition {
+    transition: fill 1s;
+}
+
+text.label {
+    text-anchor: middle;
+    dominant-baseline: central;
+    font-size: 15px;
+}
+
+/* Styles for Analyze-mode*/
+.analyze-mode .place-invariant {
+    fill: lightblue;
+}
+
+.analyze-mode text.place-invariant {
+    font-weight: bold;
+    fill: rgb(133, 186, 204);
+}
+</style><defs _ngcontent-ng-c3873681961=""><marker _ngcontent-ng-c3873681961="" id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon _ngcontent-ng-c3873681961="" points="0 0, 10 3.5, 0 7"/></marker></defs><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="182.41666666666674" cy="318" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="182.41666666666674" y="318" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="182.41666666666674" y="363"> p0 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="1088.0833333333335" cy="557" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="1088.0833333333335" y="557" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="1088.0833333333335" y="602"> p3 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="699.4166666666667" cy="575" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="699.4166666666667" y="575" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="699.4166666666667" y="620"> p2 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="366.75" cy="561" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="366.75" y="561" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="366.75" y="606"> p1 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="1927.0833333333333" cy="557" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="1927.0833333333333" y="557" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="1927.0833333333333" y="602"> p6 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="1367.75" cy="557" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="1367.75" y="557" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="1367.75" y="602"> p4 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="1647.4166666666667" cy="557" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="1647.4166666666667" y="557" class="token-label no-pointer-events"> 1 </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="1647.4166666666667" y="602"> p5 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="554.75" cy="261" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="554.75" y="261" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="554.75" y="306"> p7 </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961=""><circle _ngcontent-ng-c3873681961="" cx="1330.4166666666667" cy="215" r="25" class="place"><!----></circle><text _ngcontent-ng-c3873681961="" text-anchor="middle" dominant-baseline="central" x="1330.4166666666667" y="215" class="token-label no-pointer-events">  </text></g><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="place-id" x="1330.4166666666667" y="260"> p8 </text></g><!----><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="385.9166666666667" y="364" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="435.9166666666667" y="389" class="label no-pointer-events ng-star-inserted"> Declaration REJECTED
+by
+ADMIN. </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="435.9166666666667" y="434"> t_ra </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="495.58333333333326" y="549" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="545.5833333333333" y="574" class="label no-pointer-events ng-star-inserted"> Declaration APPROVED
+by
+ADMIN. </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="545.5833333333333" y="619"> t_apa </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="123.25000000000011" y="539" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="173.2500000000001" y="564" class="label no-pointer-events ng-star-inserted"> Declaration SUBMITTED
+by
+EMPLOYEE </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="173.2500000000001" y="609"> t_ds </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="836.2500000000001" y="548" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="886.2500000000001" y="573" class="label no-pointer-events ng-star-inserted"> Declaration APPROVED
+by
+BUDGET OWNER </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="886.2500000000001" y="618"> t_ba </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="806.5833333333333" y="314" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="856.5833333333333" y="339" class="label no-pointer-events ng-star-inserted"> Declaration REJECTED
+by
+SUPERVISOR </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="856.5833333333333" y="384"> t_rs </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="1177.9166666666667" y="532" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="1227.9166666666667" y="557" class="label no-pointer-events ng-star-inserted"> Declaration APPROVED
+by
+SUPERVISOR </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="1227.9166666666667" y="602"> t_as </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="1737.25" y="532" width="100" height="50" class="transition active"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="1787.25" y="557" class="label no-pointer-events ng-star-inserted"> Payment
+Handled
+by
+ADMIN </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="1787.25" y="602"> t_ph </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="137.2500000000001" y="137" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="187.2500000000001" y="162" class="label no-pointer-events ng-star-inserted"> Declaration SAVED
+by
+EMPLOYEE </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="187.2500000000001" y="207"> t_dsv </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="627.5833333333333" y="378" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="677.5833333333333" y="403" class="label no-pointer-events ng-star-inserted"> Declaration REJECTED
+by
+BUDGET OWNER </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="677.5833333333333" y="448"> t_rb </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="1148.5833333333333" y="186" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="1198.5833333333333" y="211" class="label no-pointer-events ng-star-inserted"> Declaration REJECTED
+by
+EMPLOYEE </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="1198.5833333333333" y="256"> t_er </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="1457.5833333333333" y="532" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="1507.5833333333333" y="557" class="label no-pointer-events ng-star-inserted"> Payment
+Requested
+by
+SUPERVISOR </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="1507.5833333333333" y="602"> t_rp </text></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><rect _ngcontent-ng-c3873681961="" x="263.58333333333326" y="259" width="100" height="50" class="transition"/><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><text _ngcontent-ng-c3873681961="" x="313.58333333333326" y="284" class="label no-pointer-events ng-star-inserted"> t_tau_rev </text><!----><!----></g><!----><text _ngcontent-ng-c3873681961="" text-anchor="middle" class="transition-id" x="313.58333333333326" y="329"> t_tau_rev </text></g><!----><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="459.12630208333337,364 537.7405526628507,279.32153654267967 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="459.12630208333337,364 537.7405526628507,279.32153654267967 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1392.75,557 1457.5833333333333,557 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1392.75,557 1457.5833333333333,557 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1837.25,557 1902.0833333333333,557 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1837.25,557 1902.0833333333333,557 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="186.47542735042745,187 183.1908678118706,293.0119906237659 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="186.47542735042745,187 183.1908678118706,293.0119906237659 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1113.0833333333335,557 1177.9166666666667,557 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1113.0833333333335,557 1177.9166666666667,557 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1557.5833333333333,557 1622.4166666666667,557 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1557.5833333333333,557 1622.4166666666667,557 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="181.48574093203288,342.9826615330832 174.18157181571826,539 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="181.48574093203288,342.9826615330832 174.18157181571826,539 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1277.9166666666667,557 1342.75,557 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1277.9166666666667,557 1342.75,557 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="724.4152343997611,574.73239713399 836.2500000000001,573.5352363960749 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="724.4152343997611,574.73239713399 836.2500000000001,573.5352363960749 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="806.5833333333333,326.07896189950304 578.954845427254,267.25503459964375 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="806.5833333333333,326.07896189950304 578.954845427254,267.25503459964375 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="376.07737740668296,537.8051723284414 425.86337209302326,414 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="376.07737740668296,537.8051723284414 425.86337209302326,414 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="696.2684794627813,550.1990137831317 680.7567829457364,428 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="696.2684794627813,550.1990137831317 680.7567829457364,428 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="936.2500000000001,569.0363336085879 1063.1615182810867,558.9756352147116 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="936.2500000000001,569.0363336085879 1063.1615182810867,558.9756352147116 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="391.6842065419131,562.8125518269052 495.58333333333326,570.3653308480895 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="391.6842065419131,562.8125518269052 495.58333333333326,570.3653308480895 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="655.9577464788732,378 571.1055138942899,279.90759543817495 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="655.9577464788732,378 571.1055138942899,279.90759543817495 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="529.8629225939605,263.3734738645704 363.58333333333326,279.23151347615755 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="529.8629225939605,263.3734738645704 363.58333333333326,279.23151347615755 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="183.1908678118706,293.0119906237659 186.47542735042745,187 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="183.1908678118706,293.0119906237659 186.47542735042745,187 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="595.5833333333333,574.3250270855905 674.4171948629586,574.8374898907668 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="595.5833333333333,574.3250270855905 674.4171948629586,574.8374898907668 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="579.6749511440817,259.064332036442 1148.5833333333333,214.8829924928812 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="579.6749511440817,259.064332036442 1148.5833333333333,214.8829924928812 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="263.58333333333326,296.96060991105463 206.61686576765152,311.72701319364563 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="263.58333333333326,296.96060991105463 206.61686576765152,311.72701319364563 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1672.4166666666667,557 1737.25,557 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1672.4166666666667,557 1737.25,557 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1248.5833333333333,212.51706700379268 1305.428166188927,214.24181540901927 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1248.5833333333333,212.51706700379268 1305.428166188927,214.24181540901927 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="223.2500000000001,563.2248062015503 341.7530040855672,561.3875503242548 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="223.2500000000001,563.2248062015503 341.7530040855672,561.3875503242548 " class="arc"/><!----><!----></g><!----></g><g _ngcontent-ng-c3873681961="" class="ng-star-inserted"><g _ngcontent-ng-c3873681961="" class="arc-group"><polyline _ngcontent-ng-c3873681961="" class="background-arc" points="1069.8829503596048,539.8609784523851 883.1314984709479,364 "/><polyline _ngcontent-ng-c3873681961="" marker-end="url(#arrow)" points="1069.8829503596048,539.8609784523851 883.1314984709479,364 " class="arc"/><!----><!----></g><!----></g><!----><!----></svg>

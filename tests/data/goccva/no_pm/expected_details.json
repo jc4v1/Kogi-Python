@@ -1,0 +1,112 @@
+[
+  {
+    "trace_id": 1,
+    "trace": [
+      "Verify identity",
+      "(System) Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    "goal_oriented_alignment": [
+      {
+        "move": [
+          "Verify identity"
+        ],
+        "mapped_tasks": [
+          "Verify identity"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "NR",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "(System) Identity verified"
+        ],
+        "mapped_tasks": [
+          "(System) Identity verified"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Format Data Special Needs"
+        ],
+        "mapped_tasks": [
+          "Format Data Special Needs"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "unknown"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "unknown"
+          }
+        ]
+      },
+      {
+        "move": [
+          "Provide Records"
+        ],
+        "mapped_tasks": [
+          "Provide Records"
+        ],
+        "theta": [
+          {
+            "target": "Data access provided",
+            "label": "M",
+            "status": "satisfied"
+          },
+          {
+            "target": "data easily accesible",
+            "label": "NR",
+            "status": "satisfied"
+          }
+        ]
+      }
+    ],
+    "final_marking": {
+      "Format Data Regular Needs": "unknown",
+      "Format Data Special Needs": "satisfied",
+      "Provide Records": "satisfied",
+      "Identity denied": "unknown",
+      "(System) Identity verified": "satisfied",
+      "Verify identity": "satisfied",
+      "Data access provided": "satisfied",
+      "(Officer) Identity verified": "satisfied",
+      "Identity verified": "satisfied",
+      "(Officer) data easily accesible": "satisfied",
+      "confidentiality": "unknown",
+      "data easily accesible": "satisfied",
+      "appropriate measures": "satisfied"
+    },
+    "targets": [
+      "Data access provided",
+      "data easily accesible"
+    ]
+  }
+]

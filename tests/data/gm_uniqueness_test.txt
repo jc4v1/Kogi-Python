@@ -1,0 +1,197 @@
+{
+  "actors": [
+    {
+      "id": "92709c08-cc39-460a-bbb7-7d9d87ab0178",
+      "text": "Actor",
+      "type": "istar.Actor",
+      "x": 885,
+      "y": 250,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "f840c0d7-f4c5-4652-940b-542ed03f03ad",
+          "text": "G1",
+          "type": "istar.Goal",
+          "x": 954,
+          "y": 317,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "a2b274f8-b787-4d5c-8f24-c5b437a5bbfa",
+      "text": "Actor 1",
+      "type": "istar.Actor",
+      "x": 174,
+      "y": 205,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "ad913790-fc57-42a6-8d2c-576e0df9143e",
+          "text": "duplicated name 1",
+          "type": "istar.Task",
+          "x": 232,
+          "y": 258,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9cddba16-8c5e-4529-ab7e-cdf5d5a5cd8c",
+          "text": "Quality",
+          "type": "istar.Quality",
+          "x": 241,
+          "y": 329,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "4a826c23-7a41-4331-bc89-fd0b10589598",
+      "text": "Actor 2",
+      "type": "istar.Actor",
+      "x": 588,
+      "y": 219,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "1f40484a-75ff-4568-8624-ec54b1ebecb2",
+          "text": "duplicated name 1",
+          "type": "istar.Goal",
+          "x": 641,
+          "y": 270.5,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9086e2f7-1bc4-4bbe-8b55-3c0c6b1c6afc",
+          "text": "duplicated name 2",
+          "type": "istar.Task",
+          "x": 652,
+          "y": 349,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "f275a1c9-3cb9-4ca0-b527-c72db789559e",
+          "text": "Q1",
+          "type": "istar.Quality",
+          "x": 658,
+          "y": 440,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "e2bb2df8-ba28-4156-921e-c3d6028ea17c",
+      "text": "duplicated name 1",
+      "type": "istar.Task",
+      "x": 444,
+      "y": 264.25,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "1f40484a-75ff-4568-8624-ec54b1ebecb2",
+      "target": "ad913790-fc57-42a6-8d2c-576e0df9143e"
+    },
+    {
+      "id": "02d51f99-d708-4e4c-8e97-d5c8bea640ab",
+      "text": "duplicated name 2",
+      "type": "istar.Quality",
+      "x": 454,
+      "y": 339,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "9086e2f7-1bc4-4bbe-8b55-3c0c6b1c6afc",
+      "target": "9cddba16-8c5e-4529-ab7e-cdf5d5a5cd8c"
+    },
+    {
+      "id": "be7251cd-59ea-4f36-8a1a-e6abb4410c93",
+      "text": "duplicated name 1",
+      "type": "istar.Goal",
+      "x": 806,
+      "y": 378.5,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "f275a1c9-3cb9-4ca0-b527-c72db789559e",
+      "target": "f840c0d7-f4c5-4652-940b-542ed03f03ad"
+    }
+  ],
+  "links": [
+    {
+      "id": "cd60f1c7-d242-43fe-a241-2b6ee3684a54",
+      "type": "istar.DependencyLink",
+      "source": "be7251cd-59ea-4f36-8a1a-e6abb4410c93",
+      "target": "f840c0d7-f4c5-4652-940b-542ed03f03ad"
+    },
+    {
+      "id": "f5bf32ce-4996-4317-af66-68ff1fab49c7",
+      "type": "istar.DependencyLink",
+      "source": "f275a1c9-3cb9-4ca0-b527-c72db789559e",
+      "target": "be7251cd-59ea-4f36-8a1a-e6abb4410c93"
+    },
+    {
+      "id": "514272ed-5b19-4a17-90e0-82970cdbd1be",
+      "type": "istar.DependencyLink",
+      "source": "02d51f99-d708-4e4c-8e97-d5c8bea640ab",
+      "target": "9cddba16-8c5e-4529-ab7e-cdf5d5a5cd8c"
+    },
+    {
+      "id": "2cc370bf-efec-4aea-ab46-0a1affa831f5",
+      "type": "istar.DependencyLink",
+      "source": "9086e2f7-1bc4-4bbe-8b55-3c0c6b1c6afc",
+      "target": "02d51f99-d708-4e4c-8e97-d5c8bea640ab"
+    },
+    {
+      "id": "3c6391fd-9848-46e8-be5d-d5202a99f5a7",
+      "type": "istar.DependencyLink",
+      "source": "e2bb2df8-ba28-4156-921e-c3d6028ea17c",
+      "target": "ad913790-fc57-42a6-8d2c-576e0df9143e"
+    },
+    {
+      "id": "fdb41e08-fcdc-4d1c-8496-69314913f05f",
+      "type": "istar.DependencyLink",
+      "source": "1f40484a-75ff-4568-8624-ec54b1ebecb2",
+      "target": "e2bb2df8-ba28-4156-921e-c3d6028ea17c"
+    }
+  ],
+  "display": {
+    "fdb41e08-fcdc-4d1c-8496-69314913f05f": {
+      "vertices": [
+        {
+          "x": 522,
+          "y": 278
+        }
+      ]
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Wed, 06 May 2026 21:47:32 GMT",
+  "diagram": {
+    "width": 1112,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

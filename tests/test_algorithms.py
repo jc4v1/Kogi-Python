@@ -56,8 +56,8 @@ def test_forward_bfs(simple_lts):
 
 def test_backward_bfs(simple_lts):
     s0, s1, s2 = sorted(list(simple_lts.states()), key=lambda x: x.name)
-    assert backward_bfs(simple_lts, {s1}) == {s0, s1, s2}
-    assert backward_bfs(simple_lts, {s0}) == {s0, s1, s2}
+    assert backward_bfs(simple_lts, {s1})[0] == {s0, s1, s2}
+    assert backward_bfs(simple_lts, {s0})[0] == {s0, s1, s2}
 
 def test_check_stable_system_holds(stable_lts):
     qualities_to_check = {'p'}

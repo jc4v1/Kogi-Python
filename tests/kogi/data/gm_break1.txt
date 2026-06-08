@@ -1,0 +1,156 @@
+{
+  "actors": [
+    {
+      "id": "865185d8-1ed3-4371-b073-83b5421b3597",
+      "text": "Actor 2",
+      "type": "istar.Actor",
+      "x": 584,
+      "y": 65,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "60f25143-99ef-4bfb-a0a7-e8fe4a1456e5",
+          "text": "T4",
+          "type": "istar.Task",
+          "x": 854,
+          "y": 157,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "467e4222-6d48-4655-a687-aa0bca308897",
+          "text": "Q1",
+          "type": "istar.Quality",
+          "x": 732,
+          "y": 65,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "837d6a42-82a9-469b-ada7-4b59f1dab922",
+          "text": "T3",
+          "type": "istar.Task",
+          "x": 608.5,
+          "y": 152,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "4e4aa677-fbd6-47c8-acfc-96e65ec51e52",
+          "text": "Q3",
+          "type": "istar.Quality",
+          "x": 724,
+          "y": 227,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3a868bb9-4b63-417b-afeb-ec82c6a85f72",
+          "text": "T5",
+          "type": "istar.Task",
+          "x": 859,
+          "y": 206,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "1a9241fe-1394-4251-8e53-41748335c264",
+      "text": "Actor 1",
+      "type": "istar.Actor",
+      "x": 71,
+      "y": 77,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "6bb15d60-c21d-4987-85e1-252bb63d9e62",
+          "text": "T1",
+          "type": "istar.Task",
+          "x": 127,
+          "y": 136,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "c42ff5e0-da3e-4aec-8693-7030fdc097be",
+      "text": "Q2",
+      "type": "istar.Quality",
+      "x": 365,
+      "y": 125,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "837d6a42-82a9-469b-ada7-4b59f1dab922",
+      "target": "6bb15d60-c21d-4987-85e1-252bb63d9e62"
+    }
+  ],
+  "links": [
+    {
+      "id": "25843d66-1c74-4ac5-b66e-ba4fe01843bb",
+      "type": "istar.DependencyLink",
+      "source": "c42ff5e0-da3e-4aec-8693-7030fdc097be",
+      "target": "6bb15d60-c21d-4987-85e1-252bb63d9e62"
+    },
+    {
+      "id": "4eb1e35a-0dc4-4f59-b477-1267e7e27f70",
+      "type": "istar.DependencyLink",
+      "source": "837d6a42-82a9-469b-ada7-4b59f1dab922",
+      "target": "c42ff5e0-da3e-4aec-8693-7030fdc097be"
+    },
+    {
+      "id": "eff22d02-75b6-4501-86b4-2b0f8aff3575",
+      "type": "istar.ContributionLink",
+      "source": "60f25143-99ef-4bfb-a0a7-e8fe4a1456e5",
+      "target": "467e4222-6d48-4655-a687-aa0bca308897",
+      "label": "break"
+    },
+    {
+      "id": "4cde87ed-2ec8-439a-9bab-b76e3c1c72c9",
+      "type": "istar.ContributionLink",
+      "source": "837d6a42-82a9-469b-ada7-4b59f1dab922",
+      "target": "467e4222-6d48-4655-a687-aa0bca308897",
+      "label": "make"
+    },
+    {
+      "id": "274c3ae7-94fb-42a5-8fbd-90bd2c5f8c70",
+      "type": "istar.ContributionLink",
+      "source": "837d6a42-82a9-469b-ada7-4b59f1dab922",
+      "target": "4e4aa677-fbd6-47c8-acfc-96e65ec51e52",
+      "label": "break"
+    },
+    {
+      "id": "67aa8c7a-6c5a-474d-be10-1236bda4a051",
+      "type": "istar.ContributionLink",
+      "source": "3a868bb9-4b63-417b-afeb-ec82c6a85f72",
+      "target": "4e4aa677-fbd6-47c8-acfc-96e65ec51e52",
+      "label": "make"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Wed, 06 May 2026 18:19:39 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

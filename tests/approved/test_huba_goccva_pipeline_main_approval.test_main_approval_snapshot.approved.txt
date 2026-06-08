@@ -1,0 +1,13 @@
+{
+  "clean_traces": "<present>",
+  "details_json": "goccva_details.json",
+  "mapping_csv": "goccva_mapping.csv",
+  "noisy_traces": "<present>",
+  "pnml": "fabricated_patient_data_access.pnml",
+  "summary_csv": "goccva_summary.csv",
+  "targets": [
+    "Data access provided",
+    "data easily accesible"
+  ],
+  "targets_csv": "goccva_targets.csv"
+}

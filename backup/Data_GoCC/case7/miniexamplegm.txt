@@ -1,0 +1,205 @@
+{
+  "actors": [
+    {
+      "id": "4e80e82a-94e3-49e4-963a-982c0f5f2815",
+      "text": "",
+      "type": "istar.Actor",
+      "x": 256,
+      "y": 133,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "1830cf3f-a835-495d-8966-56fab30befe8",
+          "text": "Forward sub-order to Hamburg Warehouse",
+          "type": "istar.Task",
+          "x": 800,
+          "y": 398,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "be74b17f-df4c-4866-8567-ed5b87555537",
+          "text": "Forward sub-order to Amsterdam Warehouse ",
+          "type": "istar.Task",
+          "x": 458,
+          "y": 397,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "5f9bdad6-0d6c-4443-b792-352a4006be11",
+          "text": "Check order line items",
+          "type": "istar.Task",
+          "x": 317,
+          "y": 223,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8696331a-d2e0-4258-a235-2602095d17b2",
+          "text": "Register order",
+          "type": "istar.Task",
+          "x": 629,
+          "y": 228,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c020654b-1a7a-41f1-9c45-9dca6693df9b",
+          "text": "Order completed",
+          "type": "istar.Goal",
+          "x": 562,
+          "y": 151,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d1397973-87b1-4666-b4d0-ffb06f4d0d20",
+          "text": "Order does not contain Amsterdam products",
+          "type": "istar.Goal",
+          "x": 281,
+          "y": 395,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8149b685-790f-45fe-aa91-11e7de71bd49",
+          "text": "Order does not contain Hamburg products",
+          "type": "istar.Goal",
+          "x": 623,
+          "y": 399,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "e46afbc2-2a91-4451-aa39-0ad9cccf882a",
+          "text": "Amsterdam orders handled",
+          "type": "istar.Goal",
+          "x": 406,
+          "y": 303,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "7132b03a-313c-431f-bc3d-188aa4d1bf32",
+          "text": "Hamburg orders handled",
+          "type": "istar.Goal",
+          "x": 738,
+          "y": 297,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "58a47951-b592-419d-8c26-883c07e057a9",
+          "text": "Order handled",
+          "type": "istar.Goal",
+          "x": 502,
+          "y": 230.5,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "fb57520b-9140-4e43-ad2f-b076fbbafb6d",
+      "type": "istar.OrRefinementLink",
+      "source": "be74b17f-df4c-4866-8567-ed5b87555537",
+      "target": "e46afbc2-2a91-4451-aa39-0ad9cccf882a"
+    },
+    {
+      "id": "681fb670-6f46-460d-9ee0-6e5d8ea00043",
+      "type": "istar.OrRefinementLink",
+      "source": "d1397973-87b1-4666-b4d0-ffb06f4d0d20",
+      "target": "e46afbc2-2a91-4451-aa39-0ad9cccf882a"
+    },
+    {
+      "id": "a622dc69-c68a-416f-ace1-b3d21b0d85b4",
+      "type": "istar.OrRefinementLink",
+      "source": "8149b685-790f-45fe-aa91-11e7de71bd49",
+      "target": "7132b03a-313c-431f-bc3d-188aa4d1bf32"
+    },
+    {
+      "id": "362ca8f7-c542-44e5-b0dd-a7753e89eadf",
+      "type": "istar.OrRefinementLink",
+      "source": "1830cf3f-a835-495d-8966-56fab30befe8",
+      "target": "7132b03a-313c-431f-bc3d-188aa4d1bf32"
+    },
+    {
+      "id": "eb73e8c8-da52-4301-9516-7006c1f99bb5",
+      "type": "istar.AndRefinementLink",
+      "source": "7132b03a-313c-431f-bc3d-188aa4d1bf32",
+      "target": "58a47951-b592-419d-8c26-883c07e057a9"
+    },
+    {
+      "id": "c809ac6f-78ca-42b2-ab1f-80cecb7feec3",
+      "type": "istar.AndRefinementLink",
+      "source": "e46afbc2-2a91-4451-aa39-0ad9cccf882a",
+      "target": "58a47951-b592-419d-8c26-883c07e057a9"
+    },
+    {
+      "id": "42eb0b1e-40f5-437b-9aab-e402fe5f586f",
+      "type": "istar.AndRefinementLink",
+      "source": "8696331a-d2e0-4258-a235-2602095d17b2",
+      "target": "c020654b-1a7a-41f1-9c45-9dca6693df9b"
+    },
+    {
+      "id": "f1be669a-2642-4c2b-95f1-3bcb0645b1a1",
+      "type": "istar.AndRefinementLink",
+      "source": "58a47951-b592-419d-8c26-883c07e057a9",
+      "target": "c020654b-1a7a-41f1-9c45-9dca6693df9b"
+    }
+  ],
+  "display": {
+    "1830cf3f-a835-495d-8966-56fab30befe8": {
+      "width": 154.609375,
+      "height": 66.34375
+    },
+    "be74b17f-df4c-4866-8567-ed5b87555537": {
+      "width": 152.109375,
+      "height": 65.34375
+    },
+    "d1397973-87b1-4666-b4d0-ffb06f4d0d20": {
+      "width": 153.609375,
+      "height": 68.34375
+    },
+    "8149b685-790f-45fe-aa91-11e7de71bd49": {
+      "width": 149.609375,
+      "height": 65.34375
+    },
+    "e46afbc2-2a91-4451-aa39-0ad9cccf882a": {
+      "width": 108.609375,
+      "height": 50.34375
+    },
+    "7132b03a-313c-431f-bc3d-188aa4d1bf32": {
+      "width": 108.609375,
+      "height": 51.84375
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Thu, 19 Mar 2026 13:46:33 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "name": "Welcome Model",
+    "customProperties": {
+      "Description": "Welcome to the piStar tool version 2.1.0, released on November, 2021! This model describes some of the recent improvements in the tool. Click on the purple elements for further info.\n\nFor help using this tool, please check the Help menu above"
+    }
+  }
+}

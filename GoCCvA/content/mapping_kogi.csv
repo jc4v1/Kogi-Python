@@ -1,0 +1,7 @@
+activity,mapped_leaf_tasks
+t_verify,Verify identity
+t_regular,Format Data Regular Needs
+t_denied,Identity denied
+t_special,Format Data Special Needs
+t_verified,(System) Identity verified
+t_provide,Provide Records

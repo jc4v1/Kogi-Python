@@ -1,0 +1,19 @@
+trace_id,trace,alignment_cost,fitness,traditional_class,goal_class
+1,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+2,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+3,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+4,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+5,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+7,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+9,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+14,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+15,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+16,Verify identity | Identity denied,0,1.0,optimal,Non-compliant
+6,Verify identity | (System) Identity verified | Format Data Regular Needs | Provide Records,20000,0.6666666666666667,non-optimal,Non-compliant
+8,Manual accessibility check | Verify identity | Identity denied,10000,0.8,non-optimal,Non-compliant
+10,Verify identity | (System) Identity verified | Format Data Special Needs | Provide Records,20000,0.6666666666666667,non-optimal,Non-compliant
+11,Verify identity | Manual accessibility check | Identity denied,10000,0.8,non-optimal,Non-compliant
+12,Verify identity | (System) Identity verified | Format Data Special Needs | Provide Records,20000,0.6666666666666667,non-optimal,Non-compliant
+13,Identity denied,10000,0.6666666666666667,non-optimal,Non-compliant
+17,Verify identity | (System) Identity verified | Format Data Regular Needs | Provide Records,20000,0.6666666666666667,non-optimal,Non-compliant
+18,Verify identity | (System) Identity verified | Provide Records,30000,0.4,non-optimal,Non-compliant

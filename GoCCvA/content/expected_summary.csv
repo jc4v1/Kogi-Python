@@ -1,0 +1,19 @@
+trace_id,trace,alignment_cost,fitness,compliance_class
+1,Verify identity | Identity denied,0,1.0,Non-compliant
+2,Verify identity | Identity denied,0,1.0,Non-compliant
+3,Verify identity | Identity denied,0,1.0,Non-compliant
+4,Verify identity | Identity denied,0,1.0,Non-compliant
+5,Verify identity | Identity denied,0,1.0,Non-compliant
+6,Verify identity | Identity verified | Format Data Regular Needs | Provide Records,0,1.0,Non-compliant
+7,Verify identity | Identity denied,0,1.0,Non-compliant
+8,Manual accessibility check | Verify identity | Identity denied,10000,0.8,Non-compliant
+9,Verify identity | Identity denied,0,1.0,Non-compliant
+10,Verify identity | Identity verified | Format Data Special Needs | Provide Records,0,1.0,Strongly compliant
+11,Verify identity | Manual accessibility check | Identity denied,10000,0.8,Non-compliant
+12,Verify identity | Identity verified | Format Data Special Needs | Provide Records,0,1.0,Strongly compliant
+13,Identity denied,10000,0.6666666666666667,Non-compliant
+14,Verify identity | Identity denied,0,1.0,Non-compliant
+15,Verify identity | Identity denied,0,1.0,Non-compliant
+16,Verify identity | Identity denied,0,1.0,Non-compliant
+17,Verify identity | Identity verified | Format Data Regular Needs | Provide Records,0,1.0,Non-compliant
+18,Verify identity | Identity verified | Provide Records,10000,0.8,Strongly compliant

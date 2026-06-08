@@ -1,0 +1,28 @@
+
+\paragraph{Conformance vs Objectives Fulfillment}
+Among the traces with optimal alignments, 14.29\% remain strongly fulfilled,
+0.0\% are reclassified as weakly fulfilled, and
+85.71\% are reclassified as non-fulfilled.
+This indicates that traditional alignment-based conformance may under-approximate problematic cases,
+since behaviorally fitting traces may still fail to satisfy selected targets.
+
+\paragraph{Tolerable Deviations: Non-compliant with the process model, objectives satisfied}
+Among the traces with non-optimal alignments, 25.0\% are still classified as strongly fulfilled and
+0.0\% as weakly fulfilled.
+This shows that traditional conformance checking may over-approximate problematic behavior, since some deviations do not compromise the selected concerns.
+The most frequent variant in this category appears 1 times (100.0\%) within the category.
+A recurrent activity pair is \textit{(System)} and \textit{Identity}, appearing in 1 traces (100.0\%) of this category.
+
+\paragraph{Apparently Acceptable Cases: Compliant with the process model, objectives not satisfied}
+Among the traces with optimal alignments, 14.29\% remain strongly fulfilled,
+0.0\% are reclassified as weakly fulfilled, and
+85.71\% are reclassified as non-fulfilled.
+These results reveal traces that are acceptable from the control-flow perspective but unsatisfactory with respect to the selected targets.
+The most frequent variant in this category appears 10 times (83.33\%) within the category.
+A recurrent activity pair is \textit{Identity} and \textit{Verify}, appearing in 12 traces (100.0\%) of this category.
+
+\paragraph{Critical Deviations: Non-compliant with the process model, objectives not satisfied}
+Among the traces with non-optimal alignments, 75.0\% are classified as non-fulfilled.
+These traces are problematic from both perspectives because they combine behavioral deviation with failure to satisfy the selected targets.
+The most frequent variant in this category appears 1 times (33.33\%) within the category.
+A recurrent activity pair is \textit{Identity} and \textit{denied}, appearing in 3 traces (100.0\%) of this category.

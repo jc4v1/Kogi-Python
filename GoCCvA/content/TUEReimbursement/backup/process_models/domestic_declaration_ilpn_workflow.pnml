@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+    <net id="net1" type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb">
+        <place id="p0">
+            <graphics>
+                <position x="182.41666666666674" y="318"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p3">
+            <graphics>
+                <position x="1088.0833333333335" y="557"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p2">
+            <graphics>
+                <position x="699.4166666666667" y="575"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p1">
+            <graphics>
+                <position x="366.75" y="561"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p6">
+            <graphics>
+                <position x="1927.0833333333333" y="557"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p4">
+            <graphics>
+                <position x="1367.75" y="557"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p5">
+            <graphics>
+                <position x="1647.4166666666667" y="557"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p7">
+            <graphics>
+                <position x="554.75" y="261"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p8">
+            <graphics>
+                <position x="1330.4166666666667" y="215"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <place id="p9">
+            <graphics>
+                <position x="25.0078125" y="314.7734375"/>
+            </graphics>
+            <initialMarking>
+                <text>1</text>
+            </initialMarking>
+        </place>
+        <place id="p10">
+            <graphics>
+                <position x="1973.0078125" y="206.7734375"/>
+            </graphics>
+            <initialMarking>
+                <text>0</text>
+            </initialMarking>
+        </place>
+        <transition id="t_ra">
+            <name>
+                <text>Declaration REJECTED by ADMIN.</text>
+            </name>
+            <graphics>
+                <position x="435.9166666666667" y="389"/>
+            </graphics>
+        </transition>
+        <transition id="t_apa">
+            <name>
+                <text>Declaration APPROVED by ADMIN.</text>
+            </name>
+            <graphics>
+                <position x="545.5833333333333" y="574"/>
+            </graphics>
+        </transition>
+        <transition id="t_ds">
+            <name>
+                <text>Declaration SUBMITTED by EMPLOYEE</text>
+            </name>
+            <graphics>
+                <position x="173.2500000000001" y="564"/>
+            </graphics>
+        </transition>
+        <transition id="t_ba">
+            <name>
+                <text>Declaration APPROVED by BUDGET OWNER</text>
+            </name>
+            <graphics>
+                <position x="886.2500000000001" y="573"/>
+            </graphics>
+        </transition>
+        <transition id="t_rs">
+            <name>
+                <text>Declaration REJECTED by SUPERVISOR</text>
+            </name>
+            <graphics>
+                <position x="856.5833333333333" y="339"/>
+            </graphics>
+        </transition>
+        <transition id="t_as">
+            <name>
+                <text>Declaration APPROVED by SUPERVISOR</text>
+            </name>
+            <graphics>
+                <position x="1227.9166666666667" y="557"/>
+            </graphics>
+        </transition>
+        <transition id="t_ph">
+            <name>
+                <text>Payment Handled by ADMIN</text>
+            </name>
+            <graphics>
+                <position x="1787.25" y="557"/>
+            </graphics>
+        </transition>
+        <transition id="t_dsv">
+            <name>
+                <text>Declaration SAVED by EMPLOYEE</text>
+            </name>
+            <graphics>
+                <position x="187.2500000000001" y="162"/>
+            </graphics>
+        </transition>
+        <transition id="t_rb">
+            <name>
+                <text>Declaration REJECTED by BUDGET OWNER</text>
+            </name>
+            <graphics>
+                <position x="677.5833333333333" y="403"/>
+            </graphics>
+        </transition>
+        <transition id="t_er">
+            <name>
+                <text>Declaration REJECTED by EMPLOYEE</text>
+            </name>
+            <graphics>
+                <position x="1198.5833333333333" y="211"/>
+            </graphics>
+        </transition>
+        <transition id="t_rp">
+            <name>
+                <text>Payment Requested by SUPERVISOR</text>
+            </name>
+            <graphics>
+                <position x="1507.5833333333333" y="557"/>
+            </graphics>
+        </transition>
+        <transition id="t_tau_rev">
+            <name>
+                <text>t_tau_rev</text>
+            </name>
+            <graphics>
+                <position x="313.58333333333326" y="284"/>
+            </graphics>
+        </transition>
+        <transition id="t1">
+            <graphics>
+                <position x="92.0078125" y="314.7734375"/>
+            </graphics>
+        </transition>
+        <transition id="t2">
+            <graphics>
+                <position x="1609.0078125" y="303.7734375"/>
+            </graphics>
+        </transition>
+        <transition id="t3">
+            <graphics>
+                <position x="1984.0078125" y="440.7734375"/>
+            </graphics>
+        </transition>
+        <arc id="t_ra,p7" source="t_ra" target = "p7">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p4,t_rp" source="p4" target = "t_rp">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_ph,p6" source="t_ph" target = "p6">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_dsv,p0" source="t_dsv" target = "p0">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p3,t_as" source="p3" target = "t_as">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_rp,p5" source="t_rp" target = "p5">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p0,t_ds" source="p0" target = "t_ds">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_as,p4" source="t_as" target = "p4">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p2,t_ba" source="p2" target = "t_ba">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_rs,p7" source="t_rs" target = "p7">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p1,t_ra" source="p1" target = "t_ra">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p2,t_rb" source="p2" target = "t_rb">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_ba,p3" source="t_ba" target = "p3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p1,t_apa" source="p1" target = "t_apa">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_rb,p7" source="t_rb" target = "p7">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p7,t_tau_rev" source="p7" target = "t_tau_rev">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p0,t_dsv" source="p0" target = "t_dsv">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_apa,p2" source="t_apa" target = "p2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p7,t_er" source="p7" target = "t_er">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_tau_rev,p0" source="t_tau_rev" target = "p0">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p5,t_ph" source="p5" target = "t_ph">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_er,p8" source="t_er" target = "p8">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t_ds,p1" source="t_ds" target = "p1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p3,t_rs" source="p3" target = "t_rs">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p9,t1" source="p9" target = "t1">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t1,p0" source="t1" target = "p0">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p8,t2" source="p8" target = "t2">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t2,p10" source="t2" target = "p10">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="p6,t3" source="p6" target = "t3">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+        <arc id="t3,p10" source="t3" target = "p10">
+            <inscription>
+                <text>1</text>
+            </inscription>
+            <graphics/>
+        </arc>
+    </net>
+</pnml>

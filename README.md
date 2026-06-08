@@ -1,259 +1,311 @@
-# Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking
-
-## Kogi-App
-
-Kogi-App is a simple-to-use interface to the Kogi tool. Here, one can select a goal model, then either a Petri Net model, a DCR graph or BPMN model, and finally the appropriate mapping of process model activities and events to intentional elements of the goal model. 
-
-**Try it live** [KogiWeb](https://kogi.compute.dtu.dk/)
-
-## Implementation
-
-A prototype was developed in Python, taking as input a process model either as a Petri Net model (pnml file), a DCR Graph (xml file), or as BPMN model (bpmn file) together with the goal model (txt file). The event mapping is provided as a CSV file. 
-
-The tool offers three options:
-- a non-interactive option. checking for stability and weak-compliance and returning either true or false with counter examples
-- an interactive option (only available for Petri nets), which allows for the animation of the combined model by executing transitions
-in the process model and see the effect on the goal model. It also allows to run the algorithms for checking stability and weak-compliance and if they are not stable or not compliant, then select those states, where the validation fails.
-- a second interactive option, where it is possible to animate how the goal model reacts to certain events.
+# Goal-Oriented Process Alignment
 
 
-### Installation
-1. Required Python version 3.11
-2. Clone the repository: ``git clone https://github.com/jc4v1/Kogi-Python.git``
-3. Install the required packages: ``pip install -r requirements.txt``
-4. You can then start Jupyter notebook with ``jupyter notebook`` and open the file README.ipynb to see this document as a Jupyter notebook and run the demo code.
+This repository contains the Python/Jupyter implementation used to explore **Goal-Oriented Conformance Checking via Alignments (GoCCvA)**. The core idea is simple: traditional alignments say whether an execution fits the process model, but GoCCvA explains whether the same execution supports, harms, or does not affect selected stakeholder goals.
 
+The main notebook is:
 
+[`TUE_GoCCvA_Case.ipynb`](GoCCvA/TUE_GoCCvA_Case.ipynb)
 
-## Kogi-Interaction
+It instantiates the paper method on the **BPI Challenge 2020 domestic travel reimbursement process**, using a reimbursement goal model, Petri net process model, activity-to-goal mapping, and real event log.
 
-Examples of goal models, process models, and event mappings are in the [Data](Data) directory of this repository.
+## What The Paper Solves
 
-The following editors can be used to create ones own models or edit the models from the [Data](Data) directory:
-- Goal Model: <a href="https://www.istardust.ch/" target="_blank">piStar</a>
-- Petri Net: <a href="https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html" target="_blank">I love Petri Nets</a>
-- DCR Graph: <a href="https://hugoalopez-dtu.github.io/dcr-js/" target="_blank">DCR Graph-JS</a> (download and upload as DCR Solutions XML)
-- BPMN: <a href="https://bpmn.io/" target="_blank">BPMN.io</a>
+Alignment-based conformance checking can localize deviations, but it does not explain why a deviation matters for business objectives or stakeholders. A fitting trace may fail the relevant goals, and a deviating trace may still fulfill them.
 
-Depending on wether a Petri net is uploaded or a DCR graph or BPMN model, the view switches into interactive mode (Petri net with the interactive checkbox ticked) or non-interactive mode (DCR graph and BPMN model and Petri net without the interactive checkbox ticked) plus an interactive animation of the goal model alone.
+GoCCvA adds an intentional layer:
 
-The mapping for Petri nets is optional, if the mapping can be derived from the Petri net by, e.g., adding actions the correspond to the intensional elements in the goal model for a transition in, e.g., the <a href="https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html" target="_blank">I love Petri Nets</a> editor. For DCR graphs, the mapping has to be provided.
-
-A standalone notebook for the Kogi-App is [KogiApp.ipynb](KogiApp.ipynb).
-
-```python
-# Execute the Kogi-App
-from Ui.interface import FileUploadInterfaceBuilder
-
-display(FileUploadInterfaceBuilder().create_interface())
+```mermaid
+flowchart LR
+    L["Event log<br/>observed executions"] --> A["Standard process alignments"]
+    P["Process model<br/>Petri net"] --> A
+    G["Goal model<br/>actors, goals, tasks, qualities"] --> S["Target-specific sets"]
+    M["Activity-task mapping"] --> S
+    T["Selected targets"] --> S
+    A --> GO["Goal-oriented alignment"]
+    S --> GO
+    G --> GO
+    GO --> C["Fulfillment class<br/>strong, weak, non-fulfilled"]
+    GO --> D["% target satisfaction and fulfillment class per alignment"]
 ```
 
-## Use of Kogi in a Jupyter notebook
+## Case Study Assets
 
+The reimbursement notebook uses the fiues listed below:
 
-The remaining sections showcase the different ways the Kogi-tool can be used from within Python.
-
-
-### Required imports
-
-```python
-from Semantics.istar_processor import read_istar_model
-from Semantics.petri_net_processor import read_petri_net
-from Semantics.dcr import read_dcr
-from Semantics.event_mapping_from_csv import read_event_mapping_csv
-from Ui.interface import InterfaceBuilder, WhatIfInterfaceBuilder, analyse_models
-from Semantics.transition_system import CombinedTransitionSystem
-```
-
-### Non-interactive usage
-1. Model the goal model using PiStar (https://www.istardust.ch/) and download the goalModel.txt file
-2. Model the process model as a Petri Net using, e.g., the "I love Petri Nets" editor (https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html)
-3. For the event mapping, create a spreadsheet with a column for events and another for Intentional elements and save it as a CSV file.
-
-| Event | Intentional Element |
+| Input | File |
 | --- | --- |
-| t1 |   |
-| t2  | e2   |
+| Goal model | `work-GoCCvA-2026/content/TUEReimbursement/gm_huba_new_actor2.txt` |
+| Process model | `work-GoCCvA-2026/content/TUEReimbursement/domestic_declaration_ilpn_updated.pnml` |
+| Event mapping | `work-GoCCvA-2026/content/TUEReimbursement/mapping_huba_new_actor.csv` |
+| Event log | `work-GoCCvA-2026/content/TUEReimbursement/DomesticDeclarations.xes.gz` |
 
-The empty cell of the intentional element indicates that that specific transition is not mapped to an intentional element.
-4. Alternatively, extract the event mapping from the Petri Net file. In the case for "I love Petri Nets", the transitions will be mapped to the actions defined in the editor and interpreted as intentional elements. The following Petri Net would correspond to the event mapping from before
-![petri net](images/pn-event-mapping.png)
+### Goal Model
 
+![TUE reimbursement goal model](work-GoCCvA-2026/content/TUEReimbursement/TUEGM.png)
 
-In the following, we define a method ``analyse_models(goal_model, process_model, event_mapping)`` that takes a goal model, a process model (either Petri Net or DCR Graph) and an event mapping.
-The method then follows the steps outlined in the paper.
-1. In the first step, the models are translated to their respective labelled transition systems
-2. Then the combined transition system is constructed from the process model, the goal model, and the event mapping
-3. Then the combined system is checked for stability
-4. And weak compliance. 
+### Process Model
 
-The results are either true or false, depending on the result of the checks and if the property does not hold, a list of traces as counter examples is returned in which the property does not hold.
+![Domestic declaration Petri net](work-GoCCvA-2026/content/TUEReimbursement/TUEPM.png)
 
-The method is also available through ``from UI.interface import analyse_models``.
+## Target Goals
 
-
-The following example is based on the security example, which is not stable, because we can always break the quality, but it is weak compliant, as we can always reach a state where the quality is true.
-
-Goal Model
-![goal model](Data/security/goal_model.jpg)
-
-
-
-
-And Petri Net
-![petri net](Data/security/petri_net.jpg)
+The notebook evaluates two selected targets:
 
 ```python
-goal_model = read_istar_model("Data/security/goal_model.txt")
-petri_net = read_petri_net("Data/security/petri_net.pnml")
-# Map generated from the Petri Net.
-event_mapping = petri_net.get_default_event_mapping()
-# Alternatively the event mapping can be read from a CSV file.
-# event_mapping = read_event_mapping_csv("Data/security/map.csv")
-
-def analyse_models(goal_model, process_model, event_mapping):
-    lts_gm = goal_model.as_transition_system()
-    print(f"Goal Model LTS reachable states and transitions: {lts_gm.size()}")
-
-    lts_pn = process_model.as_transition_system()
-    print(f"Petri Net LTS reachable states and transitions: {lts_pn.size()}")   
-    lts_combined = CombinedTransitionSystem(lts_gm, lts_pn, event_mapping)  
-    print(f"Combined LTS reachable states and transitions: {lts_combined.size()}")
-    print()
-    
-    print(f"Goal Model Goals and Tasks: {goal_model.goals_and_tasks()}")
-    print(f"Goal Model Qualities: {set(goal_model.qualities.keys())}")
-    print()
-    print(f"Combined LTS Actions: {lts_combined.actions()}")
-    print()
-    print(f"Event Mapping {event_mapping}")
-    print()
-    
-    stability = lts_combined.check_stability(goal_model.qualities)
-    print(f"Stability: {stability}")
-
-    weak_compliance = lts_combined.check_weak_compliance(goal_model.qualities)
-    print(f"Weak Compliance: {weak_compliance}")
-    
-analyse_models(goal_model, petri_net, event_mapping)
+targets = [
+    "(Admin) adequate declaration handling",
+    "(Employee) Increase employee satisfaction",
+]
 ```
 
-Note that the number of states for the goal model, the process model, and the combined labeled transition system are shown. Note that there is no state explosion happening for the combined labeled transition system. The reason is the strong synchronization of the process model and the goal model. Each action in the process model will lead either to an intentional event in the goal model or nothing. But it is not possible for the goal model to make independent transitions from that of the process model.
+These targets are intentionally stakeholder-aware: one captures the administration perspective, while the other captures the employee perspective.
 
 
-#### DCR Graph Non-Interactive Use
+## Rendered Goal-Oriented Alignment
 
-
-Here is an example of running the alogrithms for the security goal model, where the process model is given as a DCR graph. Kogi works together with DCR graphs exported by https://hugoalopez-dtu.github.io/dcr-js/ as DCR Solutions XML. Note that only the basic DCR graphs are supported by the Kogi tool.
-
-![dcr graph](Data/security/dcr.jpg)
+This is the concrete rendering that was missing from the README. It is generated from the notebook method on the representative trace:
 
 ```python
-goal_model = read_istar_model("Data/security/goal_model.txt")
-dcr_graph = read_dcr("Data/security/dcr-graph.xml")
-event_mapping = read_event_mapping_csv("Data/security/map_dcr.csv")
-analyse_models(goal_model, dcr_graph, event_mapping)
-
+[
+    "Declaration SUBMITTED by EMPLOYEE",
+    "Declaration FINAL_APPROVED by SUPERVISOR",
+    "Request Payment",
+    "Payment Handled",
+]
 ```
 
-### Interactive Usage
+![Rendered goal-oriented alignment](work-GoCCvA-2026/content/TUEReimbursement/goal_oriented_alignment_example.svg)
 
-The following shows the interactive usage of the Kogi tool, which only works for Petri nets if the Petri net contains information about the graphical layout of places and transitions.
+Example of a goal-oriented alignment. The process alignment is **non-optimal**: the model expects administration and budget-owner approvals that are missing from the observed log, shown as `>>` in the log row. However, the selected targets are still **strongly fulfilled** because the final goal-model marking satisfies both targets and is stable (no violation in intermediate steps)
 
-The following options are available in the interactive version
-- One can select a transition form the Petri Net and then press on the button "execute the event" to see the effect of that transition on the goal model
-- Run the stabiity check and jump to a failing state to then select a transition to see, why this state is not stable
-- Run the weak compliance check and again check through animation, why weak compliance fails.
+In the table:
 
-The following is the screenshot of the interactive version. In the Jupyter notebook, you can try the interactive version for yourself.
-![screenshot](images/kogi_interactive.jpg)
+| Symbol | Meaning |
+| --- | --- |
+| `M` | The move makes/supports the selected target |
+| `B` | The move breaks/harms the selected target |
+| `NR` | The move is non-related to the selected target |
+| `ND` | No target-specific decision is available |
+| `U` | Unknown/pending target status |
+| `S` | Satisfied target status |
 
+## Event Log Snapshot
 
-For comparision, we choose again the security example from the paper.
+The notebook reports the following log statistics:
+
+| Measure | Value |
+| --- | ---: |
+| Cases | 10,357 |
+| Events | 55,628 |
+| Activity classes | 14 |
+| Trace variants | 90 |
+| Cases with payment | 9,912, or 95.7% |
+| Cases with rejection | 1,278, or 12.3% |
+| Cases with resubmission | 1,006, or 9.7% |
+| Cases rejected, resubmitted and paid | 967, or 75.7% of rejected cases |
+
+## Method In The Notebook
+
+The notebook follows the paper method in executable form:
 
 ```python
-goal_model = read_istar_model("Data/security/goal_model.txt")
-petri_net = read_petri_net("Data/security/petri_net.pnml")
-# Map generated from the Petri Net.
-event_mapping = petri_net.get_default_event_mapping()
-# Alternatively the event mapping can be read from a CSV file.
-# event_mapping = read_event_mapping_csv("Data/security/map.csv")
-
-interface = InterfaceBuilder(goal_model,petri_net=petri_net,event_mapping=event_mapping).create_interface()
-display(interface)
+goal_model = read_istar_model("content/TUEReimbursement/gm_huba_new_actor2.txt", qualified=True)
+petri_net = read_petri_net("content/TUEReimbursement/domestic_declaration_ilpn_updated.pnml")
+activity_mapping = read_event_mapping_csv("content/TUEReimbursement/mapping_huba_new_actor.csv")
+activity_mapping = goal_model.canonicalize_activity_mapping(activity_mapping)
 ```
 
-### What if scenario
-
-
-The what-if scenario only looks at the behaviour of the goal model, and how the goal model reacts to 
-when tasks or goals are activated. In this animation, goals and tasks that don't have a
-refinement, can be selected in any order. 
-
-This allows to experiment with possible scenarios on how to achieve the goals of the 
-goal model or to make or break its qualities.
-
-
-The first step is to create a goal model with [PiStar]([https://www.istardust.ch/]), move the file goal_model.txt in the Download folder to the right place and the right
-name, and then read the file.
-
-And then create the interface with the InterfaceBuilder class, and diplay the created interface.
+Then it loads the BPI event log:
 
 ```python
-goal_model = read_istar_model("Data/security/goal_model.txt")
-
-interface = WhatIfInterfaceBuilder(goal_model).create_interface()
-display(interface)
+log_file_path = "content/TUEReimbursement/DomesticDeclarations.xes.gz"
+full_log = log_converter.apply(
+    pm4py.read_xes(str(log_file_path)),
+    variant=log_converter.Variants.TO_EVENT_LOG,
+)
 ```
 
-What happens is, that in the background a Petri net is created. That Petri net 
-has one place and a transition from and to that place for each task and goal that
-does not have a refinement. This allows to select and execute those tasks and goals in any order.
-
-Here is an example of the Petri net for two events e1 and e2.
-
-![petri net](images/all-events-pn.png)
-
-
-
-## Your own example
-
-
-
-
-Choose your goal model and process model. You can use the following tools
-- For Goal models https://www.istardust.ch/
-- For Petri Nets https://www.fernuni-hagen.de/ilovepetrinets/fapra/wise23/rot/index.html
-- For DCR Graphs https://hugoalopez-dtu.github.io/dcr-js/ (download as DCR Solutions XML)
-  - Note that only the basic notation for DCR's is supported by Kogi
-- The event mapping can be provided as CSV file with columns "Action" and "Intentional Element"
-  - For Petri Nets, an alternative is to add intentional elements as actions to transitions in the Petri Net editor. The corresponding transitions will then be automatically mapped the intentional elements. 
-  - ``event_mapping = petri_net.get_default_event_mapping()``
-
-For Petri Nets, both, non-interactive mode and interactive mode are supported. For DCR graphs, only the non-interactive mode is supported.
+Finally, it runs GoCCvA:
 
 ```python
-
-goal_model = read_istar_model("Data/security/goal_model.txt")
-process_model = read_petri_net("Data/security/petri_net.pnml")
-# process_model = read_dcr("Data/security/dcr-graph.xml")
-
-event_mapping = read_event_mapping_csv("Data/security/map.csv")
-# event_mapping = process_model.get_default_event_mapping() # Alternatively, create a default mapping from a Petri Net.
-
-analyse_models(goal_model, process_model, event_mapping)
-
-# Only if the process model is a Petri Net:
-interface = InterfaceBuilder(goal_model, process_model, event_mapping=event_mapping).create_interface()
-display(interface)
-
+summary, detailed, contribution_to_targets = analyse(
+    goal_model,
+    petri_net,
+    full_log,
+    targets,
+    activity_mapping,
+    initial_marking=None,
+)
 ```
-## More Examples
-More examples, including the running example and the EU air passenger rights example, can be found in the [Examples.ipynb](Examples.ipynb) Jupyter notebook and the [Data](./Data) subdirectory.
+
+## Target-Specific Meaning Of Activities
+
+GoCCvA computes whether mapped activities make (`M`), break (`B`), or are non-related (`NR`) for each selected target.
+
+| Target | Make set examples | Break set examples | Non-related examples |
+| --- | --- | --- | --- |
+| `(Admin) adequate declaration handling` | Submit declaration, approve declaration, request payment, handle payment | None in this model | Save declaration, reject declaration |
+| `(Employee) Increase employee satisfaction` | Submit declaration, request payment, handle payment | Admin rejection, budget-owner rejection, supervisor rejection, employee rejection | Approval activities, save declaration |
+
+Note: **the same event can have different meaning for different targets**. For instance, rejection is non-related to adequate declaration handling in this model, but it breaks employee satisfaction.
+
+## Fulfillment Classes
+
+Each goal-oriented alignment is classified using final target satisfaction and stability:
+
+```mermaid
+flowchart TD
+    A["Goal-oriented alignment"] --> B{"Are all selected targets<br/>satisfied at the end?"}
+    B -- "No" --> N["Non-fulfilled"]
+    B -- "Yes" --> C{"Was satisfaction stable<br/>after it was achieved?"}
+    C -- "Yes" --> S["Strongly fulfilled"]
+    C -- "No" --> W["Weakly fulfilled"]
+```
+
+The classification is then crossed with process alignment quality:
+
+| Code | Meaning |
+| --- | --- |
+| `O+` | Optimal alignment and strongly fulfilled targets |
+| `O~` | Optimal alignment and weakly fulfilled targets |
+| `O-` | Optimal alignment but non-fulfilled targets |
+| `N+` | Non-optimal alignment but strongly fulfilled targets |
+| `N~` | Non-optimal alignment but weakly fulfilled targets |
+| `N-` | Non-optimal alignment and non-fulfilled targets |
+
+## Main Result
+
+For the full reimbursement log, the notebook obtains:
+
+| Class | Cases | Interpretation |
+| --- | ---: | --- |
+| `O+` | 2,411 | Fitting and strongly fulfilled |
+| `O~` | 0 | Fitting and weakly fulfilled |
+| `O-` | 185 | Fitting but not fulfilled |
+| `N+` | 6,584 | Deviating but strongly fulfilled |
+| `N~` | 914 | Deviating but weakly fulfilled |
+| `N-` | 263 | Deviating and not fulfilled |
+
+```mermaid
+pie title GoCCvA Diagnostic Classes For 10,357 Reimbursement Cases
+    "O+ fitting + strong" : 2411
+    "O~ fitting + weak" : 0
+    "O- fitting + non-fulfilled" : 185
+    "N+ deviating + strong" : 6584
+    "N~ deviating + weak" : 914
+    "N- deviating + non-fulfilled" : 263
+```
+
+The key finding is that **behavioral conformance and goal fulfillment diverge**:
+
+| Finding | Value |
+| --- | ---: |
+| Optimal process alignments | 2,596 cases, or 25.1% |
+| Non-optimal process alignments | 7,761 cases, or 74.9% |
+| Optimal but non-fulfilled | 185 cases, or 7.1% of optimal cases |
+| Non-optimal but fulfilled | 7,498 cases, or 96.6% of non-optimal cases |
+
+This is exactly why the paper needs GoCCvA: a process deviation is not automatically a goal failure, and a fitting execution is not automatically a stakeholder success.
+
+## Example Trace Queries
+
+The notebook includes concrete trace filtering to inspect the results.
+
+Find traces that fulfill employee satisfaction, either strongly or weakly:
+
+```python
+trace_filter = TraceFilter(goal_model, traces, activity_mapping)
+
+employee_satisfied_traces = (
+    trace_filter
+    .query()
+    .where("(Employee) Increase employee satisfaction", ComplianceStatus.COMPLIANT)
+    .traces()
+)
+```
+
+Result:
+
+| Query | Result |
+| --- | ---: |
+| Employee satisfaction compliant traces | 9,909 |
+| Percentage of all traces | 95.67% |
+| Non-compliant traces | 4.33% |
+
+Find payment cases without a submitted declaration:
+
+```python
+payment_but_no_declaration_submitted = (
+    trace_filter
+    .query()
+    .contains("Payment Handled")
+    .not_contains("Declaration SUBMITTED by EMPLOYEE")
+    .sort_by_length()
+    .traces()
+)
+```
+
+The notebook finds one trace:
+
+```python
+[
+    "Declaration SAVED by EMPLOYEE",
+    "Request Payment",
+    "Payment Handled",
+]
+```
+
+Find paid traces that do not satisfy employee satisfaction:
+
+```python
+no_satisfaction_but_paid = (
+    trace_filter
+    .query()
+    .where("(Employee) Increase employee satisfaction", ComplianceStatus.NON_COMPLIANT)
+    .contains("Payment Handled")
+    .sort_by_length()
+    .traces()
+)
+```
+
+The notebook finds three such traces. These are concrete examples where payment completion alone is not enough to claim stakeholder goal fulfillment.
 
 
-## Research Papers
 
+## Repository Map
 
+| Path | Purpose |
+| --- | --- |
+| `Semantics/goccva_pipeline.py` | Core GoCCvA analysis: alignment enrichment and fulfillment classification |
+| `Semantics/target_sets.py` | Computes make, break, and non-related sets |
+| `Semantics/label_assignment.py` | Labels alignment moves as `M`, `B`, `NR`, or `ND` |
+| `Semantics/goccva_filter.py` | Trace filtering DSL used in the notebook |
+| `Ui/goccva_ui.py` | Rendering functions for matrices and goal-oriented alignment examples |
+| `content/TUEReimbursement/` | Reimbursement case-study models, mapping, figures, and log |
+| `tests/` | Regression and semantic tests |
 
-- [Preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6187219) Caballero-Villalobos, Juanita and Baumeister, Hubert and Paja, Elda and Kokoulina, Olga and López, Hugo A., Aligning Processes with High-Level Requirements: Goal-Model-Based Compliance Checking (Extended Version) (February 06, 2026). Available at SSRN: https://ssrn.com/abstract=6187219 or http://dx.doi.org/10.2139/ssrn.6187219 
+## Run It
+
+Use Python 3.11. From the repository root:
+
+```bash
+pip install pandas pm4py ipywidgets jupyter pytest
+jupyter notebook
+```
+
+Open:
+
+```text
+work-GoCCvA-2026\TUE_GoCCvA_Case.ipynb
+```
+
+To run tests:
+
+```bash
+pytest
+```
+
+## Takeaways
+
+GoCCvA turns a process alignment from "where did the trace fit or deviate?" into "how did each aligned move affect the selected goals, qualities, and actor concerns, and did the execution ultimately fulfill them?"

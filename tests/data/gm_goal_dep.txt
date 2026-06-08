@@ -1,0 +1,102 @@
+{
+  "datastructures": [],
+  "concepts": [],
+  "reinforcements": [],
+  "actors": [
+    {
+      "id": "1a9241fe-1394-4251-8e53-41748335c264",
+      "text": "Actor 1",
+      "type": "istar.Actor",
+      "x": 167,
+      "y": 89,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "57d7a5f2-6d5f-4a57-83f7-d611d230f3b6",
+          "text": "T1",
+          "type": "istar.Task",
+          "x": 243,
+          "y": 136,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "865185d8-1ed3-4371-b073-83b5421b3597",
+      "text": "Actor 2",
+      "type": "istar.Actor",
+      "x": 677,
+      "y": 84,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "56d3fa7d-b2af-41af-a8bc-de4df939ab3d",
+          "text": "G1",
+          "type": "istar.Goal",
+          "x": 713,
+          "y": 140,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "db933a01-4ba5-4aa0-87a3-7fba918a98f5",
+      "text": "Q1",
+      "type": "istar.Quality",
+      "x": 454,
+      "y": 128,
+      "customProperties": {
+        "Description": ""
+      },
+      "reinforcedBy": [],
+      "directionFlow": "inbound",
+      "source": "56d3fa7d-b2af-41af-a8bc-de4df939ab3d",
+      "target": "57d7a5f2-6d5f-4a57-83f7-d611d230f3b6"
+    }
+  ],
+  "links": [
+    {
+      "id": "87c9d075-f2a3-4d59-996d-8ddb9fc5c5f1",
+      "type": "istar.DependencyLink",
+      "source": "56d3fa7d-b2af-41af-a8bc-de4df939ab3d",
+      "target": "db933a01-4ba5-4aa0-87a3-7fba918a98f5"
+    },
+    {
+      "id": "bb0be58d-252e-4667-a65e-88fac617313e",
+      "type": "istar.DependencyLink",
+      "source": "db933a01-4ba5-4aa0-87a3-7fba918a98f5",
+      "target": "57d7a5f2-6d5f-4a57-83f7-d611d230f3b6"
+    }
+  ],
+  "display": {
+    "bb0be58d-252e-4667-a65e-88fac617313e": {
+      "vertices": [
+        {
+          "x": 418,
+          "y": 152
+        }
+      ]
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Fri, 24 Apr 2026 21:57:09 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

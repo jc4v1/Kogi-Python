@@ -1,6 +1,6 @@
 import os
-from Semantics.dcr import read_dcr
-from Semantics.dcr import DcrGraph, DcrMarking, DcrTransitionSystem
+from Semantics.parsers.dcr import read_dcr
+from Semantics.parsers.dcr import DcrGraph, DcrMarking, DcrTransitionSystem
 
 def test_load_dcr_ts():
     path = os.path.join(os.path.dirname(__file__), 'data', 'dcr_test.xml')

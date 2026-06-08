@@ -1,7 +1,7 @@
 from collections import deque
 from typing import List, TypeVar, Generic, Mapping, Iterator, Any
-from pprint import pformat
-from Semantics.enums import ElementStatus, QualityStatus
+from Semantics.enums import ElementStatus
+from Semantics.markings import Marking, MarkingGm, MarkingPn
 from Semantics.algorithms import check_stable_system, check_weak_compliance, CheckResult
 
 T_STATE = TypeVar('T_STATE')
@@ -51,7 +51,7 @@ class TransitionSystem(Generic[T_STATE]):
 
     def satisfies_quality(self, state, quality):
         # Placeholder for quality check
-        return quality in state.qualities if hasattr(state, 'qualities') else state._markings.get(quality,QualityStatus.UNKNOWN) == QualityStatus.FULFILLED
+        return quality in state.qualities if hasattr(state, 'qualities') else state._markings.get(quality,ElementStatus.UNKNOWN) == ElementStatus.SATISFIED
     
     def get_enabled_actions(self, state: T_STATE) -> list[Any]:
         """
@@ -94,135 +94,14 @@ class State:
     def __hash__(self):
         return hash(self.name)
 
-class MarkingGm:
-    def __init__(self, markings: dict[str,ElementStatus|QualityStatus]):
-        self._markings = markings
-        self._hash = None
-        
-    def markings(self) -> dict[str, ElementStatus|QualityStatus]:
-        return self._markings
-    
-    def get_element_status(self, element: str) -> ElementStatus|QualityStatus:
-        return self._markings[element]
-    
-    def __getitem__(self, key: str) -> ElementStatus|QualityStatus:
-        return self.get_element_status(key)
-    
-    def __str__(self):
-        items = [f"{key}={self._format_status(value)}" for key, value in sorted(self._markings.items())]
-        if not items:
-            return "<>"
-        return f"<{', '.join(items)}>"
-    def __repr__(self):
-        return f"MarkingGm(gm={self.markings()})"
-        # return str(self.pn_marking)
-    
-    def __eq__(self, other):
-        if not isinstance(other, MarkingGm):
-            return NotImplemented
-        return self._markings == other._markings
-
-    def __hash__(self):
-        if self._hash is None:
-            # Hash a frozenset of the dictionary items for a stable hash
-            self._hash = hash(frozenset(self._markings.items()))
-        return self._hash
-    
-    def _format_status(self, status):
-        """Format status for display"""
-        if isinstance(status, ElementStatus):
-            if status == ElementStatus.UNKNOWN:
-                return "(?, ?)"
-            elif status == ElementStatus.TRUE_FALSE:
-                return "(⊤, ⊥)"
-            elif status == ElementStatus.TRUE_TRUE:
-                return "(⊤, ⊤)"
-        elif isinstance(status, QualityStatus):
-            if status == QualityStatus.UNKNOWN:
-                return "(?)"
-            elif status == QualityStatus.FULFILLED:
-                return "(⊤)"
-            elif status == QualityStatus.DENIED:
-                return "(⊥)"
-        return str(status)    
-    def __lt__(self, other):
-        if not isinstance(other, MarkingGm):
-            return NotImplemented
-        return str(self) < str(other)    
-    
-class MarkingPn:
-    """
-    Represents a marking (state) of a Petri net.
-    """
-    def __init__(self, markings: dict[str, int]):
-        self._markings = dict(markings)
-        
-    def markings(self) -> dict[str, int]:
-        return self._markings
-
-    def __eq__(self, other):
-        return isinstance(other, MarkingPn) and self._markings == other._markings
-
-    def __hash__(self):
-        # Hash based on the frozenset of items for immutability
-        return hash(frozenset(self._markings.items()))
-
-    def __repr__(self):
-        return f"MarkingPn({self._markings})"
-    
-    def __str__(self):
-        marked_places = [p for p, v in sorted(self._markings.items()) if v == 1]
-        return "{" + ", ".join(marked_places) + "}"
-
-    def __lt__(self, other):
-        if not isinstance(other, MarkingPn):
-            return NotImplemented
-        # Sort by keys, then by values
-        self_items = sorted(self._markings.items())
-        other_items = sorted(other._markings.items())
-        return self_items > other_items
-    
 def combine_goal_model_and_petri_net(gm, pn, event_mapping = None) -> 'CombinedTransitionSystem':
+
     gm_ts = gm.as_transition_system()
     pn_ts = pn.as_transition_system()
     if not event_mapping:
-        pn.set_event_mapping(gm)
-        event_mapping = gm.event_mapping
+        event_mapping = pn.get_default_event_mapping()
     combined_ts = CombinedTransitionSystem(gm_ts, pn_ts, event_mapping)
     return combined_ts
-
-class Marking:
-    """
-    Represents a combined marking: (GoalModel marking, PetriNet marking)
-    """
-    def __init__(self, gm_marking: MarkingGm, pn_marking: MarkingPn):
-        self.gm_marking = gm_marking
-        self.pn_marking = pn_marking
-
-    def __eq__(self, other):
-        return (
-            isinstance(other, Marking)
-            and self.gm_marking == other.gm_marking
-            and self.pn_marking == other.pn_marking
-        )
-
-    def __hash__(self):
-        return hash((self.gm_marking, self.pn_marking))
-
-    def __repr__(self):
-        return f"Marking(gm={self.gm_marking}, pn={self.pn_marking})"
-        # return str(self.pn_marking)
-
-    def __str__(self):
-        return str(self.pn_marking)
-
-    def __lt__(self, other):
-        if not isinstance(other, Marking):
-            return NotImplemented
-        return (str(self.gm_marking), str(self.pn_marking)) < (str(other.gm_marking), str(other.pn_marking))
-    
-    def satisfies_quality(self, quality):
-        return self.gm_marking[quality] == QualityStatus.FULFILLED
 
 class CombinedTransitionSystem:
     """
@@ -234,7 +113,7 @@ class CombinedTransitionSystem:
         self,
         gm_ts: TransitionSystem[MarkingGm],
         pn_ts: TransitionSystem[MarkingPn],
-        event_map: dict[str, list[list[str]]]    ):
+        event_map: dict[str, set[str]]    ):
         self.gm_ts = gm_ts
         self.pn_ts = pn_ts
         self.event_map = event_map
@@ -264,28 +143,21 @@ class CombinedTransitionSystem:
             pn_actions = self.pn_ts.get_enabled_actions(current.pn_marking)
             for pn_action in pn_actions:
                 pn_successors = self.pn_ts.get_successors(current.pn_marking, pn_action)
-                event_sequences = self.event_map.get(pn_action, [])
-    
-                # If no event sequences, treat as empty event (goal model state unchanged)
-                if not event_sequences:
-                    event_sequences = [[]]
-    
-                # Each event_sequence is a list of elements to fire in order
-                for event_sequence in event_sequences:
-                    gm_successors = {current.gm_marking}
-                    for element in event_sequence:
-                        next_gm = set()
-                        for gm_marking in gm_successors:
-                            next_gm.update(self.gm_ts.get_successors(gm_marking, element))
-                        if next_gm:
-                            gm_successors = next_gm
-    
-                    for pn_target in pn_successors:
-                        for gm_target in gm_successors:
-                            next_state = Marking(gm_target, pn_target)
-                            transitions[current].setdefault(pn_action, set()).add(next_state)
-                            if next_state not in visited:
-                                queue.append(next_state)
+                event_sequence = self.event_map.get(pn_action, set())
+                gm_successors = {current.gm_marking}
+                for element in sorted(event_sequence):
+                    next_gm = set()
+                    for gm_marking in gm_successors:
+                        next_gm.update(self.gm_ts.get_successors(gm_marking, element))
+                    if next_gm:
+                        gm_successors = next_gm
+
+                for pn_target in pn_successors:
+                    for gm_target in gm_successors:
+                        next_state = Marking(gm_target, pn_target)
+                        transitions[current].setdefault(pn_action, set()).add(next_state)
+                        if next_state not in visited:
+                            queue.append(next_state)
     
         return visited, transitions, initial_state  
       

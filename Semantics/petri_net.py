@@ -1,11 +1,17 @@
 from Semantics.transition_system import TransitionSystem
-from Semantics.transition_system import MarkingPn  # Use MarkingPn for Petri net states
+from Semantics.markings import MarkingPn
+import os
+import tempfile
+from pm4py.objects.petri_net.exporter import exporter as pnml_exporter
+import scripts.to_petri_nets_i_love as pnml_fixer
 
 
 class PetriNet():
     def __init__(self,net,init,final,positions):
         self.net = net
         self.positions = positions
+        self.init = init
+        self.final = final
 
     def transitions(self):
         transitions_dict = {}
@@ -30,11 +36,38 @@ class PetriNet():
     def initial_place(self):
         if len(self.net.places) == 1:
             return self.net.places[0].name
-        inital_places = [p for p in [p1.name for p1 in self.net.places] if not any(p in actions[1] for t, actions in self.transitions().items())]
-        if len(inital_places) != 1:
-            raise Exception(f"Number of initial places is not equal to one {inital_places}")
-        else: 
-            return inital_places[0]
+        initial_places = [
+            p for p in [p1.name for p1 in self.net.places]
+            if not any(p in actions[1] for t, actions in self.transitions().items())
+        ]
+        if len(initial_places) == 1:
+            return initial_places[0]
+        
+        # Fallback if there is not a unique place with only outgoing arcs
+        # Look for places with non-zero initial markings
+
+        non_zero_marked_places = self._places_with_markings()
+
+        if len(non_zero_marked_places) == 1:
+            return non_zero_marked_places[0]
+        else:
+            raise Exception(
+                f"Number of initial places is not equal to one {initial_places}; "
+                f"non-zero initial marking places: {non_zero_marked_places}"
+            )
+
+    def _places_with_markings(self):
+        non_zero_marked_places = []
+        known_places = {p.name for p in self.net.places}
+        for place_key, value in getattr(self.init, 'items', lambda: [])():
+            if value is None or value <= 0:
+                continue
+            place_name = getattr(place_key, 'name', place_key)
+            if isinstance(place_name, str) and place_name in known_places:
+                non_zero_marked_places.append(place_name)
+
+        non_zero_marked_places = sorted(set(non_zero_marked_places))
+        return non_zero_marked_places
         
     def transition_names(self): 
         return sorted([t.name for t in self.net.transitions])
@@ -48,6 +81,9 @@ class PetriNet():
             self._add_event_mapping(event_mapping,t.name,t.label if t.label != t.name and t.label is not None else [])
         return event_mapping
 
+    def convert_to_kogi_mapping(self, activity_mapping: dict) -> dict:
+        return {t.name: activity_mapping.get(t.label, set()) for t in self.net.transitions}
+
     def convert_bpmn_net(self, mapping: dict, separator: str = '|'):
         """Convert BPMN-derived Petri net transition names using an event->intentional-element mapping.
 
@@ -56,9 +92,9 @@ class PetriNet():
         downstream code can reference transitions consistently. The positions for
         transitions are updated to use the new transition name as well.
 
-        Parameters:
-          mapping: dict mapping event -> list of [ [intentional_elem], ... ]
-                   e.g. {'e1': [['T1']]}.
+                Parameters:
+                    mapping: dict mapping event -> set of intentional elements
+                                     e.g. {'e1': {'T1'}}.
           separator: str used to join event and element into a single transition name.
         """
         # Build a map from original transition.name -> list of new names created
@@ -112,11 +148,12 @@ class PetriNet():
                     setattr(t, 'name', new_auto)
             label = getattr(t, 'label', None)
             key = label if (label and label in mapping) else (original_name if original_name in mapping else None)
-            rows = mapping.get(key, []) if key is not None else []
+            rows = mapping.get(key, set()) if key is not None else set()
 
             # Flatten mapping rows into a list of elements
             elems = []
-            for row in rows:
+            values = sorted(rows) if isinstance(rows, set) else rows
+            for row in values:
                 if isinstance(row, (list, tuple)):
                     for e in row:
                         if e:
@@ -278,10 +315,10 @@ class PetriNet():
         return rename_map
     
     def _add_event_mapping(self, ev_map, event: str, target):
-        if isinstance(target, list):
-            ev_map[event] = target
+        if isinstance(target, (list, set, tuple)):
+            ev_map[event] = set(target)
         else:
-            ev_map[event] = [[target]]
+            ev_map[event] = {target}
 
     def min_max(self):
         positions = self.positions['places'] + self.positions['transitions']
@@ -340,9 +377,6 @@ class PetriNet():
         - For transitions where label is None and name matches `t<number>` no <name> element is emitted
         - Every arc gets an <inscription><text>1</text></inscription> element
         """
-        import os
-        import tempfile
-        from pm4py.objects.petri_net.exporter import exporter as pnml_exporter
 
         # helper to create a secure temporary filename in same dir as target
         def make_tmp_path(target_path: str) -> str:
@@ -355,7 +389,6 @@ class PetriNet():
         tmp_path = make_tmp_path(path)
         try:
             pnml_exporter.apply(self.net, {}, tmp_path)
-            import scripts.to_petri_nets_i_love as pnml_fixer
             pnml_fixer.add_inscription(tmp_path, path)
         finally:
             try:
@@ -364,3 +397,9 @@ class PetriNet():
             except Exception:
                 pass
         return
+
+    def apply_log_alignments(self, log):
+        """Run pm4py log alignments against this wrapped Petri net."""
+        from pm4py.algo.conformance.alignments.petri_net import algorithm as alignments
+
+        return alignments.apply_log(log, self.net, self.init, self.final)

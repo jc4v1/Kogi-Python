@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="Goal-oriented Process Alignment - Domestic Declaration" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text>Goal-oriented Process Alignment - Domestic Declaration</text>
+    </name>
+    <page id="n0">
+      <place id="p0">
+        <name>
+          <text>p0</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="p3">
+        <name>
+          <text>p3</text>
+        </name>
+      </place>
+      <place id="p2">
+        <name>
+          <text>p2</text>
+        </name>
+      </place>
+      <place id="p1">
+        <name>
+          <text>p1</text>
+        </name>
+      </place>
+      <place id="p6">
+        <name>
+          <text>p6</text>
+        </name>
+      </place>
+      <place id="p4">
+        <name>
+          <text>p4</text>
+        </name>
+      </place>
+      <place id="p5">
+        <name>
+          <text>p5</text>
+        </name>
+      </place>
+      <place id="p7">
+        <name>
+          <text>p7</text>
+        </name>
+      </place>
+      <place id="p8">
+        <name>
+          <text>p8</text>
+        </name>
+      </place>
+      <transition id="t_ra">
+        <name>
+          <text>Declaration REJECTED
+by
+ADMIN.</text>
+        </name>
+      </transition>
+      <transition id="t_apa">
+        <name>
+          <text>Declaration APPROVED
+by
+ADMIN.</text>
+        </name>
+      </transition>
+      <transition id="t_ds">
+        <name>
+          <text>Declaration SUBMITTED
+by
+EMPLOYEE</text>
+        </name>
+      </transition>
+      <transition id="t_ba">
+        <name>
+          <text>Declaration APPROVED
+by
+BUDGET OWNER</text>
+        </name>
+      </transition>
+      <transition id="t_rs">
+        <name>
+          <text>Declaration REJECTED
+by
+SUPERVISOR</text>
+        </name>
+      </transition>
+      <transition id="t_as">
+        <name>
+          <text>Declaration APPROVED
+by
+SUPERVISOR</text>
+        </name>
+      </transition>
+      <transition id="t_ph">
+        <name>
+          <text>Payment
+Handled
+by
+ADMIN</text>
+        </name>
+      </transition>
+      <transition id="t_dsv">
+        <name>
+          <text>Declaration SAVED
+by
+EMPLOYEE</text>
+        </name>
+      </transition>
+      <transition id="t_rb">
+        <name>
+          <text>Declaration REJECTED
+by
+BUDGET OWNER</text>
+        </name>
+      </transition>
+      <transition id="t_er">
+        <name>
+          <text>Declaration REJECTED
+by
+EMPLOYEE</text>
+        </name>
+      </transition>
+      <transition id="t_rp">
+        <name>
+          <text>Payment
+Requested
+by
+SUPERVISOR</text>
+        </name>
+      </transition>
+      <transition id="t_tau_rev">
+        <name>
+          <text>t_tau_rev</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="98873041-a641-4677-a2c7-db7c3439eb4a"/>
+      </transition>
+      <arc id="136499433633408" source="t_ra" target="p7"/>
+      <arc id="136499434259712" source="p4" target="t_rp"/>
+      <arc id="136499434260096" source="t_ph" target="p6"/>
+      <arc id="136499435504272" source="t_dsv" target="p0"/>
+      <arc id="136499434259472" source="p3" target="t_as"/>
+      <arc id="136499434259856" source="t_rp" target="p5"/>
+      <arc id="136499435510176" source="p0" target="t_ds"/>
+      <arc id="136499434259232" source="p3" target="t_rs"/>
+      <arc id="136499434259616" source="t_as" target="p4"/>
+      <arc id="136499434258992" source="p2" target="t_ba"/>
+      <arc id="136499434259376" source="t_rs" target="p7"/>
+      <arc id="136499433633600" source="p1" target="t_ra"/>
+      <arc id="136499434258752" source="p2" target="t_rb"/>
+      <arc id="136499434259136" source="t_ba" target="p3"/>
+      <arc id="136499434258512" source="p1" target="t_apa"/>
+      <arc id="136499434258896" source="t_rb" target="p7"/>
+      <arc id="136499434260432" source="p7" target="t_tau_rev"/>
+      <arc id="136499435503840" source="p0" target="t_dsv"/>
+      <arc id="136499433634656" source="t_ds" target="p1"/>
+      <arc id="136499434258656" source="t_apa" target="p2"/>
+      <arc id="136499434260192" source="p7" target="t_er"/>
+      <arc id="136499434260576" source="t_tau_rev" target="p0"/>
+      <arc id="136499434259952" source="p5" target="t_ph"/>
+      <arc id="136499434260336" source="t_er" target="p8"/>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="p8">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>

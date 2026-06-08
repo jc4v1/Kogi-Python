@@ -1,0 +1,13 @@
+activity,intentional_element
+t_apa,(Admin) Approve Declaration
+t_as,(Supervisor) Approve Declaration
+t_ba,(Budget Owner) Approve Declaration
+t_ds,(Employee) Submit Declaration
+t_dsv,(Employee) Save Declaration
+t_er,(Employee) Reject Declaration
+t_ph,(Admin) Handle payment
+t_ra,(Admin) Reject Declaration
+t_rb,(Budget Owner) Reject Declaration
+t_rp,(Supervisor) Request Payment
+t_rs,(Supervisor) Reject Declaration
+t_tau_rev,

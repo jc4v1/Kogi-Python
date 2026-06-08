@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="560" viewBox="0 0 1280 560" role="img" aria-labelledby="title desc">
+  <title id="title">Rendered goal-oriented alignment example for the TUE reimbursement case</title>
+  <desc id="desc">A table showing one non-optimal but strongly fulfilled goal-oriented alignment with log moves, model moves, target labels, and markings.</desc>
+  <style>
+    .title { font: 700 24px Arial, sans-serif; fill: #111; }
+    .subtitle { font: 14px Arial, sans-serif; fill: #333; }
+    .label { font: 700 13px Arial, sans-serif; fill: #111; }
+    .text { font: 13px Arial, sans-serif; fill: #111; }
+    .small { font: 12px Arial, sans-serif; fill: #333; }
+    .celltext { font: 700 13px Arial, sans-serif; fill: #111; text-anchor: middle; dominant-baseline: middle; }
+    .target { font: 700 12px Arial, sans-serif; fill: #111; }
+    .grid { stroke: #555; stroke-width: 1; fill: #fff; }
+    .header { fill: #f2f2f2; stroke: #555; stroke-width: 1; }
+    .make { fill: #dff3e3; stroke: #555; stroke-width: 1; }
+    .nr { fill: #f2f2f2; stroke: #555; stroke-width: 1; }
+    .unknown { fill: #fff; stroke: #555; stroke-width: 1; }
+    .satisfied { fill: #dff3e3; stroke: #555; stroke-width: 1; }
+    .summarybox { fill: #fff; stroke: #222; stroke-width: 1.5; rx: 8; }
+  </style>
+
+  <rect x="0" y="0" width="1280" height="560" fill="#ffffff"/>
+
+  <text x="40" y="42" class="title">Goal-oriented alignment example from the reimbursement notebook</text>
+  <text x="40" y="68" class="subtitle">Trace: ds -> as -> rp -> ph. The process alignment is non-optimal because two model moves are missing from the log, but both selected targets are satisfied at the end.</text>
+
+  <g transform="translate(40,104)">
+    <rect x="0" y="0" width="1200" height="52" class="summarybox"/>
+    <text x="18" y="22" class="label">Case class</text>
+    <text x="18" y="42" class="text">Non-optimal alignment + strong fulfilled</text>
+    <text x="370" y="22" class="label">Alignment cost / fitness</text>
+    <text x="370" y="42" class="text">20000 / 0.714</text>
+    <text x="660" y="22" class="label">Selected targets</text>
+    <text x="660" y="42" class="text">(Admin) adequate declaration handling; (Employee) Increase employee satisfaction</text>
+  </g>
+
+  <g transform="translate(40,188)">
+    <!-- column sizes: target 250, value 80, six step columns 100 -->
+    <rect x="0" y="0" width="250" height="36" class="header"/>
+    <rect x="250" y="0" width="80" height="36" class="header"/>
+    <text x="125" y="18" class="celltext">Target</text>
+    <text x="290" y="18" class="celltext">Value</text>
+
+    <g class="steps">
+      <rect x="330" y="0" width="100" height="36" class="header"/><text x="380" y="18" class="celltext">1</text>
+      <rect x="430" y="0" width="100" height="36" class="header"/><text x="480" y="18" class="celltext">2</text>
+      <rect x="530" y="0" width="100" height="36" class="header"/><text x="580" y="18" class="celltext">3</text>
+      <rect x="630" y="0" width="100" height="36" class="header"/><text x="680" y="18" class="celltext">4</text>
+      <rect x="730" y="0" width="100" height="36" class="header"/><text x="780" y="18" class="celltext">5</text>
+      <rect x="830" y="0" width="100" height="36" class="header"/><text x="880" y="18" class="celltext">6</text>
+    </g>
+
+    <!-- alignment rows -->
+    <rect x="0" y="36" width="250" height="72" class="grid"/>
+    <text x="125" y="72" class="celltext">alignment move</text>
+    <rect x="250" y="36" width="80" height="36" class="grid"/><text x="290" y="54" class="celltext">log</text>
+    <rect x="250" y="72" width="80" height="36" class="grid"/><text x="290" y="90" class="celltext">model</text>
+
+    <rect x="330" y="36" width="100" height="36" class="grid"/><text x="380" y="54" class="celltext">ds</text>
+    <rect x="430" y="36" width="100" height="36" class="grid"/><text x="480" y="54" class="celltext">&gt;&gt;</text>
+    <rect x="530" y="36" width="100" height="36" class="grid"/><text x="580" y="54" class="celltext">&gt;&gt;</text>
+    <rect x="630" y="36" width="100" height="36" class="grid"/><text x="680" y="54" class="celltext">as</text>
+    <rect x="730" y="36" width="100" height="36" class="grid"/><text x="780" y="54" class="celltext">rp</text>
+    <rect x="830" y="36" width="100" height="36" class="grid"/><text x="880" y="54" class="celltext">ph</text>
+
+    <rect x="330" y="72" width="100" height="36" class="grid"/><text x="380" y="90" class="celltext">ds</text>
+    <rect x="430" y="72" width="100" height="36" class="grid"/><text x="480" y="90" class="celltext">aa</text>
+    <rect x="530" y="72" width="100" height="36" class="grid"/><text x="580" y="90" class="celltext">ba</text>
+    <rect x="630" y="72" width="100" height="36" class="grid"/><text x="680" y="90" class="celltext">as</text>
+    <rect x="730" y="72" width="100" height="36" class="grid"/><text x="780" y="90" class="celltext">rp</text>
+    <rect x="830" y="72" width="100" height="36" class="grid"/><text x="880" y="90" class="celltext">ph</text>
+
+    <!-- admin target rows -->
+    <rect x="0" y="108" width="250" height="72" class="grid"/>
+    <text x="12" y="142" class="target">(Admin) adequate</text>
+    <text x="12" y="158" class="target">declaration handling</text>
+    <rect x="250" y="108" width="80" height="36" class="grid"/><text x="290" y="126" class="celltext">label</text>
+    <rect x="250" y="144" width="80" height="36" class="grid"/><text x="290" y="162" class="celltext">marking</text>
+
+    <rect x="330" y="108" width="100" height="36" class="make"/><text x="380" y="126" class="celltext">M</text>
+    <rect x="430" y="108" width="100" height="36" class="make"/><text x="480" y="126" class="celltext">M</text>
+    <rect x="530" y="108" width="100" height="36" class="make"/><text x="580" y="126" class="celltext">M</text>
+    <rect x="630" y="108" width="100" height="36" class="make"/><text x="680" y="126" class="celltext">M</text>
+    <rect x="730" y="108" width="100" height="36" class="make"/><text x="780" y="126" class="celltext">M</text>
+    <rect x="830" y="108" width="100" height="36" class="make"/><text x="880" y="126" class="celltext">M</text>
+
+    <rect x="330" y="144" width="100" height="36" class="unknown"/><text x="380" y="162" class="celltext">U</text>
+    <rect x="430" y="144" width="100" height="36" class="unknown"/><text x="480" y="162" class="celltext">U</text>
+    <rect x="530" y="144" width="100" height="36" class="unknown"/><text x="580" y="162" class="celltext">U</text>
+    <rect x="630" y="144" width="100" height="36" class="unknown"/><text x="680" y="162" class="celltext">U</text>
+    <rect x="730" y="144" width="100" height="36" class="unknown"/><text x="780" y="162" class="celltext">U</text>
+    <rect x="830" y="144" width="100" height="36" class="satisfied"/><text x="880" y="162" class="celltext">S</text>
+
+    <!-- employee target rows -->
+    <rect x="0" y="180" width="250" height="72" class="grid"/>
+    <text x="12" y="214" class="target">(Employee) Increase</text>
+    <text x="12" y="230" class="target">employee satisfaction</text>
+    <rect x="250" y="180" width="80" height="36" class="grid"/><text x="290" y="198" class="celltext">label</text>
+    <rect x="250" y="216" width="80" height="36" class="grid"/><text x="290" y="234" class="celltext">marking</text>
+
+    <rect x="330" y="180" width="100" height="36" class="make"/><text x="380" y="198" class="celltext">M</text>
+    <rect x="430" y="180" width="100" height="36" class="nr"/><text x="480" y="198" class="celltext">NR</text>
+    <rect x="530" y="180" width="100" height="36" class="nr"/><text x="580" y="198" class="celltext">NR</text>
+    <rect x="630" y="180" width="100" height="36" class="nr"/><text x="680" y="198" class="celltext">NR</text>
+    <rect x="730" y="180" width="100" height="36" class="make"/><text x="780" y="198" class="celltext">M</text>
+    <rect x="830" y="180" width="100" height="36" class="make"/><text x="880" y="198" class="celltext">M</text>
+
+    <rect x="330" y="216" width="100" height="36" class="unknown"/><text x="380" y="234" class="celltext">U</text>
+    <rect x="430" y="216" width="100" height="36" class="unknown"/><text x="480" y="234" class="celltext">U</text>
+    <rect x="530" y="216" width="100" height="36" class="unknown"/><text x="580" y="234" class="celltext">U</text>
+    <rect x="630" y="216" width="100" height="36" class="unknown"/><text x="680" y="234" class="celltext">U</text>
+    <rect x="730" y="216" width="100" height="36" class="unknown"/><text x="780" y="234" class="celltext">U</text>
+    <rect x="830" y="216" width="100" height="36" class="satisfied"/><text x="880" y="234" class="celltext">S</text>
+
+    <!-- legend -->
+    <g transform="translate(970,0)">
+      <rect x="0" y="0" width="210" height="252" class="summarybox"/>
+      <text x="16" y="28" class="label">Legend</text>
+      <rect x="16" y="48" width="28" height="22" class="make"/><text x="54" y="64" class="small">M = makes/supports target</text>
+      <rect x="16" y="82" width="28" height="22" class="nr"/><text x="54" y="98" class="small">NR = non-related</text>
+      <rect x="16" y="116" width="28" height="22" class="unknown"/><text x="54" y="132" class="small">U = unknown/pending</text>
+      <rect x="16" y="150" width="28" height="22" class="satisfied"/><text x="54" y="166" class="small">S = satisfied</text>
+      <text x="16" y="204" class="small">ds = submitted</text>
+      <text x="16" y="222" class="small">aa/ba/as = approvals</text>
+      <text x="16" y="240" class="small">rp/ph = request/payment handled</text>
+    </g>
+  </g>
+
+  <text x="40" y="508" class="small">.</text>
+</svg>

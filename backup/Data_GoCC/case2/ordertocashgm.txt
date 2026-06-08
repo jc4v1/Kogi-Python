@@ -1,0 +1,234 @@
+{
+  "actors": [
+    {
+      "id": "bda083fe-1fb4-41cf-aea9-449c0d4044b5",
+      "text": "",
+      "type": "istar.Role",
+      "x": 48,
+      "y": 70,
+      "customProperties": {
+        "Description": "Someone that needs to undestand the goals of an organizations"
+      },
+      "nodes": [
+        {
+          "id": "1c617161-1de0-45a3-ab8d-5afa8a6e9c2f",
+          "text": "Order rejected",
+          "type": "istar.Goal",
+          "x": 164,
+          "y": 313,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d873e3db-d4c3-4c0f-9eed-aab4c77893a1",
+          "text": "Order fulfilled ",
+          "type": "istar.Goal",
+          "x": 290,
+          "y": 247,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "66366dd3-7b54-42af-8484-82a213546574",
+          "text": "Check stock availability ",
+          "type": "istar.Task",
+          "x": 194,
+          "y": 407,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "02f1d793-1d50-404b-8fb9-3c272fbe088e",
+          "text": "Reject order",
+          "type": "istar.Task",
+          "x": 75,
+          "y": 385,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c0f8fe67-4789-478f-8f37-7df52fcb68b1",
+          "text": "Retrieve product from warehouse",
+          "type": "istar.Task",
+          "x": 301,
+          "y": 409,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "045e5b33-47ff-417d-ba3a-bcf617d02523",
+          "text": "Confirm order",
+          "type": "istar.Task",
+          "x": 414,
+          "y": 408,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d5561634-2d38-4ae8-9063-10de848accba",
+          "text": "Get shipment address",
+          "type": "istar.Task",
+          "x": 438,
+          "y": 197,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "620f4186-0990-48cb-805b-94353d6b9f2b",
+          "text": "Ship product",
+          "type": "istar.Task",
+          "x": 525,
+          "y": 258,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "97528808-64b8-430a-a94f-fb29e122a547",
+          "text": "Emit invoice",
+          "type": "istar.Task",
+          "x": 546,
+          "y": 341,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "12e27348-6986-4c14-a7d4-7db5e542253b",
+          "text": "Receive payment",
+          "type": "istar.Task",
+          "x": 521,
+          "y": 408,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9f4f2f40-9e06-4cab-bd8f-1669a9115aaf",
+          "text": "Archive order",
+          "type": "istar.Task",
+          "x": 298,
+          "y": 168,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "0131b6fd-8727-44af-8307-3f0d13d2ee10",
+          "text": "Order confirmed",
+          "type": "istar.Goal",
+          "x": 288,
+          "y": 326,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "528b4fca-8bab-4eb6-84b7-cce22678cf13",
+          "text": "Product shipped",
+          "type": "istar.Goal",
+          "x": 402,
+          "y": 327,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "ffd166b5-203d-4170-8569-2b3f8085be98",
+      "type": "istar.AndRefinementLink",
+      "source": "66366dd3-7b54-42af-8484-82a213546574",
+      "target": "0131b6fd-8727-44af-8307-3f0d13d2ee10"
+    },
+    {
+      "id": "9b931f7d-63cb-4892-b663-79f94a841bc4",
+      "type": "istar.AndRefinementLink",
+      "source": "66366dd3-7b54-42af-8484-82a213546574",
+      "target": "1c617161-1de0-45a3-ab8d-5afa8a6e9c2f"
+    },
+    {
+      "id": "97542221-d70e-4137-a1a3-d6412106d667",
+      "type": "istar.AndRefinementLink",
+      "source": "02f1d793-1d50-404b-8fb9-3c272fbe088e",
+      "target": "1c617161-1de0-45a3-ab8d-5afa8a6e9c2f"
+    },
+    {
+      "id": "4cba0f4f-55c3-4180-8726-73df4e1c2045",
+      "type": "istar.AndRefinementLink",
+      "source": "c0f8fe67-4789-478f-8f37-7df52fcb68b1",
+      "target": "0131b6fd-8727-44af-8307-3f0d13d2ee10"
+    },
+    {
+      "id": "08d8a5b9-937b-4e60-89e6-35da6a8a7dad",
+      "type": "istar.AndRefinementLink",
+      "source": "045e5b33-47ff-417d-ba3a-bcf617d02523",
+      "target": "0131b6fd-8727-44af-8307-3f0d13d2ee10"
+    },
+    {
+      "id": "a0a8d1f0-c87b-42a6-8d3e-5599dec70460",
+      "type": "istar.AndRefinementLink",
+      "source": "12e27348-6986-4c14-a7d4-7db5e542253b",
+      "target": "528b4fca-8bab-4eb6-84b7-cce22678cf13"
+    },
+    {
+      "id": "db9c26f3-d4b4-4e16-95b2-1f868ac4edf5",
+      "type": "istar.AndRefinementLink",
+      "source": "97528808-64b8-430a-a94f-fb29e122a547",
+      "target": "528b4fca-8bab-4eb6-84b7-cce22678cf13"
+    },
+    {
+      "id": "2304d586-cb1e-468b-ad10-2f8735eedce3",
+      "type": "istar.AndRefinementLink",
+      "source": "620f4186-0990-48cb-805b-94353d6b9f2b",
+      "target": "528b4fca-8bab-4eb6-84b7-cce22678cf13"
+    },
+    {
+      "id": "ee8ef1e9-0100-497f-9af4-af1467f9e525",
+      "type": "istar.AndRefinementLink",
+      "source": "d5561634-2d38-4ae8-9063-10de848accba",
+      "target": "528b4fca-8bab-4eb6-84b7-cce22678cf13"
+    },
+    {
+      "id": "10bbe0a7-02b2-467c-a84f-e990b18e0a3b",
+      "type": "istar.AndRefinementLink",
+      "source": "9f4f2f40-9e06-4cab-bd8f-1669a9115aaf",
+      "target": "d873e3db-d4c3-4c0f-9eed-aab4c77893a1"
+    },
+    {
+      "id": "c3f58806-2755-413a-b460-06116fc9634d",
+      "type": "istar.AndRefinementLink",
+      "source": "528b4fca-8bab-4eb6-84b7-cce22678cf13",
+      "target": "d873e3db-d4c3-4c0f-9eed-aab4c77893a1"
+    },
+    {
+      "id": "46bea052-3df5-4482-b8e0-7851579ea165",
+      "type": "istar.AndRefinementLink",
+      "source": "0131b6fd-8727-44af-8307-3f0d13d2ee10",
+      "target": "d873e3db-d4c3-4c0f-9eed-aab4c77893a1"
+    }
+  ],
+  "display": {},
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 17 Mar 2026 20:41:59 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 700,
+    "name": "Welcome Model",
+    "customProperties": {
+      "Description": "Welcome to the piStar tool version 2.1.0, released on November, 2021! This model describes some of the recent improvements in the tool. Click on the purple elements for further info.\n\nFor help using this tool, please check the Help menu above"
+    }
+  }
+}

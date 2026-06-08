@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pnml>
+  <net id="imported_1779752083.4068859" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text>imported_1779752083.4068859</text>
+    </name>
+    <page id="n0">
+      <place id="p0">
+        <name>
+          <text>p0</text>
+        </name>
+      </place>
+      <place id="p3">
+        <name>
+          <text>p3</text>
+        </name>
+      </place>
+      <place id="p2">
+        <name>
+          <text>p2</text>
+        </name>
+      </place>
+      <place id="p1">
+        <name>
+          <text>p1</text>
+        </name>
+      </place>
+      <place id="p6">
+        <name>
+          <text>p6</text>
+        </name>
+      </place>
+      <place id="p4">
+        <name>
+          <text>p4</text>
+        </name>
+      </place>
+      <place id="p5">
+        <name>
+          <text>p5</text>
+        </name>
+      </place>
+      <place id="p7">
+        <name>
+          <text>p7</text>
+        </name>
+      </place>
+      <transition id="t_rb">
+        <name>
+          <text>Declaration REJECTED by BUDGET OWNER</text>
+        </name>
+      </transition>
+      <transition id="t_er">
+        <name>
+          <text>Declaration REJECTED by EMPLOYEE</text>
+        </name>
+      </transition>
+      <transition id="t_tau_rev">
+        <name>
+          <text>t_tau_rev</text>
+        </name>
+      </transition>
+      <transition id="t_apa">
+        <name>
+          <text>Declaration APPROVED by ADMINISTRATION</text>
+        </name>
+      </transition>
+      <transition id="t_ds">
+        <name>
+          <text>Declaration SUBMITTED by EMPLOYEE</text>
+        </name>
+      </transition>
+      <transition id="t_ra">
+        <name>
+          <text>Declaration REJECTED by ADMINISTRATION</text>
+        </name>
+      </transition>
+      <transition id="t_rp">
+        <name>
+          <text>Request Payment</text>
+        </name>
+      </transition>
+      <transition id="t_rs">
+        <name>
+          <text>Declaration REJECTED by SUPERVISOR</text>
+        </name>
+      </transition>
+      <transition id="t_ba">
+        <name>
+          <text>t_ba</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="8aff6af4-6c47-417c-b01f-05e6f5d47872" />
+      </transition>
+      <transition id="t_as">
+        <name>
+          <text>Declaration FINAL_APPROVED by SUPERVISOR</text>
+        </name>
+      </transition>
+      <transition id="t_ph">
+        <name>
+          <text>Payment Handled</text>
+        </name>
+      </transition>
+      <transition id="t_dsv">
+        <name>
+          <text>Declaration SAVED by EMPLOYEE</text>
+        </name>
+      </transition>
+      <arc id="2896360972240" source="t_rp" target="p5"><inscription>1</inscription></arc>
+      <arc id="2896349521424" source="p7" target="t_tau_rev"><inscription>1</inscription></arc>
+      <arc id="2896361356816" source="t_ds" target="p1"><inscription>1</inscription></arc>
+      <arc id="2896361223440" source="p0" target="t_dsv"><inscription>1</inscription></arc>
+      <arc id="2896360651152" source="p3" target="t_rs"><inscription>1</inscription></arc>
+      <arc id="2896361221904" source="t_as" target="p4"><inscription>1</inscription></arc>
+      <arc id="2896361219600" source="p2" target="t_ba"><inscription>1</inscription></arc>
+      <arc id="2896349514768" source="p5" target="t_ph"><inscription>1</inscription></arc>
+      <arc id="2896349516944" source="p1" target="t_ra"><inscription>1</inscription></arc>
+      <arc id="2896360972688" source="p4" target="t_rp"><inscription>1</inscription></arc>
+      <arc id="2896360976592" source="t_rs" target="p7"><inscription>1</inscription></arc>
+      <arc id="2896349520976" source="p1" target="t_apa"><inscription>1</inscription></arc>
+      <arc id="2896360203600" source="t_ra" target="p7"><inscription>1</inscription></arc>
+      <arc id="2896361214672" source="t_tau_rev" target="p0"><inscription>1</inscription></arc>
+      <arc id="2896349515472" source="p7" target="t_er"><inscription>1</inscription></arc>
+      <arc id="2896360973392" source="t_dsv" target="p0"><inscription>1</inscription></arc>
+      <arc id="2896360721104" source="t_er" target="p6"><inscription>1</inscription></arc>
+      <arc id="2896361219408" source="t_ph" target="p6"><inscription>1</inscription></arc>
+      <arc id="2896361218000" source="p3" target="t_as"><inscription>1</inscription></arc>
+      <arc id="2896361223632" source="p0" target="t_ds"><inscription>1</inscription></arc>
+      <arc id="2896361215824" source="t_ba" target="p3"><inscription>1</inscription></arc>
+      <arc id="2896361221456" source="p2" target="t_rb"><inscription>1</inscription></arc>
+      <arc id="2896360965392" source="t_rb" target="p7"><inscription>1</inscription></arc>
+      <arc id="2896360971600" source="t_apa" target="p2"><inscription>1</inscription></arc>
+    </page>
+  </net>
+</pnml>

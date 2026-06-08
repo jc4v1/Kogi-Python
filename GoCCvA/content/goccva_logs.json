@@ -1,0 +1,170 @@
+{
+  "clean_log": [
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ]
+  ],
+  "noisy_log": [
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Manual accessibility check",
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Manual accessibility check",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Special Needs",
+      "Provide Records"
+    ],
+    [
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity denied"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Format Data Regular Needs",
+      "Provide Records"
+    ],
+    [
+      "Verify identity",
+      "Identity verified",
+      "Provide Records"
+    ]
+  ]
+}

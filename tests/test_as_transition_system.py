@@ -1,8 +1,8 @@
 import pytest
 from typing import Any
 from Semantics.algorithms import check_stable_system, check_weak_compliance
-from Semantics.istar_processor import read_istar_model
-from Semantics.enums import ElementStatus, QualityStatus
+from Semantics.parsers.istar_processor import read_istar_model
+from Semantics.enums import ElementStatus
 from tests.utilities import pretty_print_states, states_to_str, transitions_to_str, pretty_print
 from Semantics.transition_system import MarkingGm
 
@@ -16,8 +16,8 @@ def test_simple_real_gm_as_ts_combined():
     pretty_print(ts.transitions)
 
     expected_states_set = {
-        MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED}),
-        MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': QualityStatus.UNKNOWN}),
+        MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED}),
+        MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': ElementStatus.UNKNOWN}),
     }
 
     # Assert states
@@ -29,11 +29,11 @@ def test_simple_real_gm_as_ts_combined():
 
     # Define expected transitions as MarkingGm objects
     expected_transitions = {
-       MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': QualityStatus.UNKNOWN}): {
-            'Task': {MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED})}
+       MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': ElementStatus.UNKNOWN}): {
+            'Task': {MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED})}
         },
-        MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED}): {
-            'Task': {MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED})}
+        MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED}): {
+            'Task': {MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED})}
         },
     }
     # Check that transitions match expected
@@ -55,9 +55,9 @@ def test_simple_real_gm_as_ts_original():
     pretty_print(ts.transitions)
     # Assert states
     expected_states_set = {
-        MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.UNKNOWN}),
-        MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED}),
-        MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': QualityStatus.UNKNOWN}),
+        MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.UNKNOWN}),
+        MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED}),
+        MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': ElementStatus.UNKNOWN}),
     }
     assert ts.states() == expected_states_set
 
@@ -67,11 +67,11 @@ def test_simple_real_gm_as_ts_original():
 
     # Define expected transitions as MarkingGm objects
     expected_transitions = {
-        MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': QualityStatus.UNKNOWN}): 
-            {'Task': {MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.UNKNOWN})}},
-        MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.UNKNOWN}): 
-            {'q': {MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED})}},
-        MarkingGm({'Task': ElementStatus.TRUE_FALSE, 'q': QualityStatus.FULFILLED}): {},
+        MarkingGm({'Task': ElementStatus.UNKNOWN, 'q': ElementStatus.UNKNOWN}): 
+            {'Task': {MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.UNKNOWN})}},
+        MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.UNKNOWN}): 
+            {'q': {MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED})}},
+        MarkingGm({'Task': ElementStatus.SATISFIED, 'q': ElementStatus.SATISFIED}): {},
     }
     # Check that transitions match expected
     assert ts.transitions == expected_transitions

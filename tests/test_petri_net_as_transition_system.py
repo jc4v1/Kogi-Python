@@ -3,10 +3,10 @@ from typing import Any
 from Semantics.algorithms import check_stable_system, forward_bfs, backward_bfs, check_weak_compliance
 from Semantics.transition_system import State, TransitionSystem
 from Semantics.goal_model import GoalModel
-from Semantics.istar_processor import read_istar_model
-from Semantics.petri_net_processor import read_petri_net
+from Semantics.parsers.istar_processor import read_istar_model
+from Semantics.parsers.petri_net_processor import read_petri_net
 from pprint import pp
-from Semantics.enums import ElementStatus, QualityStatus
+from Semantics.enums import ElementStatus
 from tests.utilities import pretty_print_states, states_to_str, transitions_to_str, pretty_print
 from Semantics.transition_system import MarkingPn
 

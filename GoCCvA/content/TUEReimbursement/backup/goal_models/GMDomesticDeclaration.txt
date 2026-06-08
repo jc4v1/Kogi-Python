@@ -1,0 +1,619 @@
+{
+  "actors": [
+    {
+      "id": "43452d46-979a-422a-9ba2-0c42465684d3",
+      "text": "Supervisor",
+      "type": "istar.Actor",
+      "x": 107,
+      "y": 363,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "2fc243c8-be80-4788-bd4e-3f784f95d6c1",
+          "text": "Reject Declaration  (U)",
+          "type": "istar.Task",
+          "x": 155,
+          "y": 396,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9eea0305-f436-4f90-b437-68a7436507dc",
+          "text": "Approve Declaration  (U)",
+          "type": "istar.Task",
+          "x": 205,
+          "y": 528,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "439bbf46-8ae8-4f57-8df1-610e8f3168f5",
+          "text": "Request Payment  (U)",
+          "type": "istar.Task",
+          "x": 107,
+          "y": 508,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "5350aae8-3b1e-4774-a9bf-bd64c8826377",
+          "text": "Requirements Completed  (U)",
+          "type": "istar.Goal",
+          "x": 325,
+          "y": 527,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d28b6199-e00f-4b58-a484-9818776982f2",
+          "text": "Payment initiated(U)",
+          "type": "istar.Goal",
+          "x": 222,
+          "y": 444,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "242fa4ec-8aa2-4530-a5f0-6e7f541ae8be",
+      "text": "Budget Owner",
+      "type": "istar.Actor",
+      "x": 584,
+      "y": 43,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "ca9a51d9-a660-42fd-8be4-c59452d4eab8",
+          "text": "Approve Declaration  (U)",
+          "type": "istar.Task",
+          "x": 643,
+          "y": 241,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "50b36752-849f-49f3-85eb-ebc91c0e5dde",
+          "text": "Reject Declaration  (U)",
+          "type": "istar.Task",
+          "x": 629,
+          "y": 114,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9a1b55ec-1d41-4db5-9136-51d627c845e1",
+          "text": "Declaration approved by Admin  (U)",
+          "type": "istar.Goal",
+          "x": 775,
+          "y": 241,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "869c5fe7-e290-49eb-9e8d-4a0bf695927a",
+          "text": "Requirements Completed  (U)",
+          "type": "istar.Goal",
+          "x": 710,
+          "y": 157,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "d30d030c-c951-449b-902a-58969597f5fb",
+      "text": "Admin",
+      "type": "istar.Actor",
+      "x": 493,
+      "y": 307,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "58200e51-b367-4a25-b86b-b610845919b6",
+          "text": "Approve Declaration  (U)",
+          "type": "istar.Task",
+          "x": 683,
+          "y": 408,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "43e5f540-89a0-4c1c-907b-d1a28ce47b54",
+          "text": "Reject Declaration  (U)",
+          "type": "istar.Task",
+          "x": 508,
+          "y": 406,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "ca95ff0e-37e8-4502-a06a-bed18a917e19",
+          "text": "Handle Payment  (U)",
+          "type": "istar.Task",
+          "x": 601,
+          "y": 465,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "f7413b7f-a7bb-4590-90c1-250f7b5342eb",
+          "text": "adequate declaration handling  (U)",
+          "type": "istar.Quality",
+          "x": 579,
+          "y": 311,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "138e7d88-4b79-4f74-b07b-ab4b163c6665",
+      "text": "Employee",
+      "type": "istar.Actor",
+      "x": 106,
+      "y": 36,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "b1846161-833b-4db3-ad1c-08247d86e24c",
+          "text": "Save Declaration (U)",
+          "type": "istar.Task",
+          "x": 106,
+          "y": 101,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "7e7a8860-77f4-46c9-90e9-8deab29d303c",
+          "text": "Submit Declaration  (U)",
+          "type": "istar.Task",
+          "x": 323,
+          "y": 113,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "70c9da11-2ce7-4c28-bb7e-35e4d0bb0763",
+          "text": "Reject Declaration  (U)",
+          "type": "istar.Task",
+          "x": 134,
+          "y": 219,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "4e634e8a-0040-4a76-93ec-4fa93cf9ab1c",
+          "text": "increase employee satisfaction  (S)",
+          "type": "istar.Quality",
+          "x": 265,
+          "y": 36,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+          "text": "Declaration Rejected by other actors  (U)",
+          "type": "istar.Goal",
+          "x": 290,
+          "y": 217,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "79066fe2-0877-41cb-95b9-7749c2fbd6b1",
+          "text": "Declaration Rejected  (U)",
+          "type": "istar.Goal",
+          "x": 201,
+          "y": 146,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "563e5fef-fbaa-430b-b822-840672bac0fa",
+      "text": "Declaration Rejected by Admin  (U)",
+      "type": "istar.Goal",
+      "x": 344,
+      "y": 307,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "43e5f540-89a0-4c1c-907b-d1a28ce47b54"
+    },
+    {
+      "id": "2c83cb27-66be-4904-afd5-251ee9463383",
+      "text": "Declaration Rejected by budget owner  (U)",
+      "type": "istar.Goal",
+      "x": 514,
+      "y": 185,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "50b36752-849f-49f3-85eb-ebc91c0e5dde"
+    },
+    {
+      "id": "77809e0b-17a5-45b0-9420-bbb56d64cc90",
+      "text": "Declaration Rejected by Supervisor  (U)",
+      "type": "istar.Goal",
+      "x": 213,
+      "y": 316,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "2fc243c8-be80-4788-bd4e-3f784f95d6c1"
+    },
+    {
+      "id": "b303619d-5023-4273-85e2-bf35cf4d1ab0",
+      "text": "Declaration approved  (U)",
+      "type": "istar.Goal",
+      "x": 753,
+      "y": 338,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "9a1b55ec-1d41-4db5-9136-51d627c845e1",
+      "target": "58200e51-b367-4a25-b86b-b610845919b6"
+    },
+    {
+      "id": "c109971f-a6d9-462c-bba5-4a152c781101",
+      "text": "Declaration Transfered to supervisor  (U)",
+      "type": "istar.Goal",
+      "x": 665,
+      "y": 527,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "5350aae8-3b1e-4774-a9bf-bd64c8826377",
+      "target": "869c5fe7-e290-49eb-9e8d-4a0bf695927a"
+    },
+    {
+      "id": "fdd42f68-7b24-4161-bdc5-726ddff5e1a7",
+      "text": "Payment request initiated  (U)",
+      "type": "istar.Goal",
+      "x": 414,
+      "y": 461,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "ca95ff0e-37e8-4502-a06a-bed18a917e19",
+      "target": "d28b6199-e00f-4b58-a484-9818776982f2"
+    }
+  ],
+  "links": [
+    {
+      "id": "e1cf8942-ed0d-44df-a3f4-cb0650b8ba8e",
+      "type": "istar.DependencyLink",
+      "source": "fdd42f68-7b24-4161-bdc5-726ddff5e1a7",
+      "target": "d28b6199-e00f-4b58-a484-9818776982f2"
+    },
+    {
+      "id": "5b45c845-9da6-493c-9fdb-ac2f9b8a2119",
+      "type": "istar.DependencyLink",
+      "source": "ca95ff0e-37e8-4502-a06a-bed18a917e19",
+      "target": "fdd42f68-7b24-4161-bdc5-726ddff5e1a7"
+    },
+    {
+      "id": "cfd0050d-fe39-493e-a6f8-d165844eef41",
+      "type": "istar.DependencyLink",
+      "source": "c109971f-a6d9-462c-bba5-4a152c781101",
+      "target": "869c5fe7-e290-49eb-9e8d-4a0bf695927a"
+    },
+    {
+      "id": "ea458196-0db1-4c56-99b1-b14bfce53664",
+      "type": "istar.DependencyLink",
+      "source": "5350aae8-3b1e-4774-a9bf-bd64c8826377",
+      "target": "c109971f-a6d9-462c-bba5-4a152c781101"
+    },
+    {
+      "id": "135c06e1-5331-4ff6-8877-0d735a001559",
+      "type": "istar.DependencyLink",
+      "source": "b303619d-5023-4273-85e2-bf35cf4d1ab0",
+      "target": "58200e51-b367-4a25-b86b-b610845919b6"
+    },
+    {
+      "id": "fc58c4bf-481d-4d95-8ca5-991d9f4f45b5",
+      "type": "istar.DependencyLink",
+      "source": "9a1b55ec-1d41-4db5-9136-51d627c845e1",
+      "target": "b303619d-5023-4273-85e2-bf35cf4d1ab0"
+    },
+    {
+      "id": "87784429-debb-4b07-b297-783954e916e4",
+      "type": "istar.DependencyLink",
+      "source": "77809e0b-17a5-45b0-9420-bbb56d64cc90",
+      "target": "2fc243c8-be80-4788-bd4e-3f784f95d6c1"
+    },
+    {
+      "id": "3ec46db4-1fbb-48b9-a318-213d4135be38",
+      "type": "istar.DependencyLink",
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "77809e0b-17a5-45b0-9420-bbb56d64cc90"
+    },
+    {
+      "id": "4ecbf5f0-603e-4302-ae96-8af9e4209c1f",
+      "type": "istar.DependencyLink",
+      "source": "2c83cb27-66be-4904-afd5-251ee9463383",
+      "target": "50b36752-849f-49f3-85eb-ebc91c0e5dde"
+    },
+    {
+      "id": "eff0299d-2011-4794-9c63-ba4a96227b40",
+      "type": "istar.DependencyLink",
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "2c83cb27-66be-4904-afd5-251ee9463383"
+    },
+    {
+      "id": "8612a99e-afb8-457d-a5e6-c17bd5402d72",
+      "type": "istar.DependencyLink",
+      "source": "563e5fef-fbaa-430b-b822-840672bac0fa",
+      "target": "43e5f540-89a0-4c1c-907b-d1a28ce47b54"
+    },
+    {
+      "id": "94b31e57-0252-49dc-9cce-1b2da875770d",
+      "type": "istar.DependencyLink",
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "563e5fef-fbaa-430b-b822-840672bac0fa"
+    },
+    {
+      "id": "65034ded-930c-41bb-8688-e3732bd1dc1c",
+      "type": "istar.OrRefinementLink",
+      "source": "d2517a9f-9b52-4e66-b64a-5c3f13db23a0",
+      "target": "79066fe2-0877-41cb-95b9-7749c2fbd6b1"
+    },
+    {
+      "id": "e824099b-d376-4baa-9038-e47ebb77b707",
+      "type": "istar.OrRefinementLink",
+      "source": "70c9da11-2ce7-4c28-bb7e-35e4d0bb0763",
+      "target": "79066fe2-0877-41cb-95b9-7749c2fbd6b1"
+    },
+    {
+      "id": "d838a836-88d8-47d7-98f9-dfb9679fe1cf",
+      "type": "istar.ContributionLink",
+      "source": "79066fe2-0877-41cb-95b9-7749c2fbd6b1",
+      "target": "4e634e8a-0040-4a76-93ec-4fa93cf9ab1c",
+      "label": "break"
+    },
+    {
+      "id": "22461983-676d-45df-80c9-b30b81d55f27",
+      "type": "istar.AndRefinementLink",
+      "source": "9eea0305-f436-4f90-b437-68a7436507dc",
+      "target": "d28b6199-e00f-4b58-a484-9818776982f2"
+    },
+    {
+      "id": "20067ec6-50e7-4b7f-96a2-3f5efc31ecc3",
+      "type": "istar.AndRefinementLink",
+      "source": "5350aae8-3b1e-4774-a9bf-bd64c8826377",
+      "target": "d28b6199-e00f-4b58-a484-9818776982f2"
+    },
+    {
+      "id": "e69267a2-2010-4a77-b02e-63fb5c10b94e",
+      "type": "istar.AndRefinementLink",
+      "source": "439bbf46-8ae8-4f57-8df1-610e8f3168f5",
+      "target": "d28b6199-e00f-4b58-a484-9818776982f2"
+    },
+    {
+      "id": "a9a62a79-8a5e-4ab8-8113-c69389b339e8",
+      "type": "istar.ContributionLink",
+      "source": "ca95ff0e-37e8-4502-a06a-bed18a917e19",
+      "target": "f7413b7f-a7bb-4590-90c1-250f7b5342eb",
+      "label": "make"
+    },
+    {
+      "id": "ba147ce9-07ff-4d68-9ab6-49406c31455d",
+      "type": "istar.AndRefinementLink",
+      "source": "9a1b55ec-1d41-4db5-9136-51d627c845e1",
+      "target": "869c5fe7-e290-49eb-9e8d-4a0bf695927a"
+    },
+    {
+      "id": "a1770128-c7dc-4795-b2c7-9feb80a4d4e8",
+      "type": "istar.AndRefinementLink",
+      "source": "ca9a51d9-a660-42fd-8be4-c59452d4eab8",
+      "target": "869c5fe7-e290-49eb-9e8d-4a0bf695927a"
+    }
+  ],
+  "display": {
+    "43452d46-979a-422a-9ba2-0c42465684d3": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "2fc243c8-be80-4788-bd4e-3f784f95d6c1": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "9eea0305-f436-4f90-b437-68a7436507dc": {
+      "backgroundColor": "#FAFAFA",
+      "width": 108.875,
+      "height": 40.30555725097656
+    },
+    "439bbf46-8ae8-4f57-8df1-610e8f3168f5": {
+      "backgroundColor": "#FAFAFA",
+      "width": 103.875,
+      "height": 42.30555725097656
+    },
+    "5350aae8-3b1e-4774-a9bf-bd64c8826377": {
+      "backgroundColor": "#FAFAFA",
+      "width": 114.875,
+      "height": 38.30555725097656
+    },
+    "d28b6199-e00f-4b58-a484-9818776982f2": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "242fa4ec-8aa2-4530-a5f0-6e7f541ae8be": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "ca9a51d9-a660-42fd-8be4-c59452d4eab8": {
+      "backgroundColor": "#FAFAFA",
+      "width": 115.875,
+      "height": 34.90277862548828
+    },
+    "50b36752-849f-49f3-85eb-ebc91c0e5dde": {
+      "backgroundColor": "#FAFAFA",
+      "width": 100.875,
+      "height": 42.30555725097656
+    },
+    "9a1b55ec-1d41-4db5-9136-51d627c845e1": {
+      "backgroundColor": "#FAFAFA",
+      "width": 118.875,
+      "height": 36.90277862548828
+    },
+    "869c5fe7-e290-49eb-9e8d-4a0bf695927a": {
+      "backgroundColor": "#FAFAFA",
+      "width": 122.875,
+      "height": 37.90277862548828
+    },
+    "d30d030c-c951-449b-902a-58969597f5fb": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "58200e51-b367-4a25-b86b-b610845919b6": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "43e5f540-89a0-4c1c-907b-d1a28ce47b54": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "ca95ff0e-37e8-4502-a06a-bed18a917e19": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "f7413b7f-a7bb-4590-90c1-250f7b5342eb": {
+      "backgroundColor": "#FAFAFA",
+      "width": 99.90478515625,
+      "height": 57.31147766113281
+    },
+    "138e7d88-4b79-4f74-b07b-ab4b163c6665": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "b1846161-833b-4db3-ad1c-08247d86e24c": {
+      "backgroundColor": "#FAFAFA",
+      "width": 110.875,
+      "height": 44.30555725097656
+    },
+    "7e7a8860-77f4-46c9-90e9-8deab29d303c": {
+      "backgroundColor": "#FAFAFA",
+      "width": 114.875,
+      "height": 41.30555725097656
+    },
+    "70c9da11-2ce7-4c28-bb7e-35e4d0bb0763": {
+      "backgroundColor": "#FAFAFA",
+      "width": 109.875,
+      "height": 45.30555725097656
+    },
+    "4e634e8a-0040-4a76-93ec-4fa93cf9ab1c": {
+      "backgroundColor": "#FAFAFA",
+      "width": 106.9072265625,
+      "height": 61.312007904052734
+    },
+    "d2517a9f-9b52-4e66-b64a-5c3f13db23a0": {
+      "backgroundColor": "#FAFAFA",
+      "width": 128.875,
+      "height": 42.30555725097656
+    },
+    "79066fe2-0877-41cb-95b9-7749c2fbd6b1": {
+      "backgroundColor": "#FAFAFA",
+      "width": 113.875,
+      "height": 43.30555725097656
+    },
+    "563e5fef-fbaa-430b-b822-840672bac0fa": {
+      "backgroundColor": "#FAFAFA",
+      "width": 115.875,
+      "height": 36.57221984863281
+    },
+    "2c83cb27-66be-4904-afd5-251ee9463383": {
+      "backgroundColor": "#FAFAFA",
+      "width": 117.875,
+      "height": 39.30555725097656
+    },
+    "77809e0b-17a5-45b0-9420-bbb56d64cc90": {
+      "backgroundColor": "#FAFAFA",
+      "width": 107.875,
+      "height": 35.77223205566406
+    },
+    "b303619d-5023-4273-85e2-bf35cf4d1ab0": {
+      "backgroundColor": "#FAFAFA",
+      "width": 99.875,
+      "height": 36.90277862548828
+    },
+    "c109971f-a6d9-462c-bba5-4a152c781101": {
+      "backgroundColor": "#FAFAFA",
+      "width": 141.875,
+      "height": 45.30555725097656
+    },
+    "fdd42f68-7b24-4161-bdc5-726ddff5e1a7": {
+      "backgroundColor": "#FAFAFA",
+      "width": 107.875,
+      "height": 46.30555725097656
+    },
+    "cfd0050d-fe39-493e-a6f8-d165844eef41": {
+      "vertices": [
+        {
+          "x": 882,
+          "y": 486
+        },
+        {
+          "x": 915,
+          "y": 323
+        },
+        {
+          "x": 868,
+          "y": 216
+        }
+      ]
+    },
+    "eff0299d-2011-4794-9c63-ba4a96227b40": {
+      "vertices": [
+        {
+          "x": 452,
+          "y": 255
+        }
+      ]
+    },
+    "8612a99e-afb8-457d-a5e6-c17bd5402d72": {
+      "vertices": [
+        {
+          "x": 449,
+          "y": 369
+        }
+      ]
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Fri, 08 May 2026 14:50:54 GMT",
+  "diagram": {
+    "width": 1000,
+    "height": 741,
+    "name": "Welcome Model",
+    "customProperties": {
+      "Description": "Welcome to the piStar tool version 2.1.0, released on November, 2021! This model describes some of the recent improvements in the tool. Click on the purple elements for further info.\n\nFor help using this tool, please check the Help menu above"
+    }
+  }
+}

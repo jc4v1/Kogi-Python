@@ -118,10 +118,10 @@ def forward_bfs(lts, start_state):
     # discovered predecessor which yields BFS shortest-path traces and
     # avoids combinatorial explosion of all possible traces.
     parent_map: dict[Any, tuple[Any, Any]] = {start_state: (None, None)}
+    actions = lts.actions()
 
     while queue:
         current_s = queue.popleft()
-        actions = lts.actions()
         
         for action in actions:
             successors = lts.get_successors(current_s, action)
@@ -135,12 +135,8 @@ def forward_bfs(lts, start_state):
     # attach it as a list-of-actions under the attribute `trace` where possible.
     for s in reachable:
         trace = reconstruct_trace_from_parent_map(parent_map, s)
-        try:
-            # attach a single shortest trace as `trace` (list of actions)
+        if hasattr(s, '__dict__'):
             s.trace = trace
-        except Exception:
-            # Skip states that cannot have attributes set
-            pass
 
     return reachable
 
@@ -150,20 +146,21 @@ def backward_bfs(lts, target_states):
     
     Args:
         lts (Lts): The labeled transition system.
-                    return CheckResult.failure(counterexamples)
     Returns:
         set: A set of all states that can reach any of the target states.
     """
     queue = deque(target_states)
     reachable = set(target_states)
-    
+    parent_map: dict[Any, Any] = {}
+
     while queue:
         current_s = queue.popleft()
         for prev_s in lts.get_predecessors(current_s):
             if prev_s not in reachable:
+                parent_map[prev_s] = current_s
                 reachable.add(prev_s)
                 queue.append(prev_s)
-    return reachable
+    return reachable, parent_map
 
 def check_stable_system(lts, qualities_Q, debug=False):
     """
@@ -177,7 +174,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
         bool: True if the formula holds, False otherwise.
     """
     failing_states = set()
-    counterexamples: set[Any] = set()
+    counterexamples: set[tuple[Any, ...]] = set()
     success = True
 
     # Helper: find an action sequence from `start` to any state in `targets`.
@@ -208,11 +205,12 @@ def check_stable_system(lts, qualities_Q, debug=False):
 
     # Compute reachable states once (also populates `trace` on states via forward_bfs)
     S_reachable = forward_bfs(lts, lts.initial_state())
+    all_states = lts.states()
 
     for q in qualities_Q:
-        S_not_q = {s for s in lts.states() if not lts.satisfies_quality(s, q)}
-        S_ef_not_q = backward_bfs(lts, S_not_q)
-        S_ag_q = lts.states().difference(S_ef_not_q)
+        S_not_q = {s for s in all_states if not lts.satisfies_quality(s, q)}
+        S_ef_not_q, _ = backward_bfs(lts, S_not_q)
+        S_ag_q = all_states.difference(S_ef_not_q)
         S_implication = S_not_q.union(S_ag_q)
 
         # use the global `counterexamples` set declared above
@@ -234,12 +232,7 @@ def check_stable_system(lts, qualities_Q, debug=False):
                 success = False
 
                 # Build counterexample trace: initial -> ... -> s (from s.trace if available)
-                init_trace = []
-                if hasattr(s, 'trace') and s.trace:
-                    try:
-                        init_trace = list(s.trace)
-                    except Exception:
-                        init_trace = list(s.trace)
+                init_trace = list(s.trace) if hasattr(s, 'trace') and s.trace else []
 
                 # then s -> ... -> t where t satisfies not q
                 suffix = _find_action_path(s, S_not_q)
@@ -257,7 +250,7 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
 
     Args:
         lts (Lts): The labeled transition system.
-        qualities_Q (set): A set of quality names to check.
+        qualities_Q (set): A set of quality names to check (AND semantics — a state must satisfy all).
 
     Returns:
         bool: True if the formula holds, False otherwise.
@@ -268,10 +261,10 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
     
     failing_states: set[Any] = set()
     # Step 1: Find states satisfying EF(Q)
-    # The set S_Q should contain all states that have *any* quality from qualities_Q.
+    # The set S_Q should contain all states that have *all* qualities from qualities_Q.
     S_Q = {s for s in lts.states() if all(lts.satisfies_quality(s, q) for q in qualities_Q)}
     # S_Q = {s for s in lts.states() for q in qualities_Q if lts.satisfies_quality(s, q)}
-    S_ef_q = backward_bfs(lts, S_Q)
+    S_ef_q, _ = backward_bfs(lts, S_Q)
 
 
     # Step 2: Find states satisfying AX(false)
@@ -285,7 +278,10 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
     S_disjunction = S_ef_q.union(S_ax_false_and_q)
     
     # Step 5: Find all states reachable from the initial state
-    S_reachable = forward_bfs(lts, lts.initial_state())
+    init = lts.initial_state()
+    if init is None:
+        return CheckResult.failure("No initial state")
+    S_reachable = forward_bfs(lts, init)
 
     if debug:
         print("=================================")
@@ -303,7 +299,7 @@ def check_weak_compliance(lts, qualities_Q, debug=False):
         if s not in S_disjunction:
             failing_states.add(s)
             if debug:
-                print(f"failing state weak comliance {str(s)}")
+                print(f"failing state weak compliance {str(s)}")
             success = False
     # produce set of traces (tuples) as counterexamples
     counterexamples = set()

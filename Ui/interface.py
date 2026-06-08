@@ -10,38 +10,50 @@ from Semantics.transition_system import combine_goal_model_and_petri_net
 from Semantics.transition_system import CombinedTransitionSystem
 from Semantics.petri_net import PetriNet
 from typing import Any
+import traceback
 import re
 
-def get_status_color_from_model(model, element_id):
-    from Semantics.enums import ElementStatus, QualityStatus
+
+def _format_mapped_elements(mapping_value: Any) -> str:
+    """Normalize event mapping values for display across old and new mapping shapes."""
+    if not mapping_value:
+        return ''
+
+    return ', '.join(_whitespace_to_newlines(v) for v in sorted(mapping_value))
+
+def _get_status_color_from_model(model, element_id):
+    from Semantics.enums import ElementStatus
     if element_id in model.qualities:
         status = model.qualities[element_id]
-        if status == QualityStatus.UNKNOWN:
+        if status == ElementStatus.UNKNOWN:
             return 'white'
-        elif status == QualityStatus.FULFILLED:
+        elif status == ElementStatus.SATISFIED:
             return 'lightgreen'
-        elif status == QualityStatus.DENIED:
+        elif status == ElementStatus.DENIED:
             return 'lightcoral'
     else:
         status = model.tasks.get(element_id) or model.goals.get(element_id)
         if status == ElementStatus.UNKNOWN:
             return 'white'
-        elif status == ElementStatus.TRUE_FALSE:
+        elif status == ElementStatus.SATISFIED:
             return 'lightgreen'
-        elif status == ElementStatus.TRUE_TRUE:
+        elif status == ElementStatus.PENDING:
             return 'lightblue'
     return 'white'
 
-def whitespace_to_newlines(s: str) -> str:
+def _whitespace_to_newlines(s: str) -> str:
     if s is None:
         return s
     if '@' in s:
         return s.replace('@ ', '\n')
     return re.sub(r'\s+', '\n', s)
 
+whitespace_to_newlines = _whitespace_to_newlines
+
 class InterfaceBuilder:
     def __init__(self, model, petri_net: PetriNet | None = None, event_mapping = None, whatif=False, debug=False):
         self.model = model
+        self.model.reset()
         if event_mapping is not None:
             self.model.event_mapping = event_mapping
         self.petri_net = petri_net
@@ -50,7 +62,7 @@ class InterfaceBuilder:
         if self.petri_net is None and not self.whatif:
             raise Exception("Petri net must be provided if whatif is False")
         if self.whatif and self.petri_net is None:
-            self.petri_net = self.model.generate_all_events_petri_net()
+            self.petri_net = self._default_petri_net()
         self.executed_events = []
         self.petri_tokens = {self.petri_net.initial_place(): 1}
         self._update_state = {'updating': False, 'pending_update': False}
@@ -67,7 +79,7 @@ class InterfaceBuilder:
         self.legend = widgets.HTML("""
         <div style='background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 12px; border: 1px solid #ccc;'>
         <div style='font-weight: bold; margin-bottom: 8px; text-align: center;'>Conventions</div>
-        <div><strong>Goal Model Colors:</strong> 🤍 Unknown | 🟢 Satisfied/Fulfilled | 🔵 Executed Pending | 🔴 Denied</div>
+        <div><strong>Goal Model Colors:</strong> 🤍 Unknown | 🟢 Satisfied | 🔵 Executed Pending | 🔴 Denied</div>
         <div><strong>Shapes:</strong> ☁️ Quality | ⭕ Goal | ⬡ Task | ⬜ Process Transition</div>
         <div><strong>Petri Net:</strong> ⚫ Token | ⚪ Place | ⬛ Transition </div>
         </div>
@@ -121,8 +133,8 @@ class InterfaceBuilder:
         )
 
         # Attach handlers
-        self.check_stability_button.on_click(self.check_stability_handler)
-        self.check_weak_compliance_button.on_click(self.check_weak_compliance_handler)
+        self.check_stability_button.on_click(self._check_stability_handler)
+        self.check_weak_compliance_button.on_click(self._check_weak_compliance_handler)
 
         self.token_status = widgets.HTML(
             value="<b>Tokens:</b><br>No tokens (execute events to see tokens)",
@@ -141,7 +153,7 @@ class InterfaceBuilder:
             disabled=True,
             layout=widgets.Layout(width='100%', margin='5px 0px')
         )
-        self.failed_markings_dropdown.observe(self.on_failed_marking_selected, names='value')
+        self.failed_markings_dropdown.observe(self._on_failed_marking_selected, names='value')
 
         self._last_failed_markings: list[Any] = []
 
@@ -182,15 +194,18 @@ class InterfaceBuilder:
         ])
 
         # Attach event handlers
-        self.execute_button.on_click(self.execute_event_handler)
-        self.reset_button.on_click(self.reset_model_handler)
+        self.execute_button.on_click(self._execute_event_handler)
+        self.reset_button.on_click(self._reset_model_handler)
 
         # Initial updates
-        self.update_trace()
-        self.update_token_status()
-        self.safe_update_visualization()
+        self._update_trace()
+        self._update_token_status()
+        self._safe_update_visualization()
 
-    def update_trace(self):
+    def _default_petri_net(self):
+        return self.model.generate_all_events_petri_net()
+
+    def _update_trace(self):
         with self.trace_output:
             clear_output(wait=True)
             trace_html = """
@@ -210,7 +225,7 @@ class InterfaceBuilder:
             trace_html += "</div>"
             display(HTML(trace_html))
 
-    def update_token_status(self):
+    def _update_token_status(self):
         token_text = "<b>Tokens:</b><br>"
         if self.petri_tokens:
             for place, count in sorted(self.petri_tokens.items()):
@@ -219,13 +234,13 @@ class InterfaceBuilder:
             token_text += "No tokens (execute events to see tokens)"
         self.token_status.value = token_text
 
-    def update_status_info(self, message=""):
+    def _update_status_info(self, message=""):
         if message:
             self.status_info.value = f"<b>Status:</b><br>{message}"
         else:
             self.status_info.value = "<b>Status:</b><br>Ready to execute events"
 
-    def safe_update_visualization(self):
+    def _safe_update_visualization(self):
         if self._update_state['updating']:
             self._update_state['pending_update'] = True
             return
@@ -260,7 +275,7 @@ class InterfaceBuilder:
             if self._update_state['pending_update']:
                 self._update_state['pending_update'] = False
                 import threading
-                threading.Timer(0.1, self.safe_update_visualization).start()
+                threading.Timer(0.1, self._safe_update_visualization).start()
             if self.debug:
                 print("DEBUG: safe_update_visualization() completed - Render finished")
     
@@ -311,7 +326,7 @@ class InterfaceBuilder:
             ax1.add_patch(square)
             label_text = f"{label}"
             if not is_silent and event_name:
-                label_text += f"\n({whitespace_to_newlines(event_name)})"
+                label_text += f"\n({_whitespace_to_newlines(event_name)})"
             ax1.text(x, y-0.35, label_text, ha='center', va='top', fontsize=8*font_scale, fontweight='bold')
     
         for arc in self.petri_net.net.arcs:
@@ -344,32 +359,32 @@ class InterfaceBuilder:
         shapes = {}
     
         for element_id, (x, y) in positions.items():
-            color = get_status_color_from_model(self.model, element_id)
+            color = _get_status_color_from_model(self.model, element_id)
             if self.model._get_element_type(element_id) == "Quality":
                 cloud = FancyBboxPatch((x-0.6, y-0.4), 1.2, 0.8,
                                       boxstyle="roundtooth, pad=0.6, tooth_size=0.5",
                                       facecolor=color, edgecolor='black', linewidth=2)
                 ax2.add_patch(cloud)
                 shapes[element_id] = cloud
-                status_text = f"{whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.qualities[element_id])}"
+                status_text = f"{_whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.qualities[element_id])}"
                 ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale, zorder=10)
             elif self.model._get_element_type(element_id) == "Goal":
                 ellipse = patches.Ellipse((x, y), 1.0, 0.6,
                                           facecolor=color, edgecolor='black', linewidth=2)
                 ax2.add_patch(ellipse)
                 shapes[element_id] = ellipse
-                status_text = f"{whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.goals[element_id])}"
+                status_text = f"{_whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.goals[element_id])}"
                 ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale)
             else:
                 hexagon = patches.RegularPolygon((x, y), 6, radius=0.5,
                                                  facecolor=color, edgecolor='black', linewidth=2)
                 ax2.add_patch(hexagon)
                 shapes[element_id] = hexagon
-                status_text = f"{whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.tasks[element_id])}"
+                status_text = f"{_whitespace_to_newlines(element_id)}\n{self.model._format_status(self.model.tasks[element_id])}"
                 ax2.text(x, y, status_text, ha='center', va='center', fontweight='bold', fontsize=10*font_scale)
     
         # Draw links (with AND as perpendicular bar)
-        for parent, child, link_type, _ in self.model.links:
+        for parent, child, link_type in self.model.links:
             if link_type == LinkType.MAKE:
                 arrow_color = 'green'
                 style = '->'
@@ -402,7 +417,7 @@ class InterfaceBuilder:
         ax3.axis('off')
         mapping = self.model.event_mapping
         transitions = sorted(list(mapping.keys()))
-        elements = ['' if not mapping[k] else whitespace_to_newlines(mapping[k][0][0]) for k in transitions]
+        elements = [_format_mapped_elements(mapping[k]) for k in transitions]
         table = ax3.table(cellText=[transitions, elements],
                           rowLabels=['Process Transition', 'Goal Element'],
                           cellLoc='center', loc='center',
@@ -411,9 +426,9 @@ class InterfaceBuilder:
         table.set_fontsize(10)
         table.scale(1, 2)
 
-    def update_petri_tokens(self, event_name):
+    def _update_petri_tokens(self, event_name):
         transitions = self.petri_net.transitions()
-        actions = transitions[event_name]
+        actions = transitions.get(event_name, ([], []))
         if not all(p in self.petri_tokens for p in actions[0]):
             raise Exception(f"One of {actions[0]} is missing a token")
         for p in actions[0]:
@@ -421,99 +436,99 @@ class InterfaceBuilder:
         for p in actions[1]:
             self.petri_tokens[p] = 1
 
-    def execute_event_handler(self, b):
+    def _execute_event_handler(self, b):
         selected_event = self.process_dropdown.value
         try:
-            self.update_status_info(f"Executing event: {selected_event}...")
-            self.update_petri_tokens(selected_event)
+            self._update_status_info(f"Executing event: {selected_event}...")
+            self._update_petri_tokens(selected_event)
             self.model.process_event(selected_event)
             self.executed_events.append(selected_event)
-            self.update_trace()
-            self.update_token_status()
-            self.safe_update_visualization()
-            self.update_status_info(f"Event {selected_event} completed successfully")
+            self._update_trace()
+            self._update_token_status()
+            self._safe_update_visualization()
+            self._update_status_info(f"Event {selected_event} completed successfully")
         except Exception as e:
-            self.update_status_info(f"Error executing event: {str(e)}")
+            self._update_status_info(f"Error executing event: {str(e)}")
             if self.debug:
                 print(f"Error in event execution: {e}")
 
-    def reset_model_handler(self, b):
+    def _reset_model_handler(self, b):
         self.executed_events.clear()
         self.petri_tokens.clear()
         self.petri_tokens.update({self.petri_net.initial_place(): 1})
         self.model.reset()
-        self.update_trace()
-        self.update_token_status()
-        self.safe_update_visualization()
-        self.update_status_info("Model reset to initial state")
+        self._update_trace()
+        self._update_token_status()
+        self._safe_update_visualization()
+        self._update_status_info("Model reset to initial state")
         self.failed_markings_dropdown.options = []
         self.failed_markings_dropdown.disabled = True
         self._last_failed_markings = []
         
-    def check_stability_handler(self, b):
+    def _check_stability_handler(self, b):
         try:
-            self.update_status_info("Checking stability...")
+            self._update_status_info("Checking stability...")
             self.executed_events.clear()
             self.model.reset()
             self.petri_tokens = {self.petri_net.initial_place(): 1}
             lts = combine_goal_model_and_petri_net(self.model, self.petri_net,self.model.event_mapping)
             result = lts.check_stability(list(self.model.qualities.keys()))
             if result.is_ok():
-                self.update_status_info("Stability check: TRUE")
+                self._update_status_info("Stability check: TRUE")
                 self.failed_markings_dropdown.options = []
                 self.failed_markings_dropdown.disabled = True
                 self._last_failed_markings = []
             else:
                 failed = sorted(result.failing_states)
-                self.update_status_info(f"Stability check: FALSE ({len(failed)} failed states)")
+                self._update_status_info(f"Stability check: FALSE ({len(failed)} failed states)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))
                 ]
                 self.failed_markings_dropdown.disabled = False
                 self._last_failed_markings = sorted(failed)
         except Exception as e:
-            self.update_status_info(f"Error checking stability: {str(e)}")
+            self._update_status_info(f"Error checking stability: {str(e)}")
             self.failed_markings_dropdown.options = []
             self.failed_markings_dropdown.disabled = True
             self._last_failed_markings = []
         finally:
-            self.update_trace()
-            self.update_token_status()
-            self.safe_update_visualization()
+            self._update_trace()
+            self._update_token_status()
+            self._safe_update_visualization()
 
 
-    def check_weak_compliance_handler(self, b):
+    def _check_weak_compliance_handler(self, b):
         try:
-            self.update_status_info("Checking weak compliance...")
+            self._update_status_info("Checking weak compliance...")
             self.executed_events.clear()
             self.model.reset()
             self.petri_tokens = {self.petri_net.initial_place(): 1}
             lts = combine_goal_model_and_petri_net(self.model, self.petri_net,self.model.event_mapping)
             result = lts.check_weak_compliance(list(self.model.qualities.keys()))
             if result.is_ok():
-                self.update_status_info("Weak compliance: TRUE")
+                self._update_status_info("Weak compliance: TRUE")
                 self.failed_markings_dropdown.options = []
                 self.failed_markings_dropdown.disabled = True
                 self._last_failed_markings = []
             else:
                 failed = sorted(result.failing_states)
-                self.update_status_info(f"Weak compliance: FALSE ({len(failed)} failed states)")
+                self._update_status_info(f"Weak compliance: FALSE ({len(failed)} failed states)")
                 self.failed_markings_dropdown.options = [
                     (str(failed[i]), i) for i in range(len(failed))
                 ]
                 self.failed_markings_dropdown.disabled = False
                 self._last_failed_markings = failed
         except Exception as e:
-            self.update_status_info(f"Error checking weak compliance: {str(e)}")
+            self._update_status_info(f"Error checking weak compliance: {str(e)}")
             self.failed_markings_dropdown.options = []
             self.failed_markings_dropdown.disabled = True
             self._last_failed_markings = []
         finally:
-            self.update_trace()
-            self.update_token_status()
-            self.safe_update_visualization()
+            self._update_trace()
+            self._update_token_status()
+            self._safe_update_visualization()
 
-    def on_failed_marking_selected(self, change):
+    def _on_failed_marking_selected(self, change):
         if change['type'] == 'change' and change['name'] == 'value':
             idx = change['new']
             if idx is None or not self._last_failed_markings:
@@ -526,10 +541,10 @@ class InterfaceBuilder:
             # Set petri tokens
             self.petri_tokens.clear()
             self.petri_tokens.update({ p:v for p,v in petri_tokens.markings().items() if v > 0 })
-            self.update_trace()
-            self.update_token_status()
-            self.safe_update_visualization()
-            self.update_status_info("Set to selected failed marking.")
+            self._update_trace()
+            self._update_token_status()
+            self._safe_update_visualization()
+            self._update_status_info("Set to selected failed marking.")
 
     def create_interface(self):
         return self.complete_interface
@@ -537,6 +552,86 @@ class InterfaceBuilder:
 class WhatIfInterfaceBuilder(InterfaceBuilder):
     def __init__(self, model, debug=False):
         super().__init__(model, None, event_mapping=None,whatif=True, debug=debug)
+
+class SingleStepInterfaceBuilder(WhatIfInterfaceBuilder):
+    def __init__(self, model, debug=False):
+        super().__init__(model, debug=debug)
+        self.changed_set: set[str] = set()
+        self.parent_map: dict[str, set[str]] = {}
+        self.last_rule_name: str | None = None
+        self.changed_elements_status = widgets.HTML(
+            value="<b>Changed:</b><br>None",
+            layout=widgets.Layout(width='100%', margin='10px 0px')
+        )
+        self.parent_elements_status = widgets.HTML(
+            value="<b>Affected Parents:</b><br>None",
+            layout=widgets.Layout(width='100%', margin='10px 0px')
+        )
+        self.last_rule_status = widgets.HTML(
+            value="<b>Last Rule:</b><br>None",
+            layout=widgets.Layout(width='100%', margin='10px 0px')
+        )
+        self._rebuild_controls_panel()
+
+    def _rebuild_controls_panel(self):
+        children = list(self.controls_panel.children)
+        token_idx = children.index(self.token_status)
+        children.insert(token_idx, self.changed_elements_status)
+        children.insert(token_idx + 1, self.parent_elements_status)
+        children.insert(token_idx + 2, self.last_rule_status)
+        self.controls_panel.children = children
+
+    def _default_petri_net(self):
+        return self.model.generate_all_events_petri_net_simple()
+
+    def _update_changed_elements_display(self):
+        changed_display = sorted(self.changed_set) if self.changed_set else ["None"]
+        self.changed_elements_status.value = "<b>Changed:</b><br>" + ", ".join(changed_display)
+        if self.parent_map:
+            lines = []
+            for parent in sorted(self.parent_map):
+                children = ", ".join(sorted(self.parent_map[parent]))
+                lines.append(f"{parent}  &larr;  {children}")
+            parent_html = "<br>".join(lines)
+        else:
+            parent_html = "None"
+        self.parent_elements_status.value = "<b>Affected Parents:</b><br>" + parent_html
+        rule_display = self.last_rule_name if self.last_rule_name else "no rule"
+        self.last_rule_status.value = f"<b>Last Rule:</b><br>{rule_display}"
+
+    def _add_parent_entries(self, changed_elements: set[str]) -> None:
+        for child in changed_elements:
+            for parent in self.model._parents_of({child}):
+                self.parent_map.setdefault(parent, set()).add(child)
+
+    def _execute_event_handler(self, b):
+        selected_event = self.process_dropdown.value
+        try:
+            self._update_status_info(f"Executing event: {selected_event}...")
+            self._update_petri_tokens(selected_event)
+            for element in sorted(self.model.event_mapping.get(selected_event, [])):
+                self.parent_map.pop(element, None)
+                _changed, rule_name = self.model.process_only_one_element(element)
+                self.last_rule_name = rule_name[4:-5] if rule_name else None
+                self.changed_set = _changed
+                self._add_parent_entries(self.model.changed_elements)
+            self._update_changed_elements_display()
+            self.executed_events.append(selected_event)
+            self._update_trace()
+            self._update_token_status()
+            self._safe_update_visualization()
+            self._update_status_info(f"Event {selected_event} completed successfully")
+        except Exception as e:
+            self._update_status_info(f"Error executing event: {str(e)}")
+            if self.debug:
+                print(f"Error in event execution: {e}")
+
+    def _reset_model_handler(self, b):
+        super()._reset_model_handler(b)
+        self.changed_set.clear()
+        self.parent_map.clear()
+        self.last_rule_name = None
+        self._update_changed_elements_display()
 
 # For non-interactive analysis
 def analyse_models(goal_model, process_model, event_mapping):
@@ -624,9 +719,9 @@ class FileUploadInterfaceBuilder:
             cb = self.widgets_state.get('interactive_checkbox')
             interactive_mode = True if cb is None else bool(cb.value)
 
-            from Semantics.istar_processor import read_istar_model
-            from Semantics.petri_net_processor import read_petri_net
-            from Semantics.event_mapping_from_csv import read_event_mapping_csv, event_mapping_for_petri_net
+            from Semantics.parsers.istar_processor import read_istar_model
+            from Semantics.parsers.petri_net_processor import read_petri_net
+            from Semantics.parsers.event_mapping_from_csv import read_event_mapping_csv, event_mapping_for_petri_net
 
             goal_model = read_istar_model(goal_path)
             petri_net = None
@@ -635,7 +730,7 @@ class FileUploadInterfaceBuilder:
             if pn_path:
                 petri_net = read_petri_net(pn_path)
             if dcr_path:
-                from Semantics.dcr import read_dcr
+                from Semantics.parsers.dcr import read_dcr
                 dcr_ts = read_dcr(dcr_path)
 
             # If a mapping CSV was uploaded, read it now (used for BPMN conversion)

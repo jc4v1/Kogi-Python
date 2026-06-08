@@ -9,4 +9,8 @@ approvaltests
 jupyter
 jupytext
 voila
-
+graphviz
+networkx
+numpy
+lxml
+rustxes

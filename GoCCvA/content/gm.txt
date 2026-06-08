@@ -1,0 +1,368 @@
+{
+  "actors": [
+    {
+      "id": "491d88e0-7d34-45a6-acc4-f43262ab87b8",
+      "text": "Blind Patient",
+      "type": "istar.Actor",
+      "x": 826,
+      "y": 216,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": []
+    },
+    {
+      "id": "e24da29d-d6c8-4f07-8c16-f527a43a9ca0",
+      "text": "Auditor",
+      "type": "istar.Actor",
+      "x": 707,
+      "y": 141,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "9cc7420b-43d3-49fd-9dc5-ccdc367464fe",
+          "text": "confidentiality",
+          "type": "istar.Quality",
+          "x": 720,
+          "y": 232,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "6fe45daf-9122-4a97-9b01-b55dd5d80abb",
+      "text": "System",
+      "type": "istar.Actor",
+      "x": 36,
+      "y": 102,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "13b9c70a-3dc3-4482-b066-793dac37db36",
+          "text": "Identity denied",
+          "type": "istar.Task",
+          "x": 150,
+          "y": 247,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "674811ef-06ba-4122-bd91-1ca44d23b028",
+          "text": "Identity verified",
+          "type": "istar.Task",
+          "x": 44,
+          "y": 200,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "e1f1bcf1-4369-4a0e-a289-0b5dac639807",
+          "text": "Verify identity",
+          "type": "istar.Task",
+          "x": 109,
+          "y": 112,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "ad31d03f-e4d8-43d8-86f6-e855c5f55a66",
+      "text": "Hospital Officer",
+      "type": "istar.Actor",
+      "x": 272,
+      "y": 92,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "1b4c2048-e586-4a56-a2f8-d47915919b32",
+          "text": "Format Data Regular Needs",
+          "type": "istar.Task",
+          "x": 422,
+          "y": 154,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "b52d2a9c-180b-4614-8935-f10d39045466",
+          "text": "data easily accesible",
+          "type": "istar.Quality",
+          "x": 272,
+          "y": 201,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "ffc12a16-ad10-4c31-97de-57f1568ead77",
+          "text": "Format Data Special Needs",
+          "type": "istar.Task",
+          "x": 417,
+          "y": 266,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "46fa67b6-7c00-4ff0-a5e4-c4849babddcb",
+          "text": "Data access provided",
+          "type": "istar.Goal",
+          "x": 546,
+          "y": 212,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "464b140d-a072-4ae2-9900-811b20e77900",
+          "text": "Identity verified",
+          "type": "istar.Goal",
+          "x": 452,
+          "y": 101,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "0345be9d-c8a8-489b-9c7f-f4f83d1b2884",
+          "text": "Provide Records",
+          "type": "istar.Task",
+          "x": 408,
+          "y": 207,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [
+    {
+      "id": "557677be-6b4c-4ec5-97d5-bf038338b469",
+      "text": "data easily accesible",
+      "type": "istar.Quality",
+      "x": 667,
+      "y": 248,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "491d88e0-7d34-45a6-acc4-f43262ab87b8",
+      "target": "46fa67b6-7c00-4ff0-a5e4-c4849babddcb"
+    },
+    {
+      "id": "e02a71f4-e366-4daf-8d7a-97c6bfe86df1",
+      "text": "appropriate measures",
+      "type": "istar.Quality",
+      "x": 577,
+      "y": 25,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "e24da29d-d6c8-4f07-8c16-f527a43a9ca0",
+      "target": "464b140d-a072-4ae2-9900-811b20e77900"
+    },
+    {
+      "id": "6bd20bbf-32ed-4066-98db-cc257d9c5234",
+      "text": "Identity verified",
+      "type": "istar.Goal",
+      "x": 198,
+      "y": 155,
+      "customProperties": {
+        "Description": ""
+      },
+      "source": "464b140d-a072-4ae2-9900-811b20e77900",
+      "target": "674811ef-06ba-4122-bd91-1ca44d23b028"
+    }
+  ],
+  "links": [
+    {
+      "id": "1cf2b854-7aba-4f9f-b550-0f4f007e12cc",
+      "type": "istar.DependencyLink",
+      "source": "6bd20bbf-32ed-4066-98db-cc257d9c5234",
+      "target": "674811ef-06ba-4122-bd91-1ca44d23b028"
+    },
+    {
+      "id": "f26e6dec-6ad8-4597-8e3f-7766981c310c",
+      "type": "istar.DependencyLink",
+      "source": "464b140d-a072-4ae2-9900-811b20e77900",
+      "target": "6bd20bbf-32ed-4066-98db-cc257d9c5234"
+    },
+    {
+      "id": "fd87b3b8-1680-4cf6-93cb-dbb4232e28ef",
+      "type": "istar.DependencyLink",
+      "source": "e02a71f4-e366-4daf-8d7a-97c6bfe86df1",
+      "target": "464b140d-a072-4ae2-9900-811b20e77900"
+    },
+    {
+      "id": "a9b6c90d-2b4c-4dd5-b2a3-97fa22cbc1d6",
+      "type": "istar.DependencyLink",
+      "source": "e24da29d-d6c8-4f07-8c16-f527a43a9ca0",
+      "target": "e02a71f4-e366-4daf-8d7a-97c6bfe86df1"
+    },
+    {
+      "id": "f4ecab30-3ee0-4447-b4bb-6249f01a6ea5",
+      "type": "istar.DependencyLink",
+      "source": "557677be-6b4c-4ec5-97d5-bf038338b469",
+      "target": "46fa67b6-7c00-4ff0-a5e4-c4849babddcb"
+    },
+    {
+      "id": "6f55925d-df3f-45dc-ab86-669675eb497b",
+      "type": "istar.DependencyLink",
+      "source": "491d88e0-7d34-45a6-acc4-f43262ab87b8",
+      "target": "557677be-6b4c-4ec5-97d5-bf038338b469"
+    },
+    {
+      "id": "ccd752a0-4ecf-47bf-bce7-1b97e5028ff2",
+      "type": "istar.ContributionLink",
+      "source": "1b4c2048-e586-4a56-a2f8-d47915919b32",
+      "target": "b52d2a9c-180b-4614-8935-f10d39045466",
+      "label": "break"
+    },
+    {
+      "id": "3f491b36-7968-4b59-a708-acffc4f85441",
+      "type": "istar.ContributionLink",
+      "source": "ffc12a16-ad10-4c31-97de-57f1568ead77",
+      "target": "b52d2a9c-180b-4614-8935-f10d39045466",
+      "label": "make"
+    },
+    {
+      "id": "efbace8d-f046-4ebd-879c-778a9aaf2910",
+      "type": "istar.AndRefinementLink",
+      "source": "ffc12a16-ad10-4c31-97de-57f1568ead77",
+      "target": "46fa67b6-7c00-4ff0-a5e4-c4849babddcb"
+    },
+    {
+      "id": "0a741ccb-e487-4cb9-a837-b6dc0c65d617",
+      "type": "istar.AndRefinementLink",
+      "source": "464b140d-a072-4ae2-9900-811b20e77900",
+      "target": "46fa67b6-7c00-4ff0-a5e4-c4849babddcb"
+    },
+    {
+      "id": "9f4552f8-8b6f-4a0b-bdab-be017bf64634",
+      "type": "istar.AndRefinementLink",
+      "source": "0345be9d-c8a8-489b-9c7f-f4f83d1b2884",
+      "target": "46fa67b6-7c00-4ff0-a5e4-c4849babddcb"
+    }
+  ],
+  "display": {
+    "6fe45daf-9122-4a97-9b01-b55dd5d80abb": {
+      "backgroundColor": "#ABDAFA"
+    },
+    "13b9c70a-3dc3-4482-b066-793dac37db36": {
+      "backgroundColor": "#ABDAFA",
+      "width": 87.875,
+      "height": 48.30555725097656
+    },
+    "674811ef-06ba-4122-bd91-1ca44d23b028": {
+      "backgroundColor": "#ABDAFA",
+      "width": 94.609375,
+      "height": 53.34375
+    },
+    "e1f1bcf1-4369-4a0e-a289-0b5dac639807": {
+      "backgroundColor": "#ABDAFA",
+      "width": 83.875,
+      "height": 48.30555725097656
+    },
+    "ad31d03f-e4d8-43d8-86f6-e855c5f55a66": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "1b4c2048-e586-4a56-a2f8-d47915919b32": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "b52d2a9c-180b-4614-8935-f10d39045466": {
+      "backgroundColor": "#FAFAFA",
+      "width": 85.90087890625,
+      "height": 49.90795135498047
+    },
+    "ffc12a16-ad10-4c31-97de-57f1568ead77": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "46fa67b6-7c00-4ff0-a5e4-c4849babddcb": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "464b140d-a072-4ae2-9900-811b20e77900": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "0345be9d-c8a8-489b-9c7f-f4f83d1b2884": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "e02a71f4-e366-4daf-8d7a-97c6bfe86df1": {
+      "backgroundColor": "#FAB4B4",
+      "width": 76.89846801757812,
+      "height": 48.31056213378906
+    },
+    "6bd20bbf-32ed-4066-98db-cc257d9c5234": {
+      "backgroundColor": "#FAFAFA"
+    },
+    "1cf2b854-7aba-4f9f-b550-0f4f007e12cc": {
+      "vertices": [
+        {
+          "x": 164,
+          "y": 186
+        }
+      ]
+    },
+    "f26e6dec-6ad8-4597-8e3f-7766981c310c": {
+      "vertices": [
+        {
+          "x": 353,
+          "y": 171
+        }
+      ]
+    },
+    "fd87b3b8-1680-4cf6-93cb-dbb4232e28ef": {
+      "vertices": [
+        {
+          "x": 542,
+          "y": 77
+        }
+      ]
+    },
+    "a9b6c90d-2b4c-4dd5-b2a3-97fa22cbc1d6": {
+      "vertices": [
+        {
+          "x": 676,
+          "y": 89
+        }
+      ]
+    },
+    "6f55925d-df3f-45dc-ab86-669675eb497b": {
+      "vertices": [
+        {
+          "x": 786,
+          "y": 264
+        }
+      ]
+    },
+    "491d88e0-7d34-45a6-acc4-f43262ab87b8": {
+      "collapsed": true
+    },
+    "e24da29d-d6c8-4f07-8c16-f527a43a9ca0": {
+      "collapsed": true
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Thu, 23 Apr 2026 09:14:34 GMT",
+  "diagram": {
+    "width": 1444,
+    "height": 878,
+    "name": "Welcome Model",
+    "customProperties": {
+      "Description": "Welcome to the piStar tool version 2.1.0, released on November, 2021! This model describes some of the recent improvements in the tool. Click on the purple elements for further info.\n\nFor help using this tool, please check the Help menu above"
+    }
+  }
+}
